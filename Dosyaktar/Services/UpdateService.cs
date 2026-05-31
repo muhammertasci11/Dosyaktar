@@ -57,7 +57,7 @@ namespace Dosyaktar.Services
         // ── HTTP Client ───────────────────────────────────────────────────────
         private static HttpClient CreateHttpClient()
         {
-            var client = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+            var client = new HttpClient { Timeout = TimeSpan.FromMinutes(10) };
             client.DefaultRequestHeaders.UserAgent.Add(
                 new ProductInfoHeaderValue("Dosyaktar", GetCurrentVersion().ToString()));
             client.DefaultRequestHeaders.Accept.Add(
