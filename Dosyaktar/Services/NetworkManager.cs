@@ -32,27 +32,31 @@ namespace Dosyaktar.Services
         /// </summary>
         public static string GetLocalIP()
         {
-            try
-            {
-                // En güvenilir yöntem: 8.8.8.8'e UDP bağlantı kurarak kaynak IP'yi bul
-                using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0);
-                socket.Connect("8.8.8.8", 65530);
-                var ep = socket.LocalEndPoint as IPEndPoint;
-                if (ep != null) return ep.Address.ToString();
-            }
-            catch { /* internet yoksa yedek yönteme geç */ }
+            // Tüm ağ arayüzlerini tara: Önce Ethernet, sonra Wi-Fi. (İnterneti olmayan ama 1Gbps/10Gbps hızındaki lokal kablolu ağları tercih etmeli)
+            var interfaces = NetworkInterface.GetAllNetworkInterfaces()
+                .Where(n => n.OperationalStatus == OperationalStatus.Up && n.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                .OrderByDescending(n => n.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                .ThenByDescending(n => n.Speed)
+                .ToList();
 
-            // Yedek: ağ arayüzlerini dolaş
-            foreach (var nic in NetworkInterface.GetAllNetworkInterfaces()
-                         .OrderByDescending(n => n.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
-                         .ThenByDescending(n => n.OperationalStatus == OperationalStatus.Up))
+            foreach (var nic in interfaces)
             {
-                if (nic.OperationalStatus != OperationalStatus.Up) continue;
-                if (nic.NetworkInterfaceType == NetworkInterfaceType.Loopback) continue;
-
                 foreach (var addr in nic.GetIPProperties().UnicastAddresses)
-                    if (addr.Address.AddressFamily == AddressFamily.InterNetwork &&
-                        !IPAddress.IsLoopback(addr.Address))
+                {
+                    if (addr.Address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(addr.Address))
+                    {
+                        // APIPA (169.254.x.x) adreslerini sadece başka çare yoksa kullanmak için sona atabiliriz ama şimdilik ilk bulduğumuzu dönüyoruz.
+                        if (addr.Address.ToString().StartsWith("169.254.")) continue;
+                        return addr.Address.ToString();
+                    }
+                }
+            }
+            
+            // Eğer normal bir IP bulunamazsa (veya sadece APIPA varsa), APIPA'yı dön.
+            foreach (var nic in interfaces)
+            {
+                foreach (var addr in nic.GetIPProperties().UnicastAddresses)
+                    if (addr.Address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(addr.Address))
                         return addr.Address.ToString();
             }
 

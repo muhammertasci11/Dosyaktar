@@ -236,7 +236,7 @@ if errorlevel 1 (
 )
 
 echo Baslatiliyor...
-start "" "{currentExe}"
+explorer.exe "{currentExe}"
 
 :END
 del "{newExePath}" 2>nul

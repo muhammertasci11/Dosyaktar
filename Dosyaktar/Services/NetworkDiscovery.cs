@@ -100,7 +100,9 @@ namespace Dosyaktar.Services
         {
             try
             {
-                using var udp = new UdpClient();
+                string localIpStr = NetworkManager.GetLocalIP();
+                IPAddress localIp = IPAddress.Parse(localIpStr);
+                using var udp = new UdpClient(new IPEndPoint(localIp, 0));
                 udp.EnableBroadcast = true;
                 var endpoint = new IPEndPoint(IPAddress.Broadcast, DiscoveryPort);
 
