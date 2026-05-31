@@ -120,6 +120,8 @@ namespace Dosyaktar.Services
                     Log($"TCP {host}:{port} → açık");
                     return true;
                 }
+                // Zaman aşımı durumunda, arka planda fail olan Task'in Exception'ını yut
+                _ = connectTask.ContinueWith(t => _ = t.Exception, TaskContinuationOptions.OnlyOnFaulted);
                 Log($"TCP {host}:{port} → zaman aşımı");
                 return false;
             }

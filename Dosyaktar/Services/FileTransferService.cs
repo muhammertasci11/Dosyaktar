@@ -376,7 +376,12 @@ namespace Dosyaktar.Services
             await using var reg = token.Register(() => tcs.TrySetCanceled(token));
             var acceptTask = listener.AcceptTcpClientAsync();
             var winner = await Task.WhenAny(acceptTask, tcs.Task);
-            if (winner == tcs.Task) throw new OperationCanceledException(token);
+            if (winner == tcs.Task)
+            {
+                // AcceptTask'in daha sonra hata fırlatması durumunda programı çökertmesini engelle
+                _ = acceptTask.ContinueWith(t => _ = t.Exception, TaskContinuationOptions.OnlyOnFaulted);
+                throw new OperationCanceledException(token);
+            }
             return await acceptTask;
         }
 

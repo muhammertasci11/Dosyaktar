@@ -98,34 +98,40 @@ namespace Dosyaktar.Services
 
         private async Task BroadcastLoopAsync(CancellationToken ct)
         {
-            using var udp = new UdpClient();
-            udp.EnableBroadcast = true;
-
-            var endpoint = new IPEndPoint(IPAddress.Broadcast, DiscoveryPort);
-
-            while (!ct.IsCancellationRequested)
+            try
             {
-                try
+                using var udp = new UdpClient();
+                udp.EnableBroadcast = true;
+                var endpoint = new IPEndPoint(IPAddress.Broadcast, DiscoveryPort);
+
+                while (!ct.IsCancellationRequested)
                 {
-                    string myIP = NetworkManager.GetLocalIP();
-                    var payload = new
+                    try
                     {
-                        hostname    = Environment.MachineName,
-                        ip          = myIP,
-                        port        = _transferPort,
-                        version     = UpdateService.GetCurrentVersion().ToString(),
-                        isReceiving = _isReceiving
-                    };
+                        string myIP = NetworkManager.GetLocalIP();
+                        var payload = new
+                        {
+                            hostname    = Environment.MachineName,
+                            ip          = myIP,
+                            port        = _transferPort,
+                            version     = UpdateService.GetCurrentVersion().ToString(),
+                            isReceiving = _isReceiving
+                        };
 
-                    byte[] data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(payload));
-                    await udp.SendAsync(data, data.Length, endpoint);
-                }
-                catch (Exception ex) when (!ct.IsCancellationRequested)
-                {
-                    Log($"Broadcast hatası: {ex.Message}");
-                }
+                        byte[] data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(payload));
+                        await udp.SendAsync(data, data.Length, endpoint);
+                    }
+                    catch (Exception ex) when (!ct.IsCancellationRequested)
+                    {
+                        Log($"Broadcast gönderme hatası: {ex.Message}");
+                    }
 
-                await Task.Delay(BroadcastMs, ct).ContinueWith(_ => { }); // hata yutma
+                    await Task.Delay(BroadcastMs, ct).ContinueWith(_ => { }); // hata yutma
+                }
+            }
+            catch (Exception ex)
+            {
+                Log($"Broadcast döngüsü durdu: {ex.Message}");
             }
         }
 
@@ -135,77 +141,83 @@ namespace Dosyaktar.Services
 
         private async Task ListenLoopAsync(CancellationToken ct)
         {
-            UdpClient? udp = null;
             try
             {
-                udp = new UdpClient();
-                udp.Client.SetSocketOption(SocketOptionLevel.Socket,
-                                           SocketOptionName.ReuseAddress, true);
-                udp.Client.Bind(new IPEndPoint(IPAddress.Any, DiscoveryPort));
-                udp.EnableBroadcast = true;
-
-                string myIP = NetworkManager.GetLocalIP();
-
-                while (!ct.IsCancellationRequested)
+                UdpClient? udp = null;
+                try
                 {
-                    try
+                    udp = new UdpClient();
+                    udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                    udp.Client.Bind(new IPEndPoint(IPAddress.Any, DiscoveryPort));
+                    udp.EnableBroadcast = true;
+
+                    string myIP = NetworkManager.GetLocalIP();
+
+                    while (!ct.IsCancellationRequested)
                     {
-                        // Timeout ile bekle
-                        var recvTask = udp.ReceiveAsync();
-                        if (await Task.WhenAny(recvTask, Task.Delay(1000, ct)) != recvTask)
-                            continue;
-
-                        var result = recvTask.Result;
-                        string json = Encoding.UTF8.GetString(result.Buffer);
-
-                        using var doc  = JsonDocument.Parse(json);
-                        var root = doc.RootElement;
-
-                        string ip   = root.TryGetProperty("ip",          out var ipEl)   ? ipEl.GetString()   ?? "" : result.RemoteEndPoint.Address.ToString();
-                        string host = root.TryGetProperty("hostname",     out var hEl)    ? hEl.GetString()    ?? "" : ip;
-                        int    port = root.TryGetProperty("port",         out var portEl) ? portEl.GetInt32()       : FileTransferService.DefaultPort;
-                        string ver  = root.TryGetProperty("version",      out var verEl)  ? verEl.GetString()  ?? "" : "";
-                        bool   recv = root.TryGetProperty("isReceiving",  out var recvEl) && recvEl.GetBoolean();
-
-                        // Kendi broadcast paketini yoksay
-                        if (ip == myIP) continue;
-
-                        bool changed;
-                        if (_peers.TryGetValue(ip, out var existing))
+                        try
                         {
-                            bool wasReceiving = existing.IsReceiving;
-                            existing.IsReceiving = recv;
-                            existing.LastSeen    = DateTime.UtcNow;
-                            changed = wasReceiving != recv;
-                        }
-                        else
-                        {
-                            var peer = new DiscoveredPeer
+                            // Timeout ile bekle
+                            var recvTask = udp.ReceiveAsync();
+                            if (await Task.WhenAny(recvTask, Task.Delay(1000, ct)) != recvTask)
+                                continue;
+
+                            var result = await recvTask; // recvTask.Result yerine await kullan (AggregateException olmasın)
+                            string json = Encoding.UTF8.GetString(result.Buffer);
+
+                            using var doc  = JsonDocument.Parse(json);
+                            var root = doc.RootElement;
+
+                            string ip   = root.TryGetProperty("ip",          out var ipEl)   ? ipEl.GetString()   ?? "" : result.RemoteEndPoint.Address.ToString();
+                            string host = root.TryGetProperty("hostname",    out var hEl)    ? hEl.GetString()    ?? "" : ip;
+                            int    port = root.TryGetProperty("port",        out var portEl) ? portEl.GetInt32()       : FileTransferService.DefaultPort;
+                            string ver  = root.TryGetProperty("version",     out var verEl)  ? verEl.GetString()  ?? "" : "";
+                            bool   recv = root.TryGetProperty("isReceiving", out var recvEl) && recvEl.GetBoolean();
+
+                            // Kendi broadcast paketini yoksay
+                            if (ip == myIP) continue;
+
+                            bool changed;
+                            if (_peers.TryGetValue(ip, out var existing))
                             {
-                                Hostname    = host,
-                                IP          = ip,
-                                Port        = port,
-                                Version     = ver,
-                                IsReceiving = recv,
-                                LastSeen    = DateTime.UtcNow
-                            };
-                            _peers[ip] = peer;
-                            Log($"Yeni cihaz: {host} ({ip})");
-                            changed = true;
-                        }
+                                bool wasReceiving = existing.IsReceiving;
+                                existing.IsReceiving = recv;
+                                existing.LastSeen    = DateTime.UtcNow;
+                                changed = wasReceiving != recv;
+                            }
+                            else
+                            {
+                                var peer = new DiscoveredPeer
+                                {
+                                    Hostname    = host,
+                                    IP          = ip,
+                                    Port        = port,
+                                    Version     = ver,
+                                    IsReceiving = recv,
+                                    LastSeen    = DateTime.UtcNow
+                                };
+                                _peers[ip] = peer;
+                                Log($"Yeni cihaz: {host} ({ip})");
+                                changed = true;
+                            }
 
-                        if (changed) RaisePeersChanged();
-                    }
-                    catch (Exception ex) when (!ct.IsCancellationRequested)
-                    {
-                        Log($"Dinleme hatası: {ex.Message}");
-                        await Task.Delay(500, ct).ContinueWith(_ => { });
+                            if (changed) RaisePeersChanged();
+                        }
+                        catch (Exception ex) when (!ct.IsCancellationRequested)
+                        {
+                            Log($"Dinleme paket hatası: {ex.Message}");
+                            await Task.Delay(500, ct).ContinueWith(_ => { });
+                        }
                     }
                 }
+                finally
+                {
+                    udp?.Dispose();
+                }
             }
-            finally
+            catch (Exception ex)
             {
-                udp?.Dispose();
+                Log($"Dinleme döngüsü durdu (Port kullanımda olabilir): {ex.Message}");
             }
         }
 
@@ -215,24 +227,31 @@ namespace Dosyaktar.Services
 
         private async Task CleanupLoopAsync(CancellationToken ct)
         {
-            while (!ct.IsCancellationRequested)
+            try
             {
-                await Task.Delay(3000, ct).ContinueWith(_ => { });
-
-                bool changed = false;
-                var cutoff   = DateTime.UtcNow - TimeSpan.FromMilliseconds(PeerTimeoutMs);
-
-                foreach (var kv in _peers)
+                while (!ct.IsCancellationRequested)
                 {
-                    if (kv.Value.LastSeen < cutoff)
-                    {
-                        _peers.TryRemove(kv.Key, out _);
-                        Log($"Cihaz gitti: {kv.Value.DisplayName}");
-                        changed = true;
-                    }
-                }
+                    await Task.Delay(3000, ct).ContinueWith(_ => { });
 
-                if (changed) RaisePeersChanged();
+                    bool changed = false;
+                    var cutoff   = DateTime.UtcNow - TimeSpan.FromMilliseconds(PeerTimeoutMs);
+
+                    foreach (var kv in _peers)
+                    {
+                        if (kv.Value.LastSeen < cutoff)
+                        {
+                            _peers.TryRemove(kv.Key, out _);
+                            Log($"Cihaz gitti: {kv.Value.DisplayName}");
+                            changed = true;
+                        }
+                    }
+
+                    if (changed) RaisePeersChanged();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log($"Temizleme döngüsü hatası: {ex.Message}");
             }
         }
 
