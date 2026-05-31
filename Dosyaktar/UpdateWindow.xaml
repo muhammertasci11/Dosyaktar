@@ -1,0 +1,71 @@
+<Window x:Class="Dosyaktar.UpdateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Güncelleme Mevcut" Height="340" Width="480"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BackgroundBrush}"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False">
+
+    <Grid Margin="32">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>   <!-- Başlık -->
+            <RowDefinition Height="Auto"/>   <!-- Sürüm bilgisi -->
+            <RowDefinition Height="*"/>      <!-- Release notları -->
+            <RowDefinition Height="Auto"/>   <!-- İlerleme -->
+            <RowDefinition Height="Auto"/>   <!-- Butonlar -->
+        </Grid.RowDefinitions>
+
+        <!-- Başlık -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
+            <TextBlock Text="🔄" FontSize="28" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Yeni Sürüm Mevcut!" FontSize="18" FontWeight="Bold"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock x:Name="TxtVersionInfo" FontSize="13"
+                           Foreground="{StaticResource TextSecBrush}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Ayırıcı -->
+        <Border Grid.Row="1" Height="1" Background="{StaticResource BorderBrush}" Margin="0,0,0,12"/>
+
+        <!-- Release Notları -->
+        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                CornerRadius="6" Padding="12" Margin="0,0,0,16">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <TextBlock x:Name="TxtReleaseNotes" TextWrapping="Wrap" FontSize="12"
+                           Foreground="{StaticResource TextSecBrush}"
+                           Text="Değişiklik notları yükleniyor..."/>
+            </ScrollViewer>
+        </Border>
+
+        <!-- İlerleme (gizli, indirme başlayınca görünür) -->
+        <Grid Grid.Row="3" x:Name="ProgressPanel" Visibility="Collapsed" Margin="0,0,0,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="0,0,0,6">
+                <TextBlock Text="İndiriliyor..." FontSize="12" Foreground="{StaticResource TextSecBrush}"/>
+                <TextBlock x:Name="TxtDlPercent" Text="0%" FontSize="12" FontWeight="Bold"
+                           Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Right"/>
+            </Grid>
+            <ProgressBar Grid.Row="1" x:Name="PbDownload"
+                         Style="{StaticResource ModernProgress}" Value="0" Maximum="100"/>
+        </Grid>
+
+        <!-- Butonlar -->
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="BtnSkip" Content="Sonra Hatırlat"
+                    Style="{StaticResource SecondaryButton}"
+                    Padding="16,8" FontSize="13" Margin="0,0,10,0"
+                    Click="BtnSkip_Click"/>
+            <Button x:Name="BtnUpdate" Content="⬇  Güncelle"
+                    Style="{StaticResource PrimaryButton}"
+                    Padding="16,8" FontSize="13"
+                    Click="BtnUpdate_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

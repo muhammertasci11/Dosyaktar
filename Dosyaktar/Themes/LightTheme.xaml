@@ -1,0 +1,40 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         AÇIK TEMA — Light Theme
+         ════════════════════════════════════════════════════════════════════ -->
+
+    <Color x:Key="BackgroundColor">#F2F4F7</Color>
+    <Color x:Key="SurfaceColor">#FFFFFF</Color>
+    <Color x:Key="Surface2Color">#F8F9FB</Color>
+    <Color x:Key="BorderColor">#DDE1E7</Color>
+    <Color x:Key="AccentColor">#2563EB</Color>
+    <Color x:Key="AccentHoverColor">#1D4ED8</Color>
+    <Color x:Key="DangerColor">#EF4444</Color>
+    <Color x:Key="SuccessColor">#10B981</Color>
+    <Color x:Key="WarningColor">#F59E0B</Color>
+    <Color x:Key="TextPrimary">#111827</Color>
+    <Color x:Key="TextSecondary">#6B7280</Color>
+    <Color x:Key="TextMuted">#9CA3AF</Color>
+    <Color x:Key="TabBarColor">#EEF0F5</Color>
+    <Color x:Key="PeerCardHoverColor">#F0F4FF</Color>
+    <Color x:Key="DropZoneHighlightColor">#EEF2FF</Color>
+
+    <SolidColorBrush x:Key="BackgroundBrush"   Color="{StaticResource BackgroundColor}"/>
+    <SolidColorBrush x:Key="SurfaceBrush"      Color="{StaticResource SurfaceColor}"/>
+    <SolidColorBrush x:Key="Surface2Brush"     Color="{StaticResource Surface2Color}"/>
+    <SolidColorBrush x:Key="BorderBrush"       Color="{StaticResource BorderColor}"/>
+    <SolidColorBrush x:Key="AccentBrush"       Color="{StaticResource AccentColor}"/>
+    <SolidColorBrush x:Key="AccentHoverBrush"  Color="{StaticResource AccentHoverColor}"/>
+    <SolidColorBrush x:Key="DangerBrush"       Color="{StaticResource DangerColor}"/>
+    <SolidColorBrush x:Key="SuccessBrush"      Color="{StaticResource SuccessColor}"/>
+    <SolidColorBrush x:Key="WarningBrush"      Color="{StaticResource WarningColor}"/>
+    <SolidColorBrush x:Key="TextPrimaryBrush"  Color="{StaticResource TextPrimary}"/>
+    <SolidColorBrush x:Key="TextSecBrush"      Color="{StaticResource TextSecondary}"/>
+    <SolidColorBrush x:Key="TextMutedBrush"    Color="{StaticResource TextMuted}"/>
+    <SolidColorBrush x:Key="TabBarBrush"       Color="{StaticResource TabBarColor}"/>
+    <SolidColorBrush x:Key="PeerCardHoverBrush" Color="{StaticResource PeerCardHoverColor}"/>
+    <SolidColorBrush x:Key="DropZoneHighlightBrush" Color="{StaticResource DropZoneHighlightColor}"/>
+
+</ResourceDictionary>

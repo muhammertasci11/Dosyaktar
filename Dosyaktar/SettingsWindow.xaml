@@ -1,0 +1,196 @@
+<Window x:Class="Dosyaktar.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Ayarlar" Height="560" Width="600"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{DynamicResource BackgroundBrush}">
+
+    <Grid Margin="32,28,32,28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>  <!-- Başlık -->
+            <RowDefinition Height="*"/>     <!-- İçerik -->
+            <RowDefinition Height="Auto"/>  <!-- Kaydet/İptal -->
+        </Grid.RowDefinitions>
+
+        <!-- Başlık -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,22">
+            <Border Width="36" Height="36" Background="{DynamicResource AccentBrush}"
+                    CornerRadius="10" Margin="0,0,12,0">
+                <TextBlock Text="⚙" FontSize="18" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Ayarlar" FontSize="20" FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock Text="Uygulama tercihlerinizi yapılandırın"
+                           FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- İçerik -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <!-- ── Kayıt Klasörü ──────────────────────────────────────── -->
+                <Border Background="{DynamicResource SurfaceBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                        CornerRadius="12" Padding="18,14" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="📁  Kayıt Klasörü" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
+                        <TextBlock Text="Alınan dosyaların kaydedileceği klasör"
+                                   FontSize="11" Foreground="{DynamicResource TextMutedBrush}"
+                                   Margin="0,0,0,10"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Background="{DynamicResource Surface2Brush}"
+                                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1.5"
+                                    CornerRadius="8" Padding="12,9">
+                                <TextBlock x:Name="TxtSaveDir" FontSize="12"
+                                           Foreground="{DynamicResource TextPrimaryBrush}"
+                                           TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                            </Border>
+                            <Button Grid.Column="1" Content="Göz At"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Padding="14,9" FontSize="12" Margin="8,0,0,0"
+                                    Click="BtnBrowseDir_Click"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Port ──────────────────────────────────────────────── -->
+                <Border Background="{DynamicResource SurfaceBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                        CornerRadius="12" Padding="18,14" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="🔌  Transfer Port Numarası" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
+                        <TextBlock Text="Gönderici ve alıcıda aynı port numarası kullanılmalı (varsayılan: 5001)"
+                                   FontSize="11" Foreground="{DynamicResource TextMutedBrush}"
+                                   Margin="0,0,0,10" TextWrapping="Wrap"/>
+                        <Border Background="{DynamicResource Surface2Brush}"
+                                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1.5"
+                                CornerRadius="8" Padding="12,6" Width="160" HorizontalAlignment="Left">
+                            <TextBox x:Name="TxtPort" FontSize="13" BorderThickness="0"
+                                     Background="Transparent"
+                                     Foreground="{DynamicResource TextPrimaryBrush}"
+                                     VerticalContentAlignment="Center"/>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Görünüm ────────────────────────────────────────────── -->
+                <Border Background="{DynamicResource SurfaceBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                        CornerRadius="12" Padding="18,14" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="🎨  Görünüm" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Koyu Mod" FontSize="13"
+                                           Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Medium"/>
+                                <TextBlock Text="Gözlerinizi yormayan karanlık tema"
+                                           FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                            </StackPanel>
+                            <CheckBox x:Name="ChkDarkMode" Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      VerticalAlignment="Center"
+                                      Checked="ChkDarkMode_Changed"
+                                      Unchecked="ChkDarkMode_Changed"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Güncelleme ─────────────────────────────────────────── -->
+                <Border Background="{DynamicResource SurfaceBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                        CornerRadius="12" Padding="18,14" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="🔄  Güncelleme" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
+                        <!-- Güncelleme Kontrol -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Başlangıçta güncelleme kontrol et" FontSize="13"
+                                           Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Medium"/>
+                                <TextBlock Text="Her açılışta GitHub'dan yeni sürüm arar"
+                                           FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                            </StackPanel>
+                            <CheckBox x:Name="ChkUpdates" Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      VerticalAlignment="Center"/>
+                        </Grid>
+                        <!-- Otomatik Güncelle -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Otomatik güncelle" FontSize="13"
+                                               Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Medium"/>
+                                    <Border Background="{DynamicResource AccentBrush}" CornerRadius="4"
+                                            Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="ÖNERİLİR" FontSize="9" FontWeight="Bold" Foreground="White"/>
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="Yeni sürüm çıkınca arka planda indirilir ve tüm cihazlara uygulanır"
+                                           FontSize="11" Foreground="{DynamicResource TextMutedBrush}"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <CheckBox x:Name="ChkAutoUpdate" Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      VerticalAlignment="Center"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Uygulama ───────────────────────────────────────────── -->
+                <Border Background="{DynamicResource SurfaceBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                        CornerRadius="12" Padding="18,14">
+                    <StackPanel>
+                        <TextBlock Text="⚡  Uygulama" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Otomatik alma modu" FontSize="13"
+                                           Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Medium"/>
+                                <TextBlock Text="Uygulama açılınca dosya beklemeye başlar"
+                                           FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                            </StackPanel>
+                            <CheckBox x:Name="ChkAutoReceive" Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      VerticalAlignment="Center"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Alt Bilgi -->
+        <Grid Grid.Row="2" Margin="0,15,0,0">
+            <TextBlock x:Name="TxtVersion" FontSize="11"
+                       Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window>
