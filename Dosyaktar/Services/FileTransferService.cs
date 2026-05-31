@@ -160,9 +160,8 @@ namespace Dosyaktar.Services
                 writer.Flush();
 
                 long globalSent = 0;
-                var speedSamples = new (long bytes, DateTime time)[SpeedWindow];
-                int sampleIdx    = 0;
-                speedSamples[0]  = (0, DateTime.UtcNow);
+                var speedQueue = new Queue<(long bytes, DateTime time)>();
+                DateTime lastUiUpdate = DateTime.MinValue;
 
                 for (int i = 0; i < entries.Count; i++)
                 {
@@ -189,22 +188,35 @@ namespace Dosyaktar.Services
                         await stream.WriteAsync(buf.AsMemory(0, read), token);
                         globalSent += read;
 
-                        sampleIdx = (sampleIdx + 1) % SpeedWindow;
-                        speedSamples[sampleIdx] = (globalSent, DateTime.UtcNow);
-                        int prevIdx = (sampleIdx + 1) % SpeedWindow;
-                        var delta = speedSamples[sampleIdx].time - speedSamples[prevIdx].time;
-                        long dBytes = speedSamples[sampleIdx].bytes - speedSamples[prevIdx].bytes;
-                        double speedMBps = delta.TotalSeconds > 0 ? dBytes / delta.TotalSeconds / 1048576 : 0;
-                        long remaining   = totalBytes - globalSent;
-                        double seconds = speedMBps > 0 ? remaining / (speedMBps * 1048576) : double.MaxValue;
-                        var remTime = seconds > TimeSpan.MaxValue.TotalSeconds 
-                            ? TimeSpan.MaxValue 
-                            : TimeSpan.FromSeconds(seconds);
+                        var now = DateTime.UtcNow;
+                        speedQueue.Enqueue((globalSent, now));
 
-                        OnProgress(new TransferProgress(globalSent, totalBytes, speedMBps,
-                                                        remTime, Path.GetFileName(relName),
-                                                        i + 1, entries.Count));
-                    }
+                        // 5 saniyeden eski verileri kuyruktan çıkar (Hareketli Ortalama)
+                        while (speedQueue.Count > 1 && (now - speedQueue.Peek().time).TotalSeconds > 5)
+                        {
+                            speedQueue.Dequeue();
+                        }
+
+                        // UI Throttling: Arayüzü sadece 500ms'de bir güncelle
+                        if ((now - lastUiUpdate).TotalMilliseconds >= 500 || globalSent == totalBytes)
+                        {
+                            var oldest = speedQueue.Peek();
+                            var delta = now - oldest.time;
+                            long dBytes = globalSent - oldest.bytes;
+                            
+                            double speedMBps = delta.TotalSeconds > 0 ? (dBytes / delta.TotalSeconds) / 1048576.0 : 0;
+                            long remaining   = totalBytes - globalSent;
+                            double seconds = speedMBps > 0 ? remaining / (speedMBps * 1048576.0) : double.MaxValue;
+                            
+                            var remTime = seconds > TimeSpan.MaxValue.TotalSeconds 
+                                ? TimeSpan.MaxValue 
+                                : TimeSpan.FromSeconds(seconds);
+
+                            OnProgress(new TransferProgress(globalSent, totalBytes, speedMBps,
+                                                            remTime, Path.GetFileName(relName),
+                                                            i + 1, entries.Count));
+                            lastUiUpdate = now;
+                        }
                 }
 
                 await stream.FlushAsync(token);
@@ -276,9 +288,8 @@ namespace Dosyaktar.Services
 
                 long totalBytes = 0; // Bilinmiyor — toplam sonradan hesaplanır
                 long totalRecv  = 0;
-                var speedSamples = new (long bytes, DateTime time)[SpeedWindow];
-                int sampleIdx    = 0;
-                speedSamples[0]  = (0, DateTime.UtcNow);
+                var speedQueue = new Queue<(long bytes, DateTime time)>();
+                DateTime lastUiUpdate = DateTime.MinValue;
 
                 for (int i = 0; i < fileCount; i++)
                 {
@@ -327,21 +338,35 @@ namespace Dosyaktar.Services
                         received   += rd;
                         totalRecv  += rd;
 
-                        sampleIdx = (sampleIdx + 1) % SpeedWindow;
-                        speedSamples[sampleIdx] = (totalRecv, DateTime.UtcNow);
-                        int prevIdx  = (sampleIdx + 1) % SpeedWindow;
-                        var delta    = speedSamples[sampleIdx].time - speedSamples[prevIdx].time;
-                        long dBytes  = speedSamples[sampleIdx].bytes - speedSamples[prevIdx].bytes;
-                        double speed = delta.TotalSeconds > 0 ? dBytes / delta.TotalSeconds / 1048576 : 0;
-                        long rem     = fileSize - received;
-                        double seconds = speed > 0 ? rem / (speed * 1048576) : double.MaxValue;
-                        var remTime = seconds > TimeSpan.MaxValue.TotalSeconds 
-                            ? TimeSpan.MaxValue 
-                            : TimeSpan.FromSeconds(seconds);
+                        var now = DateTime.UtcNow;
+                        speedQueue.Enqueue((totalRecv, now));
 
-                        OnProgress(new TransferProgress(totalRecv, totalBytes > 0 ? totalBytes : fileSize,
-                                                        speed, remTime, Path.GetFileName(savePath),
-                                                        i + 1, fileCount));
+                        // 5 saniyeden eski verileri kuyruktan çıkar (Hareketli Ortalama)
+                        while (speedQueue.Count > 1 && (now - speedQueue.Peek().time).TotalSeconds > 5)
+                        {
+                            speedQueue.Dequeue();
+                        }
+
+                        // UI Throttling: Arayüzü sadece 500ms'de bir güncelle
+                        if ((now - lastUiUpdate).TotalMilliseconds >= 500 || received == fileSize)
+                        {
+                            var oldest = speedQueue.Peek();
+                            var delta = now - oldest.time;
+                            long dBytes = totalRecv - oldest.bytes;
+                            
+                            double speedMBps = delta.TotalSeconds > 0 ? (dBytes / delta.TotalSeconds) / 1048576.0 : 0;
+                            long remaining   = fileSize - received;
+                            double seconds = speedMBps > 0 ? remaining / (speedMBps * 1048576.0) : double.MaxValue;
+                            
+                            var remTime = seconds > TimeSpan.MaxValue.TotalSeconds 
+                                ? TimeSpan.MaxValue 
+                                : TimeSpan.FromSeconds(seconds);
+
+                            OnProgress(new TransferProgress(totalRecv, totalBytes > 0 ? totalBytes : fileSize,
+                                                            speedMBps, remTime, Path.GetFileName(savePath),
+                                                            i + 1, fileCount));
+                            lastUiUpdate = now;
+                        }
                     }
                 }
 
