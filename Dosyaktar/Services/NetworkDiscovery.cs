@@ -100,28 +100,49 @@ namespace Dosyaktar.Services
         {
             try
             {
-                string localIpStr = NetworkManager.GetLocalIP();
-                IPAddress localIp = IPAddress.Parse(localIpStr);
-                using var udp = new UdpClient(new IPEndPoint(localIp, 0));
-                udp.EnableBroadcast = true;
                 var endpoint = new IPEndPoint(IPAddress.Broadcast, DiscoveryPort);
 
                 while (!ct.IsCancellationRequested)
                 {
                     try
                     {
-                        string myIP = NetworkManager.GetLocalIP();
+                        string mainIP = NetworkManager.GetLocalIP();
                         var payload = new
                         {
                             hostname    = Environment.MachineName,
-                            ip          = myIP,
+                            ip          = mainIP,
                             port        = _transferPort,
                             version     = UpdateService.GetCurrentVersion().ToString(),
                             isReceiving = _isReceiving
                         };
 
                         byte[] data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(payload));
-                        await udp.SendAsync(data, data.Length, endpoint);
+
+                        // Tüm aktif arayüzlerden (VirtualBox vb. hariç) aynı anda yayınla
+                        var interfaces = NetworkInterface.GetAllNetworkInterfaces()
+                            .Where(n => n.OperationalStatus == OperationalStatus.Up && 
+                                        n.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
+                                        !n.Description.Contains("Virtual") &&
+                                        !n.Description.Contains("Hyper-V") &&
+                                        !n.Name.Contains("vEthernet") &&
+                                        !n.Name.Contains("WSL"));
+
+                        foreach (var nic in interfaces)
+                        {
+                            foreach (var addr in nic.GetIPProperties().UnicastAddresses)
+                            {
+                                if (addr.Address.AddressFamily == AddressFamily.InterNetwork)
+                                {
+                                    try
+                                    {
+                                        using var udp = new UdpClient(new IPEndPoint(addr.Address, 0));
+                                        udp.EnableBroadcast = true;
+                                        await udp.SendAsync(data, data.Length, endpoint);
+                                    }
+                                    catch { /* Bazı IP'ler broadcast'e izin vermeyebilir, yut */ }
+                                }
+                            }
+                        }
                     }
                     catch (Exception ex) when (!ct.IsCancellationRequested)
                     {

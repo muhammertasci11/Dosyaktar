@@ -33,8 +33,14 @@ namespace Dosyaktar.Services
         public static string GetLocalIP()
         {
             // Tüm ağ arayüzlerini tara: Önce Ethernet, sonra Wi-Fi. (İnterneti olmayan ama 1Gbps/10Gbps hızındaki lokal kablolu ağları tercih etmeli)
+            // VirtualBox, Hyper-V, vEthernet, WSL, Loopback, VPN tünelleri yoksayılır.
             var interfaces = NetworkInterface.GetAllNetworkInterfaces()
-                .Where(n => n.OperationalStatus == OperationalStatus.Up && n.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                .Where(n => n.OperationalStatus == OperationalStatus.Up && 
+                            n.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
+                            !n.Description.Contains("Virtual") &&
+                            !n.Description.Contains("Hyper-V") &&
+                            !n.Name.Contains("vEthernet") &&
+                            !n.Name.Contains("WSL"))
                 .OrderByDescending(n => n.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
                 .ThenByDescending(n => n.Speed)
                 .ToList();
