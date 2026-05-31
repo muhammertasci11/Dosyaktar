@@ -217,6 +217,7 @@ namespace Dosyaktar.Services
                                                             i + 1, entries.Count));
                             lastUiUpdate = now;
                         }
+                    }
                 }
 
                 await stream.FlushAsync(token);
