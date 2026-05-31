@@ -11,16 +11,17 @@
     <RootNamespace>Dosyaktar</RootNamespace>
 
     <!-- Sürüm — her release'de artırın: 1.0.0 → 1.1.0 → 1.2.0 -->
-    <Version>1.5.3</Version>
-    <AssemblyVersion>1.5.3.0</AssemblyVersion>
-    <FileVersion>1.5.3.0</FileVersion>
+    <Version>1.5.4</Version>
+    <AssemblyVersion>1.5.4.0</AssemblyVersion>
+    <FileVersion>1.5.4.0</FileVersion>
     <Product>Dosyaktar</Product>
     <Company>muhammertasci11</Company>
 
     <!-- Tek EXE — paylaşılabilir, kurulum gerektirmez -->
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <SelfContained>false</SelfContained>
+    <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <PublishReadyToRun>true</PublishReadyToRun>
     <!-- Hata ayıklama sembollerini EXE'ye gömme -->
     <DebugType>embedded</DebugType>
