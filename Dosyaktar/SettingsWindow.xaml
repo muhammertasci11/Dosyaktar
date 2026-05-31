@@ -162,7 +162,7 @@
                 <!-- ── Uygulama ───────────────────────────────────────────── -->
                 <Border Background="{DynamicResource SurfaceBrush}"
                         BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
-                        CornerRadius="12" Padding="18,14">
+                        CornerRadius="12" Padding="18,14" Margin="0,0,0,12">
                     <StackPanel>
                         <TextBlock Text="⚡  Uygulama" FontSize="13" FontWeight="SemiBold"
                                    Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
@@ -180,6 +180,32 @@
                             <CheckBox x:Name="ChkAutoReceive" Grid.Column="1"
                                       Style="{StaticResource ToggleSwitch}"
                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Ağ Sorun Giderme ────────────────────────────────────── -->
+                <Border Background="#1A10B981"
+                        BorderBrush="#3310B981" BorderThickness="1"
+                        CornerRadius="12" Padding="18,14">
+                    <StackPanel>
+                        <TextBlock Text="🛡  Ağ Sorun Giderme" FontSize="13" FontWeight="SemiBold"
+                                   Foreground="#10B981" Margin="0,0,0,12"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Güvenlik Duvarı İzinlerini Onar" FontSize="13"
+                                           Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Medium"/>
+                                <TextBlock Text="Ethernet üzerinden cihazlar birbirini bulamıyorsa bu tuşa basın. (Yönetici izni gerektirir)"
+                                           FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <Button Grid.Column="1" Content="Onar"
+                                    Style="{StaticResource PrimaryButton}"
+                                    Padding="14,9" FontSize="12" VerticalAlignment="Center"
+                                    Click="BtnFixFirewall_Click"/>
                         </Grid>
                     </StackPanel>
                 </Border>
