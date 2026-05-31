@@ -157,12 +157,7 @@ namespace Dosyaktar.Services
                     {
                         try
                         {
-                            // Timeout ile bekle
-                            var recvTask = udp.ReceiveAsync();
-                            if (await Task.WhenAny(recvTask, Task.Delay(1000, ct)) != recvTask)
-                                continue;
-
-                            var result = await recvTask; // recvTask.Result yerine await kullan (AggregateException olmasın)
+                            var result = await udp.ReceiveAsync(ct);
                             string json = Encoding.UTF8.GetString(result.Buffer);
 
                             using var doc  = JsonDocument.Parse(json);

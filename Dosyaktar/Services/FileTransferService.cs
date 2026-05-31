@@ -196,9 +196,10 @@ namespace Dosyaktar.Services
                         long dBytes = speedSamples[sampleIdx].bytes - speedSamples[prevIdx].bytes;
                         double speedMBps = delta.TotalSeconds > 0 ? dBytes / delta.TotalSeconds / 1048576 : 0;
                         long remaining   = totalBytes - globalSent;
-                        var  remTime     = speedMBps > 0
-                            ? TimeSpan.FromSeconds(remaining / (speedMBps * 1048576))
-                            : TimeSpan.MaxValue;
+                        double seconds = speedMBps > 0 ? remaining / (speedMBps * 1048576) : double.MaxValue;
+                        var remTime = seconds > TimeSpan.MaxValue.TotalSeconds 
+                            ? TimeSpan.MaxValue 
+                            : TimeSpan.FromSeconds(seconds);
 
                         OnProgress(new TransferProgress(globalSent, totalBytes, speedMBps,
                                                         remTime, Path.GetFileName(relName),
@@ -333,9 +334,10 @@ namespace Dosyaktar.Services
                         long dBytes  = speedSamples[sampleIdx].bytes - speedSamples[prevIdx].bytes;
                         double speed = delta.TotalSeconds > 0 ? dBytes / delta.TotalSeconds / 1048576 : 0;
                         long rem     = fileSize - received;
-                        var  remTime = speed > 0
-                            ? TimeSpan.FromSeconds(rem / (speed * 1048576))
-                            : TimeSpan.MaxValue;
+                        double seconds = speed > 0 ? rem / (speed * 1048576) : double.MaxValue;
+                        var remTime = seconds > TimeSpan.MaxValue.TotalSeconds 
+                            ? TimeSpan.MaxValue 
+                            : TimeSpan.FromSeconds(seconds);
 
                         OnProgress(new TransferProgress(totalRecv, totalBytes > 0 ? totalBytes : fileSize,
                                                         speed, remTime, Path.GetFileName(savePath),
