@@ -113,7 +113,8 @@ namespace Dosyaktar.Services
             OnStatus($"Klasör taranıyor: {Path.GetFileName(folderPath)}...");
 
             var entries = new List<(string path, string relName, long size)>();
-            string baseDir = folderPath;
+            // Klasörün kendisini kök olarak baz alarak içeriğin dağılmasını engelle (Steam common/OyunAdı vb.)
+            string baseDir = Path.GetDirectoryName(folderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)) ?? folderPath;
 
             foreach (var file in Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories))
             {
