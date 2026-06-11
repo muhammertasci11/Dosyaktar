@@ -1,4 +1,6 @@
+using System;
 using System.Windows;
+using System.Windows.Controls;
 using Dosyaktar.Helpers;
 using Dosyaktar.Services;
 
@@ -20,8 +22,32 @@ namespace Dosyaktar
             ChkAutoReceive.IsChecked = current.AutoReceive;
             ChkDarkMode.IsChecked    = current.DarkMode;
 
+            // Set language dropdown
+            foreach (ComboBoxItem item in CmbLanguage.Items)
+            {
+                if (item.Tag?.ToString() == current.Language)
+                {
+                    CmbLanguage.SelectedItem = item;
+                    break;
+                }
+            }
+
             // Alt sürüm etiketi
             TxtVersion.Text = $"Dosyaktar v{UpdateService.GetCurrentVersion()}";
+
+            CmbLanguage.SelectionChanged += CmbLanguage_SelectionChanged;
+        }
+
+        private void CmbLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CmbLanguage.SelectedItem is ComboBoxItem item && item.Tag != null)
+            {
+                string lang = item.Tag.ToString() ?? "tr";
+                var dict = new ResourceDictionary();
+                dict.Source = new Uri($"pack://application:,,,/Resources/Strings.{lang}.xaml", UriKind.Absolute);
+                // Language dictionary is at index 1
+                Application.Current.Resources.MergedDictionaries[1] = dict;
+            }
         }
 
         // Koyu Mod toggle → anında önizleme
@@ -84,12 +110,27 @@ netsh advfirewall firewall add rule name=""Dosyaktar"" dir=out action=allow prog
             }
         }
 
+        private void TitleBar_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
+                this.DragMove();
+        }
+
+        private void BtnCloseWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
         protected override void OnClosed(EventArgs e)
         {
             if (!int.TryParse(TxtPort.Text, out int port) || port < 1024 || port > 65535)
             {
                 port = FileTransferService.DefaultPort; // Geçersiz port ise varsayılana dön
             }
+
+            string lang = "tr";
+            if (CmbLanguage.SelectedItem is ComboBoxItem item && item.Tag != null)
+                lang = item.Tag.ToString() ?? "tr";
 
             var newSettings = new AppSettings
             {
@@ -99,7 +140,8 @@ netsh advfirewall firewall add rule name=""Dosyaktar"" dir=out action=allow prog
                 AutoUpdate    = ChkAutoUpdate.IsChecked == true,
                 AutoReceive   = ChkAutoReceive.IsChecked == true,
                 DarkMode      = ChkDarkMode.IsChecked   == true,
-                LastTargetIP  = _originalSettings.LastTargetIP
+                LastTargetIP  = _originalSettings.LastTargetIP,
+                Language      = lang
             };
             
             SettingsService.Save(newSettings);
@@ -114,7 +156,8 @@ netsh advfirewall firewall add rule name=""Dosyaktar"" dir=out action=allow prog
             AutoUpdate    = s.AutoUpdate,
             AutoReceive   = s.AutoReceive,
             DarkMode      = s.DarkMode,
-            LastTargetIP  = s.LastTargetIP
+            LastTargetIP  = s.LastTargetIP,
+            Language      = s.Language
         };
     }
 }

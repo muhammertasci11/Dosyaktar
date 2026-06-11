@@ -14,6 +14,7 @@ namespace Dosyaktar.Services
         public bool   AutoReceive   { get; set; } = false;
         public bool   DarkMode      { get; set; } = false;
         public string LastTargetIP  { get; set; } = string.Empty;
+        public string Language      { get; set; } = "tr";
 
         public static string DefaultSaveDir =>
             Path.Combine(

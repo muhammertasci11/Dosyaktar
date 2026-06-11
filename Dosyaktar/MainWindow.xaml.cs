@@ -52,6 +52,7 @@ namespace Dosyaktar
         private static readonly SolidColorBrush GreenBrush  = new(Color.FromRgb(0x10, 0xB9, 0x81));
         private static readonly SolidColorBrush RedBrush    = new(Color.FromRgb(0xEF, 0x44, 0x44));
         private static readonly SolidColorBrush OrangeBrush = new(Color.FromRgb(0xF5, 0x9E, 0x0B));
+        private static readonly SolidColorBrush YellowBrush = new(Color.FromRgb(0xEA, 0xB3, 0x08));
         private static readonly SolidColorBrush BlueBrush   = new(Color.FromRgb(0x37, 0x7E, 0xF7));
         private static readonly SolidColorBrush GrayBrush   = new(Color.FromRgb(0x6B, 0x72, 0x80));
 
@@ -65,7 +66,7 @@ namespace Dosyaktar
                 _initialized = true;
 
                 FileListControl.ItemsSource  = _files;
-                PeerItemsControl.ItemsSource = _peers;
+                PeerList.ItemsSource = _peers;
 
                 WireEvents();
                 UpdateRoleUI();
@@ -253,21 +254,38 @@ namespace Dosyaktar
             if (!_initialized) return;
             bool isSender = RbSender.IsChecked == true;
 
-            DropZone.IsEnabled = isSender;
-            DropZone.Opacity   = isSender ? 1.0 : 0.55;
+            if (DropZoneBorder != null)
+                DropZoneBorder.Visibility = isSender ? Visibility.Visible : Visibility.Collapsed;
+            
+            if (ReceiveModeUI != null)
+                ReceiveModeUI.Visibility = isSender ? Visibility.Collapsed : Visibility.Visible;
 
-            TxtTargetLabel.Text = isSender ? "Hedef Cihaz" : "Gönderici Cihaz (opsiyonel)";
+            if (TxtTargetLabel != null)
+                TxtTargetLabel.Text = isSender ? "Hedef Cihaz" : "Gönderici Cihaz (opsiyonel)";
 
-            BtnSend.Visibility    = isSender ? Visibility.Visible   : Visibility.Collapsed;
-            BtnReceive.Visibility = isSender ? Visibility.Collapsed : Visibility.Visible;
-
-            BtnSend.IsEnabled    = isSender && _files.Count > 0 && !_isBusy;
-            BtnReceive.IsEnabled = !isSender && !_isBusy;
+            if (BtnSend != null)
+            {
+                BtnSend.Visibility = isSender ? Visibility.Visible : Visibility.Collapsed;
+                BtnSend.IsEnabled = isSender && _files.Count > 0 && !_isBusy;
+            }
 
             // Discovery'ye modunu bildir
             _discovery.SetReceivingMode(!isSender);
+            
+            if (TxtReceiveSavePath != null)
+            {
+                if (string.IsNullOrEmpty(_settings.SaveDirectory))
+                {
+                    _settings.SaveDirectory = System.IO.Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                        "Dosyaktar Alınanlar");
+                    SettingsService.Save(_settings);
+                }
+                TxtReceiveSavePath.Text = _settings.SaveDirectory;
+            }
 
-            TxtTransferFile.Text = isSender ? "Bekleniyor..." : "Bağlantı bekleniyor...";
+            if (TxtTransferFile != null)
+                TxtTransferFile.Text = isSender ? "Bekleniyor..." : "Bağlantı bekleniyor...";
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -465,9 +483,26 @@ namespace Dosyaktar
         //  Transfer — AL
         // ═════════════════════════════════════════════════════════════════════
 
+        private void BtnChangeReceivePath_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new Microsoft.Win32.OpenFolderDialog { Title = "Alınan Dosyalar Klasörü" };
+            if (dlg.ShowDialog() == true)
+            {
+                _settings.SaveDirectory = dlg.FolderName;
+                SettingsService.Save(_settings);
+                if (TxtReceiveSavePath != null)
+                    TxtReceiveSavePath.Text = dlg.FolderName;
+                AppendLog($"Kayıt dizini değiştirildi: {dlg.FolderName}");
+            }
+        }
+
         private async void BtnReceive_Click(object sender, RoutedEventArgs e)
         {
             SetBusy(true);
+
+            if (BtnCancelReceive != null) BtnCancelReceive.Visibility = Visibility.Visible;
+            if (BtnReceive != null) BtnReceive.Visibility = Visibility.Collapsed;
+            if (RbSender != null) RbSender.IsEnabled = false;
 
             string saveDir = _settings.SaveDirectory;
             if (string.IsNullOrEmpty(saveDir) || !Directory.Exists(saveDir))
@@ -491,6 +526,10 @@ namespace Dosyaktar
 
             SetBusy(false);
 
+            if (BtnCancelReceive != null) BtnCancelReceive.Visibility = Visibility.Collapsed;
+            if (BtnReceive != null) BtnReceive.Visibility = Visibility.Visible;
+            if (RbSender != null) RbSender.IsEnabled = true;
+
             if (result.Success)
             {
                 SetProgressDone();
@@ -502,6 +541,16 @@ namespace Dosyaktar
                 MessageBox.Show($"Alma başarısız:\n{result.Message}",
                     "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            else 
+            {
+                SetStatus("İptal Edildi", YellowBrush);
+                TxtTransferFile.Text = "Bekleme iptal edildi.";
+            }
+        }
+
+        private void BtnCancelReceive_Click(object sender, RoutedEventArgs e)
+        {
+            _xfer.Cancel();
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -631,6 +680,80 @@ namespace Dosyaktar
             _discovery.Dispose();
             _xfer.Cancel();
             _net.Dispose();
+        }
+
+        private void BtnRefresh_Click(object sender, RoutedEventArgs e) 
+        { 
+            _peers.Clear(); 
+            _discovery.Stop(); 
+            int port = _settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort; 
+            _discovery.Start(port, isReceiving: false); 
+        }
+
+        private void BtnSendToPeer_Click(object sender, RoutedEventArgs e) 
+        { 
+            if ((sender as System.Windows.Controls.Button)?.Tag is DiscoveredPeer peer) 
+            { 
+                _selectedPeer = peer; 
+                BtnSend_Click(null, null); 
+            } 
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
+        }
+
+        private void BtnMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void BtnMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+                this.WindowState = WindowState.Normal;
+            else
+                this.WindowState = WindowState.Maximized;
+        }
+
+        private void BtnCloseWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void BtnNav_Checked(object sender, RoutedEventArgs e)
+        {
+            if (PanelDiscovery == null) return; // Henüz initialize olmadıysa
+
+            PanelDiscovery.Visibility = Visibility.Collapsed;
+            PanelActive.Visibility    = Visibility.Collapsed;
+            PanelHistory.Visibility   = Visibility.Collapsed;
+
+            System.Windows.Controls.Grid activePanel = null;
+
+            if (BtnNavDiscovery.IsChecked == true)
+                activePanel = PanelDiscovery;
+            else if (BtnNavActive.IsChecked == true)
+                activePanel = PanelActive;
+            else if (BtnNavHistory.IsChecked == true)
+                activePanel = PanelHistory;
+
+            if (activePanel != null)
+            {
+                activePanel.Visibility = Visibility.Visible;
+                
+                // Fade-in animasyonu ekle
+                System.Windows.Media.Animation.DoubleAnimation fadeIn = new System.Windows.Media.Animation.DoubleAnimation
+                {
+                    From = 0.0,
+                    To = 1.0,
+                    Duration = new Duration(TimeSpan.FromMilliseconds(250)),
+                    EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
+                };
+                activePanel.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+            }
         }
     }
 }

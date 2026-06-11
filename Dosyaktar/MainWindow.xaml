@@ -1,415 +1,498 @@
 <Window x:Class="Dosyaktar.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Dosyaktar" Height="700" Width="860"
-        MinHeight="600" MinWidth="700"
+        Title="Dosyaktar" Height="750" Width="1100"
+        MinHeight="700" MinWidth="1000"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource BackgroundBrush}"
+        Icon="Assets/icon.png"
+        WindowStyle="None"
+        AllowsTransparency="True"
         Closing="Window_Closing">
 
-    <Grid Margin="32,28,32,28">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>   <!-- Başlık -->
-            <RowDefinition Height="Auto"/>   <!-- Rol Tab -->
-            <RowDefinition Height="Auto"/>   <!-- Bağlantı Paneli -->
-            <RowDefinition Height="*"/>      <!-- İçerik -->
-            <RowDefinition Height="Auto"/>   <!-- İlerleme -->
-            <RowDefinition Height="Auto"/>   <!-- Aksiyon -->
-        </Grid.RowDefinitions>
+    <Window.Resources>
+        <!-- Modern ScrollBar -->
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Width" Value="8" />
+        </Style>
+        
+        <!-- ToggleButton for Dosya Gönder / Al -->
+        <Style x:Key="ModernTabButton" TargetType="RadioButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="border" Background="Transparent" CornerRadius="20" Padding="16,8" Cursor="Hand">
+                            <TextBlock Text="{TemplateBinding Content}" Foreground="{DynamicResource TextMutedBrush}" FontWeight="SemiBold" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource SurfaceBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource Surface2Brush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-        <!-- ═══ 1. BAŞLIK ═══════════════════════════════════════════════════ -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Border Width="38" Height="38" Background="{DynamicResource AccentBrush}"
-                        CornerRadius="10" Margin="0,0,12,0">
-                    <TextBlock Text="📁" FontSize="18" HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
-                </Border>
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Dosyaktar" FontSize="22" FontWeight="Bold"
-                               Foreground="{DynamicResource TextPrimaryBrush}"/>
-                    <TextBlock Text="Aynı ağdaki cihazları otomatik bulur"
-                               FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
-                </StackPanel>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Border x:Name="StatusPill" Background="{DynamicResource Surface2Brush}" CornerRadius="20"
-                        Padding="10,5" Margin="0,0,12,0">
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse x:Name="StatusDot" Width="7" Height="7"
-                                 Fill="{DynamicResource SuccessBrush}" Margin="0,0,6,0"/>
-                        <TextBlock x:Name="TxtStatus" Text="Hazır" FontSize="12" FontWeight="SemiBold"
-                                   Foreground="{DynamicResource SuccessBrush}"/>
-                    </StackPanel>
-                </Border>
-                <Button Content="🎮 Oyun Taşı" Style="{DynamicResource SecondaryButton}"
-                        Padding="12,7" FontSize="12" Margin="0,0,8,0"
-                        Click="BtnGameTransfer_Click"/>
-                <Button x:Name="BtnSettings" Style="{DynamicResource IconButton}"
-                        Width="36" Height="36" Click="BtnSettings_Click" ToolTip="Ayarlar">
-                    <TextBlock Text="⚙" FontSize="16"/>
-                </Button>
-            </StackPanel>
-        </Grid>
+        <!-- Sidebar Button Style -->
+        <Style x:Key="SidebarButton" TargetType="RadioButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="border" Background="Transparent" CornerRadius="8" Padding="12,12" Margin="16,4" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" FontFamily="Segoe UI Emoji" Margin="0,0,12,0" FontSize="16" Foreground="{DynamicResource TextSecBrush}"/>
+                                <TextBlock Text="{TemplateBinding Content}" Foreground="{DynamicResource TextSecBrush}" FontWeight="Medium" FontSize="14" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource Surface2Brush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1A1A24" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-        <!-- ═══ 2. ROL TAB ══════════════════════════════════════════════════ -->
-        <Border Grid.Row="1" Background="{DynamicResource TabBarBrush}" CornerRadius="12"
-                Padding="4" Margin="0,0,0,16">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <RadioButton x:Name="RbSender" Grid.Column="0"
-                             Content="📤  Dosya Gönder" IsChecked="True"
-                             Style="{DynamicResource RoleTabButton}"
-                             Checked="Role_Checked"/>
-                <RadioButton x:Name="RbReceiver" Grid.Column="1"
-                             Content="📥  Dosya Al"
-                             Style="{DynamicResource RoleTabButton}"
-                             Checked="Role_Checked"/>
-            </Grid>
-        </Border>
-
-        <!-- ═══ 3. ANA İÇERİK (Cihazlar + Drop Zone yan yana) ══════════════ -->
-        <Grid Grid.Row="2" Margin="0,0,0,16">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="260"/>   <!-- Cihaz Listesi -->
-                <ColumnDefinition Width="16"/>    <!-- Boşluk -->
-                <ColumnDefinition Width="*"/>     <!-- Bağlantı Detayları -->
-            </Grid.ColumnDefinitions>
-
-            <!-- ── Cihaz Listesi Paneli ─────────────────────────────────── -->
-            <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}"
-                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
-                    CornerRadius="12" Padding="0">
+        <!-- Peer Card Style -->
+        <DataTemplate x:Key="PeerCardTemplate">
+            <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,0,16,0" Width="220" Cursor="Hand">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Başlık -->
-                    <Border Grid.Row="0" Padding="14,12" BorderBrush="{DynamicResource BorderBrush}"
-                            BorderThickness="0,0,0,1">
-                        <Grid>
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="Yakındaki Cihazlar" FontSize="13" FontWeight="SemiBold"
-                                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                <Border x:Name="PeerCountBadge" Background="{DynamicResource AccentBrush}"
-                                        CornerRadius="10" Padding="6,2" Margin="8,0,0,0"
-                                        Visibility="Collapsed">
-                                    <TextBlock x:Name="TxtPeerCount" Text="0" FontSize="11"
-                                               FontWeight="Bold" Foreground="White"/>
-                                </Border>
-                            </StackPanel>
-                            <!-- Tarama animasyonu -->
-                            <Border x:Name="ScanningIndicator" HorizontalAlignment="Right"
-                                    VerticalAlignment="Center">
-                                <TextBlock x:Name="TxtScanning" Text="📡" FontSize="14"/>
-                            </Border>
-                        </Grid>
-                    </Border>
-
-                    <!-- Cihaz Listesi -->
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <StackPanel x:Name="PeerListPanel" Margin="8">
-
-                            <!-- Boş durum -->
-                            <StackPanel x:Name="NoPeersHint" VerticalAlignment="Center"
-                                        HorizontalAlignment="Center" Margin="0,30,0,0">
-                                <TextBlock Text="📡" FontSize="32" HorizontalAlignment="Center"
-                                           Margin="0,0,0,10"/>
-                                <TextBlock Text="Taranıyor..." FontSize="13" FontWeight="Medium"
-                                           Foreground="{DynamicResource TextSecBrush}"
-                                           HorizontalAlignment="Center"/>
-                                <TextBlock Text="Diğer PC'de de Dosyaktar açık olsun"
-                                           FontSize="11" Foreground="{DynamicResource TextMutedBrush}"
-                                           HorizontalAlignment="Center" TextWrapping="Wrap"
-                                           TextAlignment="Center" Margin="10,6,10,0"/>
-                            </StackPanel>
-
-                            <!-- Cihaz öğeleri (kod tarafından eklenir) -->
-                            <ItemsControl x:Name="PeerItemsControl">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border x:Name="peerCard"
-                                                Background="Transparent"
-                                                BorderBrush="{DynamicResource BorderBrush}"
-                                                BorderThickness="1"
-                                                CornerRadius="10" Padding="12,10"
-                                                Margin="0,3" Cursor="Hand"
-                                                MouseDown="PeerCard_Click"
-                                                Tag="{Binding}">
-                                            <Border.Style>
-                                                <Style TargetType="Border">
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Background" Value="#F0F4FF"/>
-                                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Border.Style>
-                                            <Grid>
-                                                <StackPanel>
-                                                    <TextBlock Text="{Binding Hostname}" FontSize="13"
-                                                               FontWeight="SemiBold"
-                                                               Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                                    <TextBlock Text="{Binding IP}" FontSize="11"
-                                                               Foreground="{DynamicResource TextSecBrush}"/>
-                                                    <TextBlock Text="{Binding StatusText}" FontSize="11"
-                                                               Foreground="{DynamicResource SuccessBrush}"
-                                                               Margin="0,2,0,0"/>
-                                                </StackPanel>
-                                                <!-- Seçili göstergesi -->
-                                                <TextBlock Text="→" FontSize="16" FontWeight="Bold"
-                                                           Foreground="{DynamicResource AccentBrush}"
-                                                           HorizontalAlignment="Right"
-                                                           VerticalAlignment="Center"/>
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </ScrollViewer>
-                </Grid>
-            </Border>
-
-            <!-- ── Sağ Taraf: IP + Kendi Bilgi ─────────────────────────── -->
-            <StackPanel Grid.Column="2" VerticalAlignment="Stretch">
-
-                <!-- Kendi IP kartı -->
-                <Border Background="{DynamicResource SurfaceBrush}"
-                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
-                        CornerRadius="10" Padding="16,12" Margin="0,0,0,10">
-                    <Grid>
+                    <Grid Grid.Row="0" Margin="0,0,0,16">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="Bu Bilgisayarın IP Adresi" FontSize="11" FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextSecBrush}" Margin="0,0,0,4"/>
-                            <TextBlock x:Name="TxtMyIP" Text="—" FontSize="18" FontWeight="Bold"
-                                       Foreground="{DynamicResource AccentBrush}"/>
-                            <TextBlock x:Name="TxtHostname" Text="" FontSize="11"
-                                       Foreground="{DynamicResource TextMutedBrush}" Margin="0,2,0,0"/>
+                        
+                        <Border Width="36" Height="36" Background="{DynamicResource Surface2Brush}" CornerRadius="8" Margin="0,0,12,0">
+                            <TextBlock Text="💻" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
+                        </Border>
+                        
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="14" Margin="0,0,0,2"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Müsait • PC" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
+                            </StackPanel>
                         </StackPanel>
-                        <Border Grid.Column="1" Background="{DynamicResource DropZoneHighlightBrush}" CornerRadius="8"
-                                Padding="10,6" VerticalAlignment="Center">
-                            <TextBlock Text="📋 Paylaş" FontSize="11" FontWeight="SemiBold"
-                                       Foreground="{DynamicResource AccentBrush}"
-                                       Cursor="Hand" MouseDown="CopyIP_Click"/>
-                        </Border>
+
+                        <Ellipse Grid.Column="2" Width="8" Height="8" Fill="{DynamicResource SuccessBrush}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,4,0,0"/>
                     </Grid>
-                </Border>
 
-                <!-- Hedef IP (manuel giriş veya cihaz seçilince otomatik dolar) -->
-                <Border Background="{DynamicResource SurfaceBrush}"
-                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
-                        CornerRadius="10" Padding="16,12">
-                    <StackPanel>
-                        <TextBlock x:Name="TxtTargetLabel" Text="Hedef Cihaz"
-                                   FontSize="11" FontWeight="SemiBold"
-                                   Foreground="{DynamicResource TextSecBrush}" Margin="0,0,0,8"/>
+                    <TextBlock Grid.Row="1" Text="{Binding IpAddress}" Foreground="{DynamicResource TextMutedBrush}" FontSize="10" Margin="0,0,0,16"/>
 
-                        <!-- Seçili Cihaz -->
-                        <Border x:Name="SelectedPeerCard" Visibility="Collapsed"
-                                Background="{DynamicResource Surface2Brush}" BorderBrush="{DynamicResource SuccessBrush}"
-                                BorderThickness="1.5" CornerRadius="8" Padding="12,8">
-                            <Grid>
-                                <StackPanel>
-                                    <TextBlock x:Name="TxtSelectedPeerName" FontSize="13"
-                                               FontWeight="SemiBold"
-                                               Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                    <TextBlock x:Name="TxtSelectedPeerIP" FontSize="11"
-                                               Foreground="{DynamicResource TextSecBrush}"/>
-                                </StackPanel>
-                                <Button Style="{DynamicResource IconButton}" HorizontalAlignment="Right"
-                                        VerticalAlignment="Center" Click="BtnClearPeer_Click"
-                                        ToolTip="Seçimi kaldır">
-                                    <TextBlock Text="✕" FontSize="12"
-                                               Foreground="{DynamicResource TextSecBrush}"/>
-                                </Button>
-                            </Grid>
+                    <Button Grid.Row="2" Content="▷ Dosya Gönder" Background="{DynamicResource Surface2Brush}" Foreground="{DynamicResource TextSecBrush}" BorderThickness="0" Height="32" Tag="{Binding}" Click="BtnSendToPeer_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.FontSize="12" TextElement.FontWeight="SemiBold"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        
+        <!-- Window Control Button Style -->
+        <Style x:Key="WindowControlBtn" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecBrush}"/>
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource Surface2Brush}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style x:Key="WindowCloseBtn" TargetType="Button" BasedOn="{StaticResource WindowControlBtn}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E81123"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
-                        <!-- Manuel IP girişi -->
-                        <Grid x:Name="ManualIPPanel">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBox x:Name="TxtTargetIP" Grid.Column="0"
-                                     Style="{DynamicResource ModernTextBox}"
-                                     FontSize="13" FontWeight="Bold"
-                                     ToolTip="Sol listeden cihaz seçin veya IP girin"/>
-                            <Button x:Name="BtnTestConn" Grid.Column="1" Content="Test"
-                                    Style="{DynamicResource SecondaryButton}"
-                                    Padding="12,8" FontSize="12" Margin="8,0,0,0"
-                                    Click="BtnTestConn_Click"/>
-                        </Grid>
-                        <TextBlock x:Name="TxtConnStatus" Text="" FontSize="11"
-                                   Foreground="{DynamicResource TextSecBrush}" Margin="0,6,0,0"/>
-                    </StackPanel>
-                </Border>
-            </StackPanel>
-        </Grid>
+        <!-- Success Button Style -->
+        <Style x:Key="SuccessButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource SuccessBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#059669"/> <!-- Darker Green -->
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource Surface2Brush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
-        <!-- ═══ 4. DROP ZONE ════════════════════════════════════════════════ -->
-        <Border Grid.Row="3" x:Name="DropZone"
-                Background="{DynamicResource SurfaceBrush}"
-                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2"
-                CornerRadius="12" AllowDrop="True"
-                DragEnter="DropZone_DragEnter" DragLeave="DropZone_DragLeave"
-                Drop="DropZone_Drop" MouseDown="DropZone_MouseDown"
-                Margin="0,0,0,12" Cursor="Hand">
+    <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Background="{DynamicResource BackgroundBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-            <Grid>
-                <!-- Boş State -->
-                <StackPanel x:Name="DropHint" VerticalAlignment="Center"
-                            HorizontalAlignment="Center" Margin="0,30,0,30">
-                    <Border Background="{DynamicResource DropZoneHighlightBrush}" Width="64" Height="64" CornerRadius="18"
-                            HorizontalAlignment="Center" Margin="0,0,0,16">
-                        <TextBlock Text="📂" FontSize="32" HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"/>
-                    </Border>
-                    <TextBlock Text="Dosyaları sürükleyip bırakın" FontSize="15" FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextPrimaryBrush}"
-                               HorizontalAlignment="Center"/>
-                    <TextBlock Text="veya tıklayarak seçin — sınırsız dosya" FontSize="12"
-                               Foreground="{DynamicResource TextSecBrush}"
-                               HorizontalAlignment="Center" Margin="0,5,0,20"/>
-                    <Button Content="Dosya Seç" Style="{DynamicResource SecondaryButton}"
-                            Padding="20,10" FontSize="13" HorizontalAlignment="Center"
-                            Click="BtnBrowse_Click"/>
+            <!-- ═══ Custom Title Bar ═══ -->
+            <Grid Grid.Row="0" Background="{DynamicResource SurfaceBrush}" MouseLeftButtonDown="TitleBar_MouseDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="16,0,0,0">
+                    <Image Source="Assets/icon.png" Width="16" Height="16" Margin="0,0,8,0" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <TextBlock Text="Dosyaktar" Foreground="{DynamicResource TextSecBrush}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </StackPanel>
 
-                <!-- Dosya Listesi State -->
-                <Grid x:Name="FileListPanel" Visibility="Collapsed" Margin="18,14,18,14">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button Content="—" Style="{StaticResource WindowControlBtn}" Click="BtnMinimize_Click"/>
+                    <Button Content="☐" Style="{StaticResource WindowControlBtn}" Click="BtnMaximize_Click"/>
+                    <Button Content="✕" Style="{StaticResource WindowCloseBtn}" Click="BtnCloseWindow_Click"/>
+                </StackPanel>
+            </Grid>
 
-                    <!-- Özet + Butonlar -->
-                    <Grid Grid.Row="0" Margin="0,0,0,10">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Border Background="{DynamicResource Surface2Brush}" CornerRadius="6" Padding="8,4" Margin="0,0,10,0">
-                                <TextBlock Text="✓" FontSize="12" Foreground="{DynamicResource SuccessBrush}"
-                                           FontWeight="Bold"/>
-                            </Border>
-                            <TextBlock x:Name="TxtFileCount" FontSize="13" FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextPrimaryBrush}"
-                                       VerticalAlignment="Center"/>
+            <!-- ═══ Main Content Area ═══ -->
+            <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260" /> <!-- Sidebar -->
+            <ColumnDefinition Width="*" />   <!-- Main Area -->
+            <ColumnDefinition Width="340" /> <!-- Queue -->
+        </Grid.ColumnDefinitions>
+
+        <!-- ═══ 1. LEFT SIDEBAR ═══════════════════════════════════════════════════ -->
+        <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Logo -->
+                <StackPanel Orientation="Horizontal" Margin="24,32,24,40">
+                    <Border Width="40" Height="40" Background="{DynamicResource AccentBrush}" CornerRadius="10" Margin="0,0,12,0">
+                        <TextBlock Text="⇄" Foreground="White" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Dosyaktar" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        <TextBlock Text="{DynamicResource Text_AppSubtitle}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Navigation -->
+                <StackPanel Grid.Row="1">
+                    <RadioButton x:Name="BtnNavDiscovery" Content="{DynamicResource Text_NavDiscovery}" Tag="🧭" Style="{DynamicResource SidebarButton}" IsChecked="True" Checked="BtnNav_Checked"/>
+                    <RadioButton x:Name="BtnNavActive" Content="{DynamicResource Text_NavActive}" Tag="⇄" Style="{DynamicResource SidebarButton}" Checked="BtnNav_Checked"/>
+                    <RadioButton x:Name="BtnNavHistory" Content="{DynamicResource Text_NavHistory}" Tag="🕒" Style="{DynamicResource SidebarButton}" Checked="BtnNav_Checked"/>
+                    <RadioButton Content="{DynamicResource Text_NavGames}" Tag="🎮" Style="{DynamicResource SidebarButton}" Click="BtnGameTransfer_Click"/>
+                </StackPanel>
+
+                <!-- Footer -->
+                <StackPanel Grid.Row="2" Margin="16,24">
+                    <Button x:Name="BtnSettings" Background="Transparent" Foreground="{DynamicResource TextSecBrush}" BorderThickness="0" HorizontalAlignment="Left" Padding="12" Click="BtnSettings_Click" Cursor="Hand" FontSize="14" FontWeight="Medium">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="⚙ "/>
+                            <TextBlock Text="{DynamicResource Text_Settings}"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button Content="+ Ekle" Style="{DynamicResource SecondaryButton}"
-                                    Padding="10,5" FontSize="12" Margin="0,0,8,0"
-                                    Click="BtnBrowse_Click"/>
-                            <Button Content="Temizle" Style="{DynamicResource DangerButton}"
-                                    Padding="10,5" FontSize="12"
-                                    Click="BtnClearFiles_Click"/>
-                        </StackPanel>
-                    </Grid>
-
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <ItemsControl x:Name="FileListControl">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Background="{DynamicResource Surface2Brush}"
-                                            CornerRadius="8" Margin="0,3" Padding="12,8"
-                                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
-                                        <Grid>
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <TextBlock Text="📄" FontSize="13" Margin="0,0,8,0"
-                                                           VerticalAlignment="Center"/>
-                                                <StackPanel>
-                                                    <TextBlock Text="{Binding Name}" FontSize="12" FontWeight="Medium"
-                                                               Foreground="{DynamicResource TextPrimaryBrush}"
-                                                               MaxWidth="420" TextTrimming="CharacterEllipsis"/>
-                                                    <TextBlock Text="{Binding SizeText}" FontSize="11"
-                                                               Foreground="{DynamicResource TextSecBrush}"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                            <Button Content="✕" Style="{DynamicResource IconButton}"
-                                                    HorizontalAlignment="Right" VerticalAlignment="Center"
-                                                    Width="26" Height="26" Padding="4" FontSize="10"
-                                                    Tag="{Binding}" Click="BtnRemoveFile_Click"
-                                                    Foreground="{DynamicResource DangerBrush}"/>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-
-                    <TextBlock Grid.Row="2" Text="Daha fazla dosya eklemek için buraya sürükleyin"
-                               FontSize="11" Foreground="{DynamicResource TextMutedBrush}"
-                               HorizontalAlignment="Center" Margin="0,8,0,0"/>
-                </Grid>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="Transparent">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button Content="{DynamicResource Text_PairDevice}" Foreground="White" FontWeight="Bold" FontSize="12" Margin="0,16,0,0" Height="40" Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{DynamicResource PairDeviceGradientBrush}" CornerRadius="8">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
             </Grid>
         </Border>
 
-        <!-- ═══ 5. İLERLEME ════════════════════════════════════════════════ -->
-        <Border Grid.Row="4" Background="{DynamicResource SurfaceBrush}"
-                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
-                CornerRadius="10" Padding="14,10" Margin="0,0,0,12">
-            <StackPanel>
-                <Grid Margin="0,0,0,6">
-                    <TextBlock x:Name="TxtTransferFile" Text="Bekleniyor..." FontSize="13"
-                               Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Medium"/>
-                    <TextBlock x:Name="TxtPercent" Text="0%" FontSize="13" FontWeight="Bold"
-                               Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right"/>
-                </Grid>
-                <ProgressBar x:Name="PbTransfer" Style="{DynamicResource ModernProgress}"
-                             Value="0" Maximum="100" Margin="0,0,0,6"/>
-                <Grid>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Hız: " FontSize="11" Foreground="{DynamicResource TextSecBrush}"/>
-                        <TextBlock x:Name="TxtSpeed" Text="—" FontSize="11"
-                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <TextBlock Text="Kalan: " FontSize="11" Foreground="{DynamicResource TextSecBrush}"/>
-                        <TextBlock x:Name="TxtRemaining" Text="—" FontSize="11"
-                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
-        </Border>
+        <!-- ═══ 2. MAIN AREA ══════════════════════════════════════════════════════ -->
+        <Grid Grid.Column="1" Margin="40">
+            <!-- 2.A: Discovery Panel -->
+            <Grid x:Name="PanelDiscovery" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-        <!-- ═══ 6. AKSİYON ════════════════════════════════════════════════ -->
-        <Grid Grid.Row="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0" Margin="0,0,0,24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource Text_NearbyDevices}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,6"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="8" Height="8" Fill="{DynamicResource SuccessBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Scanning local network..." FontSize="13" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
 
-            <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                <TextBlock x:Name="TxtNetStatus" Text="" FontSize="12"
-                           Foreground="{DynamicResource SuccessBrush}"/>
-                <ScrollViewer x:Name="LogScroll" Height="0" Visibility="Collapsed">
-                    <TextBlock x:Name="TxtLog"/>
+                    <Button Grid.Column="1" Content="⟳ Refresh List" Style="{StaticResource SecondaryButton}" Padding="16,10" FontSize="12" Click="BtnRefresh_Click"/>
+                </Grid>
+
+                <!-- Radar Animation Area -->
+                <Border Grid.Row="1" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="16" Height="260" Margin="0,0,0,32">
+                    <Grid>
+                        <!-- Radar Circles -->
+                        <Ellipse Width="80" Height="80" Stroke="{DynamicResource Surface2Brush}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Ellipse Width="160" Height="160" Stroke="{DynamicResource Surface2Brush}" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
+                        <Ellipse Width="240" Height="240" Stroke="{DynamicResource Surface2Brush}" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.2"/>
+                        
+                        <Border Width="48" Height="48" Background="{DynamicResource Surface2Brush}" CornerRadius="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="🎯" FontSize="20" Foreground="{DynamicResource TextSecBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <!-- Network Info -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16">
+                            <TextBlock Text="📶" Foreground="{DynamicResource TextMutedBrush}" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Network: AURA_SECURE" Foreground="{DynamicResource TextMutedBrush}" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <ItemsControl x:Name="PeerList" ItemTemplate="{StaticResource PeerCardTemplate}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
                 </ScrollViewer>
-                <TextBlock x:Name="TxtSavePath" Visibility="Collapsed"/>
-            </StackPanel>
+            </Grid>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                <Button x:Name="BtnCancel" Content="İptal"
-                        Style="{DynamicResource SecondaryButton}"
-                        Width="90" Margin="0,0,10,0"
-                        Click="BtnCancel_Click" IsEnabled="False"/>
-                <Button x:Name="BtnSend" Content="🚀 Gönder"
-                        Style="{DynamicResource PrimaryButton}"
-                        Width="130" Click="BtnSend_Click" IsEnabled="False"/>
-                <Button x:Name="BtnReceive" Content="📥 Almaya Başla"
-                        Style="{DynamicResource SuccessButton}"
-                        Width="150" Click="BtnReceive_Click" Visibility="Collapsed"/>
-            </StackPanel>
+            <!-- 2.B: Active Transfers Panel -->
+            <Grid x:Name="PanelActive" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/> <!-- Header -->
+                    <RowDefinition Height="Auto"/> <!-- Tabs -->
+                    <RowDefinition Height="*"/>    <!-- Content (Drop Zone or Receive Waiting) -->
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="0,0,0,32">
+                    <TextBlock Text="{DynamicResource Text_ActiveTitle}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8"/>
+                    <TextBlock Text="{DynamicResource Text_ActiveDesc}" FontSize="14" Foreground="{DynamicResource TextSecBrush}"/>
+                </StackPanel>
+
+                <!-- Tabs -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,32">
+                    <RadioButton x:Name="RbSender" Content="{DynamicResource Text_TabSend}" IsChecked="True" Style="{DynamicResource TabRadioButton}" Margin="0,0,16,0" Checked="Role_Checked"/>
+                    <RadioButton x:Name="RbReceiver" Content="{DynamicResource Text_TabReceive}" Style="{DynamicResource TabRadioButton}" Checked="Role_Checked"/>
+                </StackPanel>
+
+                <!-- Sürükle Bırak Alanı (SENDER MODE) -->
+                <Border x:Name="DropZoneBorder" Grid.Row="2" Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" CornerRadius="16" Margin="0,0,0,32" AllowDrop="True" Drop="DropZone_Drop" DragEnter="DropZone_DragEnter" DragLeave="DropZone_DragLeave">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Border Width="64" Height="64" Background="{DynamicResource Surface2Brush}" CornerRadius="32" Margin="0,0,0,16" HorizontalAlignment="Center">
+                            <TextBlock Text="☁" FontSize="32" Foreground="{DynamicResource TextSecBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="{DynamicResource Text_DragDropTitle}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                        <TextBlock Text="{DynamicResource Text_DragDropDesc}" FontSize="14" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                        <Button Content="{DynamicResource Text_Browse}" Margin="0,16,0,0" Width="100" Height="32" Click="BtnBrowse_Click">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
+                </Border>
+                
+                <!-- Receive State UI (RECEIVER MODE) -->
+                <!-- Receive State UI (RECEIVER MODE) -->
+                <Grid x:Name="ReceiveModeUI" Grid.Row="2" Visibility="Collapsed">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Border Width="64" Height="64" Background="{DynamicResource Surface2Brush}" CornerRadius="32" Margin="0,0,0,16" HorizontalAlignment="Center">
+                            <TextBlock Text="📥" FontSize="24" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="{DynamicResource Text_ReceiveModeActive}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                        
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,24">
+                            <TextBlock Text="{DynamicResource Text_SavePathInfo}" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <Border Background="{DynamicResource Surface2Brush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="8,4" Margin="0,0,8,0">
+                                <TextBlock x:Name="TxtReceiveSavePath" Text="C:\..." Foreground="{DynamicResource TextSecBrush}" FontWeight="Medium" VerticalAlignment="Center"/>
+                            </Border>
+                            <Button Content="Değiştir" Style="{StaticResource SecondaryButton}" Padding="12,4" FontSize="11" Click="BtnChangeReceivePath_Click" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        
+                        <Button x:Name="BtnCancelReceive" Content="{DynamicResource Text_CancelReceiveBtn}" Style="{StaticResource DangerButton}" Height="40" Padding="24,0" HorizontalAlignment="Center" Click="BtnCancelReceive_Click" Visibility="Collapsed"/>
+                    </StackPanel>
+                    
+                    <Button x:Name="BtnReceive" Content="{DynamicResource Text_StartReceiveBtn}" Style="{StaticResource SuccessButton}" Height="46" Padding="32,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="BtnReceive_Click"/>
+                </Grid>
+            </Grid>
+
+            <!-- 2.C: History Panel -->
+            <Grid x:Name="PanelHistory" Visibility="Collapsed">
+                <StackPanel Margin="0,0,0,32">
+                    <TextBlock Text="{DynamicResource Text_HistoryTitle}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8"/>
+                    <TextBlock Text="{DynamicResource Text_HistoryDesc}" FontSize="14" Foreground="{DynamicResource TextSecBrush}"/>
+                </StackPanel>
+                <TextBlock Text="{DynamicResource Text_HistoryEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}"/>
+            </Grid>
         </Grid>
+
+        <!-- ═══ 3. RIGHT SIDEBAR (QUEUE) ══════════════════════════════════════════ -->
+        <Border Grid.Column="2" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1,0,0,0">
+            <Grid Margin="24,32,24,24">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/> <!-- Bottom Actions if needed -->
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,24">
+                    <TextBlock Text="{DynamicResource Text_QueueTitle}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                    <Border Background="{DynamicResource Surface2Brush}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Right">
+                        <TextBlock x:Name="TxtActiveCount" Text="{DynamicResource Text_ActiveCount}" FontSize="11" Foreground="{DynamicResource TextSecBrush}"/>
+                    </Border>
+                </Grid>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <!-- Tek bir Aktarım Kartı Örneği -->
+                        <Border x:Name="TransferCard" Background="{DynamicResource Surface2Brush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="12" Padding="16" Visibility="Collapsed">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                
+                                <Grid Grid.Row="0" Margin="0,0,0,16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Width="32" Height="32" Background="{DynamicResource BackgroundBrush}" CornerRadius="6" Margin="0,0,12,0">
+                                        <TextBlock Text="📄" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock x:Name="TxtTransferFile" Text="Bekleniyor..." Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="13" TextTrimming="CharacterEllipsis" MaxWidth="160"/>
+                                        <TextBlock x:Name="TxtTargetDevice" Text="Bekleniyor" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
+                                    </StackPanel>
+                                    <Button x:Name="BtnCancel" Grid.Column="2" Content="✕" Foreground="{DynamicResource TextMutedBrush}" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="BtnCancel_Click" VerticalAlignment="Top">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <TextBlock Text="{TemplateBinding Content}" FontSize="14"/>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+
+                                <Grid Grid.Row="1" Margin="0,0,0,8">
+                                    <TextBlock x:Name="TxtSizeInfo" Text="0 MB / 0 MB" FontSize="11" Foreground="{DynamicResource TextSecBrush}" HorizontalAlignment="Left"/>
+                                    <TextBlock x:Name="TxtSpeed" Text="0 MB/s" FontSize="11" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                </Grid>
+
+                                <ProgressBar x:Name="PbTransfer" Grid.Row="2" Height="4" Value="0" Maximum="100" BorderThickness="0" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ProgressGradientBrush}" Margin="0,0,0,8"/>
+                                
+                                <TextBlock x:Name="TxtRemaining" Grid.Row="3" Text="~0s remaining" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+        
+        <!-- ═══ 4. LEGACY CONTROLS (HIDDEN) ════════════════════════════════════════ -->
+        <!-- Code-behind derlemesinin patlamaması için eski kontrolleri gizleyerek tutuyoruz -->
+        <Grid Visibility="Collapsed">
+            <TextBlock x:Name="TxtConnStatus" />
+            <TextBlock x:Name="TxtScanning" />
+            <TextBlock x:Name="TxtMyIP" />
+            <TextBlock x:Name="TxtNetStatus" />
+            <TextBlock x:Name="TxtTargetLabel" />
+            <TextBlock x:Name="DropHint" />
+            <TextBlock x:Name="TxtPercent" />
+            <TextBlock x:Name="TxtStatus" />
+            <TextBlock x:Name="TxtLog" />
+            <TextBlock x:Name="TxtTargetIP" />
+            <TextBlock x:Name="TxtFileCount" />
+            <TextBlock x:Name="TxtHostname" />
+            <TextBlock x:Name="NoPeersHint" />
+            <TextBlock x:Name="TxtPeerCount" />
+            <TextBlock x:Name="TxtSelectedPeerName" />
+            <TextBlock x:Name="TxtSelectedPeerIP" />
+            <Border x:Name="PeerCountBadge" />
+            <Border x:Name="SelectedPeerCard" />
+            <ItemsControl x:Name="PeerItemsControl" />
+            <Ellipse x:Name="StatusDot" />
+            <Border x:Name="StatusPill" />
+            <Border x:Name="DropZone" />
+            <ScrollViewer x:Name="LogScroll" />
+            <StackPanel x:Name="ManualIPPanel" />
+            <StackPanel x:Name="FileListPanel" />
+            <ItemsControl x:Name="FileListControl" />
+            <Button x:Name="BtnTestConn" />
+            <Button x:Name="BtnSend" />
+        </Grid>
+
     </Grid>
+    </Grid>
+    </Border>
 </Window>

@@ -57,6 +57,9 @@ namespace Dosyaktar.Services
         // ── HTTP Client ───────────────────────────────────────────────────────
         private static HttpClient CreateHttpClient()
         {
+            // Ensure modern TLS for GitHub API
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls13;
+
             var client = new HttpClient { Timeout = TimeSpan.FromMinutes(10) };
             client.DefaultRequestHeaders.UserAgent.Add(
                 new ProductInfoHeaderValue("Dosyaktar", GetCurrentVersion().ToString()));

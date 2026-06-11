@@ -2,25 +2,33 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- ══════════════════════════════════════════════════════════════════════
-         KOYU TEMA — Dark Theme
+         KOYU TEMA — Ultra-Modern Dark Theme (Vercel/Linear Inspired)
          ════════════════════════════════════════════════════════════════════ -->
 
-    <Color x:Key="BackgroundColor">#0F1117</Color>
-    <Color x:Key="SurfaceColor">#1A1D27</Color>
-    <Color x:Key="Surface2Color">#22263A</Color>
-    <Color x:Key="BorderColor">#2E3347</Color>
-    <Color x:Key="AccentColor">#3B82F6</Color>
-    <Color x:Key="AccentHoverColor">#2563EB</Color>
-    <Color x:Key="DangerColor">#F87171</Color>
-    <Color x:Key="SuccessColor">#34D399</Color>
-    <Color x:Key="WarningColor">#FBBF24</Color>
-    <Color x:Key="TextPrimary">#F1F5F9</Color>
-    <Color x:Key="TextSecondary">#94A3B8</Color>
-    <Color x:Key="TextMuted">#64748B</Color>
-    <Color x:Key="TabBarColor">#13161F</Color>
-    <Color x:Key="PeerCardHoverColor">#1E2540</Color>
-    <Color x:Key="DropZoneHighlightColor">#1A2240</Color>
+    <!-- Core Colors -->
+    <Color x:Key="BackgroundColor">#0A0A10</Color>         <!-- Main Area -->
+    <Color x:Key="SurfaceColor">#111116</Color>            <!-- Sidebar & Queue Panel -->
+    <Color x:Key="Surface2Color">#16161D</Color>           <!-- Cards -->
+    <Color x:Key="BorderColor">#22222A</Color>             <!-- Subtle thin borders -->
+    
+    <!-- Accents -->
+    <Color x:Key="AccentColor">#4B65F5</Color>             <!-- Primary Action Blue -->
+    <Color x:Key="AccentHoverColor">#5C74F6</Color>
+    <Color x:Key="DangerColor">#E05252</Color>
+    <Color x:Key="SuccessColor">#10B981</Color>
+    <Color x:Key="WarningColor">#F59E0B</Color>
 
+    <!-- Typography -->
+    <Color x:Key="TextPrimary">#F1F5F9</Color>             <!-- Headlines, Active Data -->
+    <Color x:Key="TextSecondary">#94A3B8</Color>           <!-- Labels -->
+    <Color x:Key="TextMuted">#52525B</Color>               <!-- Inactive / Paths -->
+
+    <!-- Specific UI Colors -->
+    <Color x:Key="TabBarColor">#111116</Color>
+    <Color x:Key="PeerCardHoverColor">#1A1A24</Color>
+    <Color x:Key="DropZoneHighlightColor">#12182B</Color>
+
+    <!-- Brushes -->
     <SolidColorBrush x:Key="BackgroundBrush"   Color="{StaticResource BackgroundColor}"/>
     <SolidColorBrush x:Key="SurfaceBrush"      Color="{StaticResource SurfaceColor}"/>
     <SolidColorBrush x:Key="Surface2Brush"     Color="{StaticResource Surface2Color}"/>
@@ -36,5 +44,16 @@
     <SolidColorBrush x:Key="TabBarBrush"       Color="{StaticResource TabBarColor}"/>
     <SolidColorBrush x:Key="PeerCardHoverBrush" Color="{StaticResource PeerCardHoverColor}"/>
     <SolidColorBrush x:Key="DropZoneHighlightBrush" Color="{StaticResource DropZoneHighlightColor}"/>
+
+    <!-- Gradients -->
+    <LinearGradientBrush x:Key="ProgressGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
+        <GradientStop Color="#3B82F6" Offset="0.0" />
+        <GradientStop Color="#8B5CF6" Offset="1.0" />
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="PairDeviceGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#465A8C" Offset="0.0" />
+        <GradientStop Color="#5D4B85" Offset="1.0" />
+    </LinearGradientBrush>
 
 </ResourceDictionary>

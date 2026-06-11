@@ -41,6 +41,16 @@ namespace Dosyaktar
             if (settings.DarkMode)
                 ThemeManager.Apply(dark: true);
 
+            // Uygulama dili yükleme
+            string lang = settings.Language ?? "tr";
+            var dict = new ResourceDictionary();
+            try
+            {
+                dict.Source = new Uri($"pack://application:,,,/Resources/Strings.{lang}.xaml", UriKind.Absolute);
+                Application.Current.Resources.MergedDictionaries[1] = dict;
+            }
+            catch { /* Varsayılan kalır */ }
+
             base.OnStartup(e);
         }
     }
