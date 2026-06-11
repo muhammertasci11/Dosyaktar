@@ -230,9 +230,8 @@ namespace Dosyaktar
 
             try
             {
-                // AutoUpdate=true → sessizce indir+uygula
-                // AutoUpdate=false → pencere aç
-                var info = await svc.CheckAndMaybeAutoUpdateAsync(silent: _settings.AutoUpdate);
+                // Kullanıcı her zaman güncelleme panelini görsün
+                var info = await svc.CheckAndMaybeAutoUpdateAsync(silent: false);
 
                 if (info != null) // Manuel mod: kullanıcıya sor
                 {

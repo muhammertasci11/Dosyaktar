@@ -1,0 +1,66 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Common -->
+    <system:String x:Key="Text_AppSubtitle">High-speed Sync</system:String>
+    <system:String x:Key="Text_Settings">Settings</system:String>
+    <system:String x:Key="Text_PairDevice">PAIR DEVICE</system:String>
+
+    <!-- Sidebar -->
+    <system:String x:Key="Text_NavDiscovery">Discovery</system:String>
+    <system:String x:Key="Text_NavActive">Active Transfers</system:String>
+    <system:String x:Key="Text_NavHistory">History</system:String>
+    <system:String x:Key="Text_NavGames">Game &amp; App Transfer</system:String>
+
+    <!-- Discovery Panel -->
+    <system:String x:Key="Text_DiscoveryTitle">Discovery &amp; Connect</system:String>
+    <system:String x:Key="Text_DiscoveryDesc">Find devices on your network or connect manually via IP.</system:String>
+    <system:String x:Key="Text_NearbyDevices">Nearby Devices</system:String>
+    <system:String x:Key="Text_Refresh">↻ Refresh</system:String>
+    <system:String x:Key="Text_ManualIP">Enter Manual IP:</system:String>
+    <system:String x:Key="Text_Connect">Connect</system:String>
+
+    <!-- Active Transfers Panel -->
+    <system:String x:Key="Text_ActiveTitle">File Sharing</system:String>
+    <system:String x:Key="Text_ActiveDesc">Ongoing or new file transfers.</system:String>
+    <system:String x:Key="Text_TabSend">Send File</system:String>
+    <system:String x:Key="Text_TabReceive">Receive File</system:String>
+    <system:String x:Key="Text_DragDropTitle">Drag &amp; Drop Files Here</system:String>
+    <system:String x:Key="Text_DragDropDesc">or click to browse from your device</system:String>
+    <system:String x:Key="Text_Browse">Browse</system:String>
+    
+    <system:String x:Key="Text_ReceiveModeActive">You are in receive mode.</system:String>
+    <system:String x:Key="Text_SavePathInfo">Save Location:</system:String>
+    <system:String x:Key="Text_StartReceiveBtn">Start Receiving Files</system:String>
+    <system:String x:Key="Text_CancelReceiveBtn">Cancel Receiving</system:String>
+
+    <!-- History Panel -->
+    <system:String x:Key="Text_HistoryTitle">History</system:String>
+    <system:String x:Key="Text_HistoryDesc">Records of your previous file transfers.</system:String>
+    <system:String x:Key="Text_HistoryEmpty">Your transfer history is empty.</system:String>
+
+    <!-- Right Queue -->
+    <system:String x:Key="Text_QueueTitle">Transfer Queue</system:String>
+    <system:String x:Key="Text_ActiveCount">0 Active</system:String>
+
+    <!-- Settings Window -->
+    <system:String x:Key="Text_SettingsDesc">Configure your application preferences</system:String>
+    <system:String x:Key="Text_SetSaveDir">Save Directory</system:String>
+    <system:String x:Key="Text_SetSaveDirDesc">Folder where received files will be saved</system:String>
+    <system:String x:Key="Text_SetPort">Transfer Port Number</system:String>
+    <system:String x:Key="Text_SetPortDesc">Sender and receiver must use the same port number (default: 5001)</system:String>
+    <system:String x:Key="Text_SetLang">App Interface Language</system:String>
+    <system:String x:Key="Text_SetLangDesc">Select the language to display Dosyaktar in.</system:String>
+    <system:String x:Key="Text_SetDarkMode">Dark Mode</system:String>
+    <system:String x:Key="Text_SetDarkModeDesc">Dark theme that is easy on the eyes</system:String>
+    <system:String x:Key="Text_SetAutoUpdate">Check updates on startup</system:String>
+    <system:String x:Key="Text_SetAutoUpdateDesc">Searches GitHub for new versions on every launch</system:String>
+    <system:String x:Key="Text_SetAutoBgUpdate">Auto-update</system:String>
+    <system:String x:Key="Text_SetAutoBgUpdateDesc">New versions download and apply in the background</system:String>
+    <system:String x:Key="Text_SetAutoReceive">Auto-receive mode</system:String>
+    <system:String x:Key="Text_SetAutoReceiveDesc">App automatically waits for files on startup</system:String>
+    <system:String x:Key="Text_SetFirewall">Fix Firewall Permissions</system:String>
+    <system:String x:Key="Text_SetFirewallDesc">Click this if devices can't find each other over Ethernet. (Requires Admin privileges)</system:String>
+
+</ResourceDictionary>

@@ -1,0 +1,66 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Common -->
+    <system:String x:Key="Text_AppSubtitle">Yüksek Hızlı Senkronizasyon</system:String>
+    <system:String x:Key="Text_Settings">Ayarlar</system:String>
+    <system:String x:Key="Text_PairDevice">CİHAZ EŞLEŞTİR</system:String>
+
+    <!-- Sidebar -->
+    <system:String x:Key="Text_NavDiscovery">Keşif</system:String>
+    <system:String x:Key="Text_NavActive">Aktif Aktarımlar</system:String>
+    <system:String x:Key="Text_NavHistory">Geçmiş</system:String>
+    <system:String x:Key="Text_NavGames">Oyun ve Uygulama Taşıma</system:String>
+
+    <!-- Discovery Panel -->
+    <system:String x:Key="Text_DiscoveryTitle">Keşif ve Cihaz Arama</system:String>
+    <system:String x:Key="Text_DiscoveryDesc">Ağınızdaki cihazları bulun veya IP ile manuel bağlanın.</system:String>
+    <system:String x:Key="Text_NearbyDevices">Yakındaki Cihazlar</system:String>
+    <system:String x:Key="Text_Refresh">↻ Yenile</system:String>
+    <system:String x:Key="Text_ManualIP">Manuel IP Girin:</system:String>
+    <system:String x:Key="Text_Connect">Bağlan</system:String>
+
+    <!-- Active Transfers Panel -->
+    <system:String x:Key="Text_ActiveTitle">Dosya Paylaşımı</system:String>
+    <system:String x:Key="Text_ActiveDesc">Şu anda devam eden veya yeni başlatılacak aktarımlar.</system:String>
+    <system:String x:Key="Text_TabSend">Dosya Gönder</system:String>
+    <system:String x:Key="Text_TabReceive">Dosya Al</system:String>
+    <system:String x:Key="Text_DragDropTitle">Dosyaları Buraya Sürükle</system:String>
+    <system:String x:Key="Text_DragDropDesc">veya cihazınızdan seçmek için tıklayın</system:String>
+    <system:String x:Key="Text_Browse">Gözat</system:String>
+    
+    <system:String x:Key="Text_ReceiveModeActive">Dosya alım modundasınız.</system:String>
+    <system:String x:Key="Text_SavePathInfo">Kayıt Konumu:</system:String>
+    <system:String x:Key="Text_StartReceiveBtn">Dosya Almaya Başla</system:String>
+    <system:String x:Key="Text_CancelReceiveBtn">Alımı İptal Et</system:String>
+
+    <!-- History Panel -->
+    <system:String x:Key="Text_HistoryTitle">Geçmiş</system:String>
+    <system:String x:Key="Text_HistoryDesc">Önceki dosya transferlerinizin kayıtları.</system:String>
+    <system:String x:Key="Text_HistoryEmpty">Transfer geçmişiniz boş.</system:String>
+
+    <!-- Right Queue -->
+    <system:String x:Key="Text_QueueTitle">Aktarım Kuyruğu</system:String>
+    <system:String x:Key="Text_ActiveCount">0 Aktif</system:String>
+
+    <!-- Settings Window -->
+    <system:String x:Key="Text_SettingsDesc">Uygulama tercihlerinizi yapılandırın</system:String>
+    <system:String x:Key="Text_SetSaveDir">Kayıt Klasörü</system:String>
+    <system:String x:Key="Text_SetSaveDirDesc">Alınan dosyaların kaydedileceği klasör</system:String>
+    <system:String x:Key="Text_SetPort">Transfer Port Numarası</system:String>
+    <system:String x:Key="Text_SetPortDesc">Gönderici ve alıcıda aynı port numarası kullanılmalı (varsayılan: 5001)</system:String>
+    <system:String x:Key="Text_SetLang">Uygulama Arayüz Dili</system:String>
+    <system:String x:Key="Text_SetLangDesc">Dosyaktar'ın görüntüleneceği dili seçin.</system:String>
+    <system:String x:Key="Text_SetDarkMode">Koyu Mod</system:String>
+    <system:String x:Key="Text_SetDarkModeDesc">Gözlerinizi yormayan karanlık tema</system:String>
+    <system:String x:Key="Text_SetAutoUpdate">Başlangıçta güncelleme kontrol et</system:String>
+    <system:String x:Key="Text_SetAutoUpdateDesc">Her açılışta GitHub'dan yeni sürüm arar</system:String>
+    <system:String x:Key="Text_SetAutoBgUpdate">Otomatik güncelle</system:String>
+    <system:String x:Key="Text_SetAutoBgUpdateDesc">Yeni sürüm çıkınca arka planda indirilir ve uygulanır</system:String>
+    <system:String x:Key="Text_SetAutoReceive">Otomatik alma modu</system:String>
+    <system:String x:Key="Text_SetAutoReceiveDesc">Uygulama açılınca dosya beklemeye başlar</system:String>
+    <system:String x:Key="Text_SetFirewall">Güvenlik Duvarı İzinlerini Onar</system:String>
+    <system:String x:Key="Text_SetFirewallDesc">Ethernet üzerinden cihazlar birbirini bulamıyorsa bu tuşa basın. (Yönetici izni gerektirir)</system:String>
+
+</ResourceDictionary>
