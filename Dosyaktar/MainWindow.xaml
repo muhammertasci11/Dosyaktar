@@ -11,62 +11,32 @@
         Closing="Window_Closing">
 
     <Window.Resources>
-        <!-- Modern ScrollBar -->
         <Style TargetType="ScrollBar">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Width" Value="8" />
-        </Style>
-        
-        <!-- ToggleButton for Dosya Gönder / Al -->
-        <Style x:Key="ModernTabButton" TargetType="RadioButton">
+            <Setter Property="Width" Value="6" />
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="RadioButton">
-                        <Border x:Name="border" Background="Transparent" CornerRadius="20" Padding="16,8" Cursor="Hand">
-                            <TextBlock Text="{TemplateBinding Content}" Foreground="{DynamicResource TextMutedBrush}" FontWeight="SemiBold" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Border Background="Transparent">
+                            <Track x:Name="PART_Track" IsDirectionReversed="true">
+                                <Track.Thumb>
+                                    <Thumb Background="{DynamicResource BorderBrush}">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="3"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
                         </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource SurfaceBrush}" />
-                                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource Surface2Brush}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <!-- Sidebar Button Style -->
-        <Style x:Key="SidebarButton" TargetType="RadioButton">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="RadioButton">
-                        <Border x:Name="border" Background="Transparent" CornerRadius="8" Padding="12,12" Margin="16,4" Cursor="Hand">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" FontFamily="Segoe UI Emoji" Margin="0,0,12,0" FontSize="16" Foreground="{DynamicResource TextSecBrush}"/>
-                                <TextBlock Text="{TemplateBinding Content}" Foreground="{DynamicResource TextSecBrush}" FontWeight="Medium" FontSize="14" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource Surface2Brush}" />
-                                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#1A1A24" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Peer Card Style -->
         <DataTemplate x:Key="PeerCardTemplate">
-            <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,0,16,0" Width="220" Cursor="Hand">
+            <Border Style="{StaticResource GlassPanelBorder}" Padding="20" Margin="0,0,16,16" Cursor="Hand" Width="380">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -81,134 +51,65 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         
-                        <Border Width="36" Height="36" Background="{DynamicResource Surface2Brush}" CornerRadius="8" Margin="0,0,12,0">
-                            <TextBlock Text="💻" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
+                        <Border Width="48" Height="48" Background="{DynamicResource SurfaceBrush}" CornerRadius="12" Margin="0,0,16,0">
+                            <TextBlock Text="💻" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
                         </Border>
                         
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="14" Margin="0,0,0,2"/>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Müsait • PC" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
-                            </StackPanel>
-                        </StackPanel>
-
-                        <Ellipse Grid.Column="2" Width="8" Height="8" Fill="{DynamicResource SuccessBrush}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,4,0,0"/>
+                        <Border Grid.Column="2" Background="{DynamicResource SuccessBrush}" Opacity="0.2" CornerRadius="6" VerticalAlignment="Top" Padding="8,4">
+                            <TextBlock Text="{Binding IpAddress}" Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold" FontSize="11" />
+                        </Border>
                     </Grid>
 
-                    <TextBlock Grid.Row="1" Text="{Binding IpAddress}" Foreground="{DynamicResource TextMutedBrush}" FontSize="10" Margin="0,0,0,16"/>
+                    <StackPanel Grid.Row="1" Margin="0,0,0,16">
+                        <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Bold" FontSize="20" Margin="0,0,0,4"/>
+                        <TextBlock Text="Cihaz • Local Network" Foreground="{DynamicResource TextSecBrush}" FontSize="13"/>
+                    </StackPanel>
 
-                    <Button Grid.Row="2" Content="▷ Bağlan" Background="{DynamicResource Surface2Brush}" Foreground="{DynamicResource TextSecBrush}" BorderThickness="0" Height="32" Tag="{Binding}" Click="BtnSendToPeer_Click">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="6">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.FontSize="12" TextElement.FontWeight="SemiBold"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
+                    <Button Grid.Row="2" Style="{StaticResource GlassPanelButton}" Content="🔗 Bağlan" Tag="{Binding}" Click="BtnSendToPeer_Click"/>
                 </Grid>
             </Border>
         </DataTemplate>
-        
-        <!-- Window Control Button Style -->
-        <Style x:Key="WindowControlBtn" TargetType="Button">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{DynamicResource TextSecBrush}"/>
-            <Setter Property="Width" Value="46"/>
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource Surface2Brush}"/>
-                    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        
-        <Style x:Key="WindowCloseBtn" TargetType="Button" BasedOn="{StaticResource WindowControlBtn}">
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#E81123"/>
-                    <Setter Property="Foreground" Value="White"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <!-- Success Button Style -->
-        <Style x:Key="SuccessButton" TargetType="Button">
-            <Setter Property="Background" Value="{DynamicResource SuccessBrush}"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#059669"/> <!-- Darker Green -->
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Background" Value="{DynamicResource Surface2Brush}"/>
-                                <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Window.Resources>
 
-    <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Background="{DynamicResource BackgroundBrush}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="32"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <!-- ═══ Custom Title Bar ═══ -->
-            <Grid Grid.Row="0" Background="{DynamicResource SurfaceBrush}" MouseLeftButtonDown="TitleBar_MouseDown">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                
-                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="16,0,0,0">
-                    <Image Source="Assets/icon.png" Width="16" Height="16" Margin="0,0,8,0" RenderOptions.BitmapScalingMode="HighQuality"/>
-                    <TextBlock Text="Dosyaktar" Foreground="{DynamicResource TextSecBrush}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                </StackPanel>
-
-                <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button Content="—" Style="{StaticResource WindowControlBtn}" Click="BtnMinimize_Click"/>
-                    <Button Content="☐" Style="{StaticResource WindowControlBtn}" Click="BtnMaximize_Click"/>
-                    <Button Content="✕" Style="{StaticResource WindowCloseBtn}" Click="BtnCloseWindow_Click"/>
-                </StackPanel>
-            </Grid>
-
-            <!-- ═══ Main Content Area ═══ -->
-            <Grid Grid.Row="1">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="260" /> <!-- Sidebar -->
-            <ColumnDefinition Width="*" />   <!-- Main Area -->
-            <ColumnDefinition Width="340" /> <!-- Queue -->
+            <ColumnDefinition Width="260"/> <!-- Sidebar -->
+            <ColumnDefinition Width="*"/>   <!-- Main Area -->
+            <ColumnDefinition Width="320"/> <!-- Right Panel -->
         </Grid.ColumnDefinitions>
 
-        <!-- ═══ 1. LEFT SIDEBAR ═══════════════════════════════════════════════════ -->
-        <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+        <!-- Dummy Elements for Legacy C# Code Compatibility -->
+        <Grid x:Name="LegacyDummies" Visibility="Collapsed" Grid.Column="0">
+            <TextBlock x:Name="TxtConnStatus"/>
+            <Button x:Name="BtnSend"/>
+            <RadioButton x:Name="RbSender"/>
+            <RadioButton x:Name="RbReceiver"/>
+            <Grid x:Name="SelectedPeerCard"/>
+            <Grid x:Name="ManualIPPanel"/>
+            <TextBlock x:Name="TxtScanning"/>
+            <TextBlock x:Name="TxtMyIP"/>
+            <TextBlock x:Name="TxtTargetIP"/>
+            <TextBlock x:Name="TxtNetStatus"/>
+            <Button x:Name="BtnTestConn"/>
+            <Grid x:Name="PairingModal"/>
+            
+            <ListBox x:Name="FileListControl"/>
+            <TextBlock x:Name="NoPeersHint"/>
+            <Border x:Name="PeerCountBadge"/>
+            <TextBlock x:Name="TxtPeerCount"/>
+            <TextBlock x:Name="TxtSelectedPeerName"/>
+            <TextBlock x:Name="TxtSelectedPeerIP"/>
+        </Grid>
+
+        <!-- Background radar pulse animation container -->
+        <Canvas x:Name="RadarCanvas" IsHitTestVisible="False" Grid.Column="0" Grid.ColumnSpan="3">
+            <Ellipse x:Name="RadarCircle1" Width="0" Height="0" Stroke="{DynamicResource AccentBrush}" StrokeThickness="1" Opacity="0"/>
+        </Canvas>
+
+        <!-- ==============================================
+             LEFT SIDEBAR
+             ============================================== -->
+        <Border Grid.Column="0" Background="{DynamicResource SurfaceColor}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0" Padding="20">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -216,217 +117,453 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Logo -->
-                <StackPanel Orientation="Horizontal" Margin="24,32,24,40">
-                    <Border Width="40" Height="40" Background="{DynamicResource AccentBrush}" CornerRadius="10" Margin="0,0,12,0">
-                        <TextBlock Text="⇄" Foreground="White" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="Dosyaktar" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                        <TextBlock Text="{DynamicResource Text_AppSubtitle}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}"/>
-                    </StackPanel>
+                <StackPanel Grid.Row="0" Margin="0,0,0,30">
+                    <TextBlock Text="Dosyaktar" Foreground="{DynamicResource AccentBrush}" FontWeight="Bold" FontSize="24"/>
+                    <TextBlock Text="Local High-Speed" Foreground="{DynamicResource TextMutedBrush}" FontSize="12" FontWeight="SemiBold"/>
                 </StackPanel>
 
-                <!-- Navigation -->
                 <StackPanel Grid.Row="1">
-                    <RadioButton x:Name="BtnNavDiscovery" Content="{DynamicResource Text_NavDiscovery}" Tag="🧭" Style="{DynamicResource SidebarButton}" IsChecked="True" Checked="BtnNav_Checked"/>
-                    <RadioButton x:Name="BtnNavActive" Content="{DynamicResource Text_NavActive}" Tag="⇄" Style="{DynamicResource SidebarButton}" Checked="BtnNav_Checked"/>
-                    <RadioButton x:Name="BtnNavHistory" Content="{DynamicResource Text_NavHistory}" Tag="🕒" Style="{DynamicResource SidebarButton}" Checked="BtnNav_Checked"/>
-                    <RadioButton Content="{DynamicResource Text_NavGames}" Tag="🎮" Style="{DynamicResource SidebarButton}" Click="BtnGameTransfer_Click"/>
+                    <RadioButton Content="Keşif" Tag="&#xE73E;" Style="{StaticResource SidebarTabButton}" IsChecked="True" Click="MenuDiscovery_Click"/>
+                    <RadioButton Content="Aktif Oturum" Tag="&#xE895;" Style="{StaticResource SidebarTabButton}" Click="MenuActiveSession_Click"/>
+                    <RadioButton Content="Geçmiş" Tag="&#xE81C;" Style="{StaticResource SidebarTabButton}" Click="MenuHistory_Click"/>
+                    
+                    <Border Height="1" Background="{DynamicResource BorderBrush}" Margin="0,20" Opacity="0.5"/>
+                    <RadioButton Content="Ayarlar" Tag="&#xE713;" Style="{StaticResource SidebarTabButton}" Click="MenuSettings_Click"/>
                 </StackPanel>
 
-                <!-- Footer -->
-                <StackPanel Grid.Row="2" Margin="16,24">
-                    <Button x:Name="BtnSettings" Background="Transparent" Foreground="{DynamicResource TextSecBrush}" BorderThickness="0" HorizontalAlignment="Left" Padding="12" Click="BtnSettings_Click" Cursor="Hand" FontSize="14" FontWeight="Medium">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="⚙ "/>
-                            <TextBlock Text="{DynamicResource Text_Settings}"/>
-                        </StackPanel>
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="Transparent">
-                                    <ContentPresenter/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-                    <Button Content="{DynamicResource Text_PairDevice}" Foreground="White" FontWeight="Bold" FontSize="12" Margin="0,16,0,0" Height="40" Cursor="Hand">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{DynamicResource PairDeviceGradientBrush}" CornerRadius="8">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-                </StackPanel>
+                <Button Grid.Row="2" Content="&#xE710;  Cihaz Eşleştir" Style="{StaticResource GradientButton}" FontFamily="Segoe Fluent Icons, Segoe UI Emoji, Segoe MDL2 Assets, Segoe UI" Click="MenuPair_Click"/>
             </Grid>
         </Border>
 
-        <!-- ═══ 2. MAIN AREA ══════════════════════════════════════════════════════ -->
-        <Grid Grid.Column="1" Margin="40">
-            <!-- 2.A: Discovery Panel -->
-            <Grid x:Name="PanelDiscovery" Visibility="Visible">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+        <!-- ==============================================
+             MAIN AREA
+             ============================================== -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,24">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+            <!-- Main Header -->
+            <Border Grid.Row="0" Background="{DynamicResource SurfaceColor}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="24,0">
+                <Grid>
+                    <TextBlock x:Name="TxtHeaderTitle" Text="Keşif Modu" Foreground="{DynamicResource AccentBrush}" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     
-                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                        <TextBlock Text="{DynamicResource Text_NearbyDevices}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,6"/>
-                        <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="8" Height="8" Fill="{DynamicResource SuccessBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Scanning local network..." FontSize="13" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
-                        </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Ellipse Width="8" Height="8" Fill="{DynamicResource SuccessBrush}" Margin="0,0,8,0" x:Name="ElScanIndicator"/>
+                        <TextBlock Text="Yerel ağ taranıyor..." Foreground="{DynamicResource SuccessBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,0,16,0" VerticalAlignment="Center"/>
+                        
+                        <Button Style="{StaticResource IconButton}" Content="&#xE897;" FontFamily="Segoe MDL2 Assets" FontSize="16" Click="BtnRefresh_Click"/>
+                        <Button Style="{StaticResource IconButton}" Content="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="8,0,0,0" Click="BtnClose_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Content Panels -->
+            <Grid Grid.Row="1" Margin="32">
+                <!-- KEŞİF MODU PANELİ -->
+                <Grid x:Name="PanelDiscovery">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Margin="0,0,0,32">
+                        <TextBlock Text="Yakındaki Cihazlar" FontSize="40" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8"/>
+                        <TextBlock Text="Mevcut WiFi alt ağındaki eşler aranıyor. Bağlantı istemek için dokunun." FontSize="15" Foreground="{DynamicResource TextSecBrush}"/>
                     </StackPanel>
 
-                    <Button Grid.Column="1" Content="⟳ Refresh List" Style="{StaticResource SecondaryButton}" Padding="16,10" FontSize="12" Click="BtnRefresh_Click"/>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl x:Name="PeerList" ItemTemplate="{StaticResource PeerCardTemplate}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </Grid>
 
-                <!-- Radar Animation Area -->
-                <Border Grid.Row="1" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="16" Height="260" Margin="0,0,0,32">
-                    <Grid>
-                        <!-- Radar Circles -->
-                        <Ellipse Width="80" Height="80" Stroke="{DynamicResource Surface2Brush}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Ellipse Width="160" Height="160" Stroke="{DynamicResource Surface2Brush}" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.5"/>
-                        <Ellipse Width="240" Height="240" Stroke="{DynamicResource Surface2Brush}" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.2"/>
-                        
-                        <Border Width="48" Height="48" Background="{DynamicResource Surface2Brush}" CornerRadius="24" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Text="🎯" FontSize="20" Foreground="{DynamicResource TextSecBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
+                <!-- AKTİF OTURUM PANELİ -->
+                <Grid x:Name="PanelActive" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Grid.Row="0" Margin="0,0,0,40" HorizontalAlignment="Center">
+                        <TextBlock Text="Aktif Oturum" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" TextAlignment="Center"/>
+                        <TextBlock Text="Yüksek hızlı veri transferi aktif." FontSize="14" Foreground="{DynamicResource TextSecBrush}" TextAlignment="Center"/>
+                    </StackPanel>
 
-                        <!-- Network Info -->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16">
-                            <TextBlock Text="📶" Foreground="{DynamicResource TextMutedBrush}" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                            <TextBlock Text="Network: AURA_SECURE" Foreground="{DynamicResource TextMutedBrush}" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                    <!-- Device Connection Visual -->
+                    <Grid Grid.Row="1" Margin="0,0,0,40" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- My Device -->
+                        <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                            <Border Width="100" Height="100" Style="{StaticResource GlassPanelBorder}">
+                                <TextBlock Text="💻" FontSize="48" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <Border Background="{DynamicResource Surface2Brush}" CornerRadius="4" Padding="6,2" Margin="0,12,0,4" HorizontalAlignment="Center">
+                                <TextBlock Text="BU CİHAZ" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
+                            </Border>
+                            <TextBlock x:Name="TxtMyDeviceName" Text="Bilgisayarım" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Transfer Arrow -->
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="⇄" FontSize="28" Foreground="{DynamicResource TextSecBrush}" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="TxtLiveSpeed" Text="Bağlı" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Target Device -->
+                        <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                            <Border Width="100" Height="100" Style="{StaticResource GlassPanelBorder}">
+                                <TextBlock Text="📱" FontSize="48" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <Border Background="{DynamicResource Surface2Brush}" CornerRadius="4" Padding="6,2" Margin="0,12,0,4" HorizontalAlignment="Center">
+                                <TextBlock Text="HEDEF" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                            </Border>
+                            <TextBlock x:Name="TxtTargetDeviceName" Text="Hedef Cihaz" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Grid>
-                </Border>
 
-                <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                    <ItemsControl x:Name="PeerList" ItemTemplate="{StaticResource PeerCardTemplate}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </ScrollViewer>
-            </Grid>
-
-            <!-- 2.B: Active Transfers Panel (SHAREIT SESSION MODE) -->
-            <Grid x:Name="PanelActive" Visibility="Collapsed">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/> <!-- Header & Disconnect -->
-                    <RowDefinition Height="*"/>    <!-- 2 Column Layout -->
-                </Grid.RowDefinitions>
-
-                <Grid Grid.Row="0" Margin="0,0,0,24">
-                    <StackPanel>
-                        <TextBlock Text="Oturum Aktif" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8"/>
-                        <TextBlock Text="Cihazlar eşleşti. Dosya veya oyun göndermek için sürükleyip bırakabilirsiniz." FontSize="14" Foreground="{DynamicResource TextSecBrush}"/>
-                    </StackPanel>
-                    <Button Content="Bağlantıyı Kes" Style="{StaticResource DangerButton}" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="16,8" Height="36" Click="BtnDisconnect_Click"/>
+                    <!-- Drop Zone -->
+                    <Border Grid.Row="2" x:Name="DropZoneBorder" Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" CornerRadius="20" AllowDrop="True" Drop="Border_Drop" DragEnter="Border_DragEnter" DragLeave="Border_DragLeave">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="&#xE898;" FontFamily="Segoe MDL2 Assets" FontSize="48" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                            <TextBlock Text="Dosya veya oyun göndermek için sürükleyip bırakın" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                            <TextBlock Text="Veya yerel depolamanızdan gözatın" FontSize="13" Foreground="{DynamicResource TextSecBrush}" HorizontalAlignment="Center" Margin="0,0,0,24"/>
+                            
+                            <Button Content="&#xE909;  Oyun Gönder" Style="{StaticResource GlassPanelButton}" FontFamily="Segoe MDL2 Assets, Segoe UI" Width="180" Click="BtnGameTransfer_Click"/>
+                        </StackPanel>
+                    </Border>
                 </Grid>
 
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="40"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <!-- GEÇMİŞ PANELİ -->
+                <Grid x:Name="PanelHistory" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Grid.Row="0" Margin="0,0,0,24">
+                        <TextBlock Text="Transfer Geçmişi" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,16"/>
+                        <TextBox Style="{StaticResource ModernTextBox}" Width="350" HorizontalAlignment="Left" Text="&#xE721;  Dosya adı, türü veya tarih ile ara..." FontFamily="Segoe MDL2 Assets, Segoe UI"/>
+                    </StackPanel>
+                    
+                    <!-- Table Header -->
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <Grid Grid.Row="0" Margin="16,0,16,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="DOSYA ADI" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBlock Grid.Column="1" Text="BOYUT" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBlock Grid.Column="2" Text="TARİH" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
+                            <TextBlock Grid.Column="3" Text="DURUM" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        
+                        <ScrollViewer Grid.Row="1">
+                            <StackPanel x:Name="HistoryList">
+                                <!-- Example item -->
+                                <Border Style="{StaticResource GlassPanelBorder}" Padding="16" Margin="0,0,0,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="100"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <Border Width="36" Height="36" Background="{DynamicResource SurfaceColor}" CornerRadius="8" Margin="0,0,12,0">
+                                                <TextBlock Text="&#xE8D5;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource AccentBrush}"/>
+                                            </Border>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="Setup_Installer.exe" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
+                                                <TextBlock Text="Gönderen: Dev-Laptop" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" Text="156 MB" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
+                                        <TextBlock Grid.Column="2" Text="Bugün, 11:05" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
+                                        <TextBlock Grid.Column="3" Text="Tamamlandı ✓" VerticalAlignment="Center" Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold" FontSize="12" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
 
-                    <!-- Left: My Device -->
-                    <Border Grid.Column="0" Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" CornerRadius="16" AllowDrop="True" Drop="DropZone_Drop" DragEnter="DropZone_DragEnter" DragLeave="DropZone_DragLeave" Padding="24">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Border Width="64" Height="64" Background="{DynamicResource Surface2Brush}" CornerRadius="32" Margin="0,0,0,16" HorizontalAlignment="Center">
-                                <TextBlock Text="💻" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <TextBlock Text="{Binding ElementName=TxtHostname, Path=Text}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-                            <TextBlock Text="Bu Cihaz" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,0,0,24"/>
-                            
-                            <Border x:Name="DropZoneBorder" Background="{DynamicResource Surface2Brush}" CornerRadius="8" Padding="16,12" Margin="0,0,0,16" AllowDrop="True" Drop="DropZone_Drop" DragEnter="DropZone_DragEnter" DragLeave="DropZone_DragLeave">
-                                <StackPanel>
-                                    <TextBlock Text="Göndermek için dosyaları buraya sürükleyin" Foreground="{DynamicResource TextSecBrush}" FontSize="12" TextAlignment="Center" Margin="0,0,0,8"/>
-                                    <Button Content="Dosya Seç" Height="32" Click="BtnBrowse_Click">
+                <!-- AYARLAR PANELİ -->
+                <Grid x:Name="PanelSettings" Visibility="Collapsed">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,0,0,24">
+                            <!-- UYGULAMA TEMASI -->
+                            <StackPanel Margin="0,0,0,32">
+                                <TextBlock Text="Uygulama Teması" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
+                                <TextBlock Text="Görünümü tarzınıza göre özelleştirin." FontSize="13" Foreground="{DynamicResource TextSecBrush}" Margin="0,0,0,16"/>
+                                
+                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,4">
+                                        <!-- Nordic Frost -->
+                                        <Border Style="{StaticResource GlassPanelBorder}" Width="160" Height="140" Margin="0,0,16,0" Cursor="Hand">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <Border Grid.Row="0" Margin="8,8,8,0" CornerRadius="8" Background="#E6F0FA"/>
+                                                <StackPanel Grid.Row="1" Margin="12">
+                                                    <TextBlock Text="Nordic Frost" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                        <Ellipse Width="8" Height="8" Fill="#1E40AF" Margin="0,0,4,0"/>
+                                                        <Ellipse Width="8" Height="8" Fill="#93C5FD" Margin="0,0,4,0"/>
+                                                        <Ellipse Width="8" Height="8" Fill="#EFF6FF"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                        <!-- Cyberpunk -->
+                                        <Border Style="{StaticResource GlassPanelBorder}" Width="160" Height="140" Margin="0,0,16,0" Cursor="Hand">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <Border Grid.Row="0" Margin="8,8,8,0" CornerRadius="8" Background="#170F24"/>
+                                                <StackPanel Grid.Row="1" Margin="12">
+                                                    <TextBlock Text="Cyberpunk" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                        <Ellipse Width="8" Height="8" Fill="#E879F9" Margin="0,0,4,0"/>
+                                                        <Ellipse Width="8" Height="8" Fill="#2DD4BF" Margin="0,0,4,0"/>
+                                                        <Ellipse Width="8" Height="8" Fill="#0F172A"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                        <!-- Deep Forest -->
+                                        <Border Style="{StaticResource GlassPanelBorder}" Width="160" Height="140" Margin="0,0,16,0" Cursor="Hand">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <Border Grid.Row="0" Margin="8,8,8,0" CornerRadius="8" Background="#14532D"/>
+                                                <StackPanel Grid.Row="1" Margin="12">
+                                                    <TextBlock Text="Deep Forest" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                        <Ellipse Width="8" Height="8" Fill="#166534" Margin="0,0,4,0"/>
+                                                        <Ellipse Width="8" Height="8" Fill="#4ADE80" Margin="0,0,4,0"/>
+                                                        <Ellipse Width="8" Height="8" Fill="#86EFAC"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                        <!-- Crimson Slate (Active) -->
+                                        <Border Style="{StaticResource GlassPanelBorder}" Width="160" Height="140" Margin="0,0,16,0" BorderBrush="#7C3AED" BorderThickness="2" Cursor="Hand">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <Border Grid.Row="0" Margin="8,8,8,0" CornerRadius="8">
+                                                    <Border.Background>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                            <GradientStop Color="#312E81" Offset="0"/>
+                                                            <GradientStop Color="#4C1D95" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.Background>
+                                                </Border>
+                                                <StackPanel Grid.Row="1" Margin="12">
+                                                    <TextBlock Text="Crimson Slate" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                        <Ellipse Width="8" Height="8" Fill="#7C3AED" Margin="0,0,4,0"/>
+                                                        <Ellipse Width="8" Height="8" Fill="#A78BFA" Margin="0,0,4,0"/>
+                                                        <Ellipse Width="8" Height="8" Fill="#1E1B4B"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                        <!-- Sunset Breeze -->
+                                        <Border Style="{StaticResource GlassPanelBorder}" Width="160" Height="140" Margin="0,0,16,0" Cursor="Hand">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <Border Grid.Row="0" Margin="8,8,8,0" CornerRadius="8">
+                                                    <Border.Background>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                            <GradientStop Color="#F97316" Offset="0"/>
+                                                            <GradientStop Color="#FCA5A5" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.Background>
+                                                </Border>
+                                                <StackPanel Grid.Row="1" Margin="12">
+                                                    <TextBlock Text="Sunset Breeze" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                        <Ellipse Width="8" Height="8" Fill="#EA580C" Margin="0,0,4,0"/>
+                                                        <Ellipse Width="8" Height="8" Fill="#FB923C" Margin="0,0,4,0"/>
+                                                        <Ellipse Width="8" Height="8" Fill="#FED7AA"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </StackPanel>
+
+                            <!-- MIDDLE SECTION (Cihaz & İndirme) -->
+                            <Grid Margin="0,0,0,32">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="24"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Cihaz Bilgileri -->
+                                <Border Grid.Column="0" Style="{StaticResource GlassPanelBorder}" Padding="24">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
+                                            <TextBlock Text="&#xE7F4;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="{DynamicResource AccentBrush}" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Cihaz Bilgileri" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+
+                                        <TextBlock Text="CİHAZ ADI" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,8"/>
+                                        <Grid Margin="0,0,0,20">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox x:Name="TxtHostname" Style="{StaticResource ModernTextBox}" Grid.Column="0" Margin="0,0,12,0" Text="Dosyaktar-PC-01"/>
+                                            <Border Grid.Column="1" Background="{DynamicResource AccentBrush}" Opacity="0.2" CornerRadius="8">
+                                                <Button Content="Değiştir" Style="{StaticResource GlassPanelButton}" Background="Transparent" Foreground="{DynamicResource AccentBrush}" BorderThickness="0" Width="80" FontWeight="Bold"/>
+                                            </Border>
+                                        </Grid>
+
+                                        <TextBlock Text="TRANSFER PROTOKOLÜ" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,8"/>
+                                        <ComboBox SelectedIndex="0" Height="40" Background="{DynamicResource Surface2Brush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderBrush="{DynamicResource BorderBrush}" Padding="12,10">
+                                            <ComboBoxItem Content="Ultra-Hızlı (P2P)"/>
+                                            <ComboBoxItem Content="Güvenli (Şifreli TCP)"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- İndirme Ayarları -->
+                                <Border Grid.Column="2" Style="{StaticResource GlassPanelBorder}" Padding="24">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
+                                            <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="{DynamicResource AccentBrush}" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="İndirme Ayarları" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+
+                                        <TextBlock Text="İNDİRME KLASÖRÜ" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,8"/>
+                                        <Grid Margin="0,0,0,20">
+                                            <TextBox x:Name="TxtDownloadFolder" Style="{StaticResource ModernTextBox}" Padding="36,10,80,10" Text="C:\Kullanıcılar\Belgeler\Dosyaktar\..."/>
+                                            <TextBlock Text="&#xE8D5;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource TextSecBrush}" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="12,0,0,0" IsHitTestVisible="False"/>
+                                            <Button Content="Gözat" Style="{StaticResource GlassPanelButton}" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,8,0"/>
+                                        </Grid>
+
+                                        <Border Height="1" Background="{DynamicResource BorderBrush}" Margin="0,0,0,16"/>
+
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="Otomatik Kabul Et" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14" Margin="0,0,0,4"/>
+                                                <TextBlock Text="Tanıdık cihazlardan gelenleri sorma" Foreground="{DynamicResource TextSecBrush}" FontSize="12"/>
+                                            </StackPanel>
+                                            <CheckBox x:Name="ChkDarkMode" Style="{StaticResource ToggleSwitch}" IsChecked="True" Grid.Column="1" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <!-- DANGER ZONE -->
+                            <Border BorderBrush="{DynamicResource DangerBrush}" BorderThickness="1" CornerRadius="12" Padding="24">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{DynamicResource DangerColor}" Opacity="0.1"/>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <Border Grid.Column="0" Width="40" Height="40" Background="Transparent" BorderBrush="{DynamicResource DangerBrush}" BorderThickness="1" CornerRadius="20" Margin="0,0,16,0">
+                                        <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource DangerBrush}" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="Uygulama Verilerini Temizle" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14" Margin="0,0,0,4"/>
+                                        <TextBlock Text="Tüm geçmişi ve ayarları sıfırlayarak uygulamayı baştan başlatın." Foreground="{DynamicResource TextSecBrush}" FontSize="12"/>
+                                    </StackPanel>
+                                    
+                                    <Button Grid.Column="2" Content="Sıfırla" Background="{DynamicResource DangerBrush}" Foreground="White" BorderThickness="0" Padding="24,10" FontWeight="Bold" Cursor="Hand" VerticalAlignment="Center">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Border>
                                             </ControlTemplate>
                                         </Button.Template>
                                     </Button>
-                                </StackPanel>
+                                </Grid>
                             </Border>
-                            <Button Content="Oyun Gönder" Background="Transparent" Foreground="{DynamicResource AccentBrush}" BorderThickness="0" Click="BtnGameTransfer_Click" Cursor="Hand" FontWeight="SemiBold"/>
-                        </StackPanel>
-                    </Border>
 
-                    <!-- Center: Arrow -->
-                    <TextBlock Grid.Column="1" Text="⇄" FontSize="28" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-                    <!-- Right: Target Device -->
-                    <Border Grid.Column="2" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="16" Padding="24">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Border Width="64" Height="64" Background="{DynamicResource Surface2Brush}" CornerRadius="32" Margin="0,0,0,16" HorizontalAlignment="Center">
-                                <TextBlock Text="📱" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <TextBlock x:Name="TxtActiveTargetName" Text="Hedef Cihaz" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-                            <TextBlock x:Name="TxtActiveTargetIP" Text="192.168.x.x" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,0,0,24"/>
-                            
-                            <Border Background="{DynamicResource Surface2Brush}" CornerRadius="8" Padding="16,12" HorizontalAlignment="Stretch">
-                                <StackPanel>
-                                    <TextBlock Text="Karşı cihaz şu an otomatik alım modunda." Foreground="{DynamicResource SuccessBrush}" FontSize="12" TextAlignment="Center" TextWrapping="Wrap"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
-                                        <Ellipse Width="8" Height="8" Fill="{DynamicResource SuccessBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                        <TextBlock Text="Bağlantı Stabil" Foreground="{DynamicResource TextSecBrush}" FontSize="12" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
                         </StackPanel>
-                    </Border>
+                    </ScrollViewer>
                 </Grid>
-            </Grid>
-
-            <!-- 2.C: History Panel -->
-            <Grid x:Name="PanelHistory" Visibility="Collapsed">
-                <StackPanel x:Name="HistoryList" Margin="0,0,0,32">
-                    <TextBlock Text="{DynamicResource Text_HistoryTitle}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8"/>
-                    <TextBlock Text="{DynamicResource Text_HistoryDesc}" FontSize="14" Foreground="{DynamicResource TextSecBrush}" Margin="0,0,0,16"/>
-                </StackPanel>
-                <TextBlock x:Name="TxtHistoryEmpty" Text="{DynamicResource Text_HistoryEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}"/>
             </Grid>
         </Grid>
 
-        <!-- ═══ 3. RIGHT SIDEBAR (QUEUE) ══════════════════════════════════════════ -->
-        <Border Grid.Column="2" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1,0,0,0">
-            <Grid Margin="24,32,24,24">
+        <!-- ==============================================
+             RIGHT PANEL (QUEUE / NETWORK)
+             ============================================== -->
+        <Border x:Name="QueuePanel" Grid.Column="2" Background="{DynamicResource SurfaceColor}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1,0,0,0">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/> <!-- Bottom Actions if needed -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,24">
-                    <TextBlock Text="{DynamicResource Text_QueueTitle}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
-                    <Border Background="{DynamicResource Surface2Brush}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Right">
-                        <TextBlock x:Name="TxtActiveCount" Text="{DynamicResource Text_ActiveCount}" FontSize="11" Foreground="{DynamicResource TextSecBrush}"/>
-                    </Border>
-                </Grid>
+                <Border Grid.Row="0" Padding="24" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
+                    <TextBlock x:Name="TxtRightPanelTitle" Text="Aktarım Kuyruğu" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource AccentBrush}"/>
+                </Border>
 
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <!-- Empty State -->
+                <StackPanel x:Name="QueueEmptyState" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Border Width="80" Height="80" Background="{DynamicResource Surface2Brush}" CornerRadius="40" Margin="0,0,0,16" HorizontalAlignment="Center">
+                        <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="32" Foreground="{DynamicResource BorderBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Aktif aktarım yok" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBlock Text="Dosyaları yerel ışık hızında taşımaya&#x0a;başlamak için bir cihaza bağlanın." FontSize="13" Foreground="{DynamicResource TextMutedBrush}" TextAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Active Transfer State -->
+                <ScrollViewer x:Name="QueueActiveState" Grid.Row="1" Visibility="Collapsed" Padding="16">
                     <StackPanel>
-                        <!-- Tek bir Aktarım Kartı Örneği -->
-                        <Border x:Name="TransferCard" Background="{DynamicResource Surface2Brush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="12" Padding="16" Visibility="Collapsed">
+                        <!-- Example Active Transfer Card -->
+                        <Border x:Name="TransferCard" Style="{StaticResource GlassPanelBorder}" Padding="16" Margin="0,0,0,12" Background="#111827">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -434,117 +571,54 @@
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
                                 
-                                <Grid Grid.Row="0" Margin="0,0,0,16">
+                                <Grid Grid.Row="0" Margin="0,0,0,12">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Border Width="32" Height="32" Background="{DynamicResource BackgroundBrush}" CornerRadius="6" Margin="0,0,12,0">
-                                        <TextBlock Text="📄" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                    <Border Width="36" Height="36" Background="{DynamicResource PrimaryGradientBrush}" CornerRadius="8" Margin="0,0,12,0">
+                                        <TextBlock Text="&#xE898;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock x:Name="TxtTransferFile" Text="Bekleniyor..." Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="13" TextTrimming="CharacterEllipsis" MaxWidth="160"/>
-                                        <TextBlock x:Name="TxtTargetDevice" Text="Bekleniyor" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
+                                        <TextBlock x:Name="TxtQueueFileName" Text="Dosyalar Gönderiliyor" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
+                                        <TextBlock x:Name="TxtQueueFileSize" Text="Hesaplanıyor..." Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                     </StackPanel>
-                                    <Button x:Name="BtnCancel" Grid.Column="2" Content="✕" Foreground="{DynamicResource TextMutedBrush}" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="BtnCancel_Click" VerticalAlignment="Top">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="Button">
-                                                <TextBlock Text="{TemplateBinding Content}" FontSize="14"/>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
+                                    <Button x:Name="BtnCancelTransfer" Grid.Column="2" Style="{StaticResource IconButton}" Content="&#xE711;" FontFamily="Segoe MDL2 Assets" Click="BtnCancelTransfer_Click"/>
                                 </Grid>
 
                                 <Grid Grid.Row="1" Margin="0,0,0,8">
-                                    <TextBlock x:Name="TxtSizeInfo" Text="0 MB / 0 MB" FontSize="11" Foreground="{DynamicResource TextSecBrush}" HorizontalAlignment="Left"/>
-                                    <TextBlock x:Name="TxtSpeed" Text="0 MB/s" FontSize="11" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="TxtQueueSpeed" Text="-- MB/s" Foreground="{DynamicResource SuccessBrush}" FontWeight="Bold" FontSize="12" HorizontalAlignment="Left"/>
+                                    <TextBlock x:Name="TxtQueueProgress" Text="--%" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Bold" FontSize="12" HorizontalAlignment="Right"/>
                                 </Grid>
 
-                                <ProgressBar x:Name="PbTransfer" Grid.Row="2" Height="4" Value="0" Maximum="100" BorderThickness="0" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource ProgressGradientBrush}" Margin="0,0,0,8"/>
-                                
-                                <TextBlock x:Name="TxtRemaining" Grid.Row="3" Text="~0s remaining" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Right"/>
+                                <ProgressBar x:Name="TransferProgressBar" Grid.Row="2" Height="4" Background="{DynamicResource SurfaceBrush}" Foreground="{DynamicResource ProgressGradientBrush}" BorderThickness="0" Value="45"/>
                             </Grid>
                         </Border>
                     </StackPanel>
                 </ScrollViewer>
-            </Grid>
-        </Border>
-        
-        <!-- ═══ 4. LEGACY CONTROLS (HIDDEN) ════════════════════════════════════════ -->
-        <!-- Code-behind derlemesinin patlamaması için eski kontrolleri gizleyerek tutuyoruz -->
-        <Grid Visibility="Collapsed">
-            <TextBlock x:Name="TxtConnStatus" />
-            <TextBlock x:Name="TxtScanning" />
-            <TextBlock x:Name="TxtMyIP" />
-            <TextBlock x:Name="TxtNetStatus" />
-            <TextBlock x:Name="TxtTargetLabel" />
-            <TextBlock x:Name="DropHint" />
-            <TextBlock x:Name="TxtPercent" />
-            <TextBlock x:Name="TxtStatus" />
-            <TextBlock x:Name="TxtLog" />
-            <TextBlock x:Name="TxtTargetIP" />
-            <TextBlock x:Name="TxtFileCount" />
-            <TextBlock x:Name="TxtHostname" />
-            <TextBlock x:Name="NoPeersHint" />
-            <TextBlock x:Name="TxtPeerCount" />
-            <TextBlock x:Name="TxtSelectedPeerName" />
-            <TextBlock x:Name="TxtSelectedPeerIP" />
-            <Border x:Name="PeerCountBadge" />
-            <Border x:Name="SelectedPeerCard" />
-            <ItemsControl x:Name="PeerItemsControl" />
-            <Ellipse x:Name="StatusDot" />
-            <Border x:Name="StatusPill" />
-            <Border x:Name="DropZone" />
-            <ScrollViewer x:Name="LogScroll" />
-            <StackPanel x:Name="ManualIPPanel" />
-            <StackPanel x:Name="FileListPanel" />
-            <ItemsControl x:Name="FileListControl" />
-            <Button x:Name="BtnTestConn" />
-            <Button x:Name="BtnSend" />
-            <RadioButton x:Name="RbSender" />
-            <RadioButton x:Name="RbReceiver" />
-        </Grid>
 
-        <!-- ═══ 5. PAIRING MODAL ════════════════════════════════════════ -->
-        <Grid x:Name="PairingModal" Visibility="Collapsed" Background="#80000000" Grid.RowSpan="2" Grid.ColumnSpan="3">
-            <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="16" Width="400" Height="250" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="24">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    
-                    <TextBlock x:Name="TxtPairingTitle" Text="Bağlantı İsteği" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                    
-                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock x:Name="TxtPairingMessage" Text="Cihaz sana bağlanmak istiyor." FontSize="14" Foreground="{DynamicResource TextSecBrush}" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,16"/>
-                        <Border Background="{DynamicResource Surface2Brush}" CornerRadius="8" Padding="16,8">
-                            <TextBlock x:Name="TxtPairingPin" Text="123456" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" Typography.Capitals="AllSmallCaps"/>
+                <!-- Network Info Box -->
+                <Border Grid.Row="2" Margin="24,0,24,24" Style="{StaticResource GlassPanelBorder}" Padding="16">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,12">
+                            <TextBlock Text="Ağ Durumu" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextSecBrush}" HorizontalAlignment="Left"/>
+                            <TextBlock Text="Gigabit LAN" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Border Height="4" Background="{DynamicResource SurfaceBrush}" CornerRadius="2">
+                            <Border HorizontalAlignment="Left" Width="200" Background="{DynamicResource SuccessBrush}" CornerRadius="2"/>
                         </Border>
                     </StackPanel>
+                </Border>
 
-                    <!-- Buttons for Receive Mode -->
-                    <Grid x:Name="PairingReceiveButtons" Grid.Row="2" Visibility="Collapsed">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="16"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button x:Name="BtnPairingReject" Grid.Column="0" Content="Reddet" Style="{StaticResource DangerButton}" Height="40" Click="BtnPairingReject_Click"/>
-                        <Button x:Name="BtnPairingAccept" Grid.Column="2" Content="Onayla" Style="{StaticResource SuccessButton}" Height="40" Click="BtnPairingAccept_Click"/>
+                <!-- Status Footer -->
+                <Border Grid.Row="3" Background="{DynamicResource BackgroundBrush}" Padding="16,12" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
+                    <Grid>
+                        <TextBlock Text="Dosyaktar v1.6.7" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Text="Bağlı" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Grid>
-
-                    <!-- Buttons for Send Mode -->
-                    <Grid x:Name="PairingSendButtons" Grid.Row="2" Visibility="Collapsed">
-                        <Button x:Name="BtnPairingCancel" Content="İptal Et" Style="{StaticResource SecondaryButton}" Height="40" Width="120" HorizontalAlignment="Center" Click="BtnPairingCancel_Click"/>
-                    </Grid>
-                </Grid>
-            </Border>
-        </Grid>
-
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
-    </Grid>
-    </Border>
 </Window>
