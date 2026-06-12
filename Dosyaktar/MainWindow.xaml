@@ -353,7 +353,7 @@
                             <TextBlock Text="{Binding ElementName=TxtHostname, Path=Text}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,4"/>
                             <TextBlock Text="Bu Cihaz" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,0,0,24"/>
                             
-                            <Border Background="{DynamicResource Surface2Brush}" CornerRadius="8" Padding="16,12" Margin="0,0,0,16">
+                            <Border x:Name="DropZoneBorder" Background="{DynamicResource Surface2Brush}" CornerRadius="8" Padding="16,12" Margin="0,0,0,16" AllowDrop="True" Drop="DropZone_Drop" DragEnter="DropZone_DragEnter" DragLeave="DropZone_DragLeave">
                                 <StackPanel>
                                     <TextBlock Text="Göndermek için dosyaları buraya sürükleyin" Foreground="{DynamicResource TextSecBrush}" FontSize="12" TextAlignment="Center" Margin="0,0,0,8"/>
                                     <Button Content="Dosya Seç" Height="32" Click="BtnBrowse_Click">
@@ -399,11 +399,11 @@
 
             <!-- 2.C: History Panel -->
             <Grid x:Name="PanelHistory" Visibility="Collapsed">
-                <StackPanel Margin="0,0,0,32">
+                <StackPanel x:Name="HistoryList" Margin="0,0,0,32">
                     <TextBlock Text="{DynamicResource Text_HistoryTitle}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8"/>
-                    <TextBlock Text="{DynamicResource Text_HistoryDesc}" FontSize="14" Foreground="{DynamicResource TextSecBrush}"/>
+                    <TextBlock Text="{DynamicResource Text_HistoryDesc}" FontSize="14" Foreground="{DynamicResource TextSecBrush}" Margin="0,0,0,16"/>
                 </StackPanel>
-                <TextBlock Text="{DynamicResource Text_HistoryEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}"/>
+                <TextBlock x:Name="TxtHistoryEmpty" Text="{DynamicResource Text_HistoryEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextMutedBrush}"/>
             </Grid>
         </Grid>
 

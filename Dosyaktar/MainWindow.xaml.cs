@@ -354,18 +354,51 @@ namespace Dosyaktar
             int port = _settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort;
             AppendLog($"Dosyalar gönderiliyor: {_connectedTargetIP}:{port}");
 
+            // UI'da aktarım kartını göster
+            if (FindName("TransferCard") is Border card) card.Visibility = Visibility.Visible;
+            if (FindName("TxtTransferFile") is TextBlock tf) tf.Text = System.IO.Path.GetFileName(newFiles[0]) + (newFiles.Count > 1 ? $" ve {newFiles.Count - 1} dosya daha" : "");
+            if (FindName("TxtTargetDevice") is TextBlock td) td.Text = _connectedTargetName;
+            if (FindName("TxtActiveCount") is TextBlock ac) ac.Text = "1 Aktarım";
+
             var result = await _xfer.SendFilesAsync(newFiles.ToArray(), _connectedTargetIP, port);
             SetBusy(false);
+
+            if (FindName("TransferCard") is Border card2) card2.Visibility = Visibility.Collapsed;
+            if (FindName("TxtActiveCount") is TextBlock ac2) ac2.Text = "Aktif işlem yok";
 
             if (result.Success)
             {
                 SetProgressDone();
                 AppendLog("Transfer başarıyla tamamlandı.");
+                AddToHistory($"Gönderildi: {newFiles.Count} dosya → {_connectedTargetName}");
             }
             else if (!result.Message.Contains("iptal", StringComparison.OrdinalIgnoreCase))
             {
                 MessageBox.Show($"Transfer başarısız:\n{result.Message}", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                AddToHistory($"Hata: {newFiles.Count} dosya gönderilemedi → {_connectedTargetName}");
             }
+        }
+
+        private void AddToHistory(string info)
+        {
+            Dispatcher.InvokeAsync(() => {
+                if (FindName("TxtHistoryEmpty") is TextBlock emptyTxt) emptyTxt.Visibility = Visibility.Collapsed;
+                if (FindName("HistoryList") is StackPanel hl)
+                {
+                    var border = new Border {
+                        Background = (SolidColorBrush)FindResource("Surface2Brush"),
+                        CornerRadius = new CornerRadius(8),
+                        Padding = new Thickness(16, 12, 16, 12),
+                        Margin = new Thickness(0, 0, 0, 8)
+                    };
+                    border.Child = new TextBlock {
+                        Text = $"{DateTime.Now:HH:mm} - {info}",
+                        Foreground = (SolidColorBrush)FindResource("TextPrimaryBrush"),
+                        FontSize = 13
+                    };
+                    hl.Children.Add(border);
+                }
+            });
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -662,8 +695,9 @@ namespace Dosyaktar
 
         private void BtnRefresh_Click(object sender, RoutedEventArgs e) 
         { 
-            _peers.Clear(); 
-            _discovery.Stop(); 
+            // Cihaz listesi UI'dan anında silinmemeli, çünkü broadcast 2 saniyede bir geliyor.
+            // Sadece loglara yazdırıp arka planda dinlemeye devam etmesini sağlıyoruz.
+            AppendLog("Ağ taraması tetiklendi...");
             int port = _settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort; 
             _discovery.Start(port, isReceiving: false); 
         }
