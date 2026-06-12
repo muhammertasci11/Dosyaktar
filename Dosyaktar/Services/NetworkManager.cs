@@ -39,6 +39,11 @@ namespace Dosyaktar.Services
                             n.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
                             !n.Description.Contains("Virtual") &&
                             !n.Description.Contains("Hyper-V") &&
+                            !n.Description.Contains("Tailscale") &&
+                            !n.Description.Contains("Radmin") &&
+                            !n.Description.Contains("TAP-Windows") &&
+                            !n.Description.Contains("Sanal") &&
+                            !n.Description.Contains("ZeroTier") &&
                             !n.Name.Contains("vEthernet") &&
                             !n.Name.Contains("WSL"))
                 .OrderByDescending(n => n.NetworkInterfaceType == NetworkInterfaceType.Ethernet)

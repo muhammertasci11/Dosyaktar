@@ -99,6 +99,10 @@ namespace Dosyaktar
 
                 // Tarama animasyonu
                 StartScanAnimation();
+                
+                // Ayarları UI'a yükle ve ağ bilgisini güncelle
+                LoadSettingsToUI();
+                UpdateNetworkInfo();
 
                 Loaded += async (_, _) => await CheckForUpdatesAsync();
             }
@@ -801,6 +805,183 @@ namespace Dosyaktar
         private void BtnCancelTransfer_Click(object sender, RoutedEventArgs e)
         {
             // _xfer.CancelTransfer();
+        }
+
+        private void ThemeCard_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Border border && border.Tag is string theme)
+            {
+                ApplyTheme(theme);
+                AppendLog($"Tema uygulandı: {theme}");
+            }
+        }
+
+        private void ApplyTheme(string theme)
+        {
+            var res = Application.Current.Resources;
+            Color bg, surface, surface2, border, accent, text, textSec, textMuted;
+
+            switch (theme)
+            {
+                case "nordic":
+                    bg = (Color)ColorConverter.ConvertFromString("#E6F0FA");
+                    surface = (Color)ColorConverter.ConvertFromString("#FFFFFF");
+                    surface2 = (Color)ColorConverter.ConvertFromString("#F8FAFC");
+                    border = (Color)ColorConverter.ConvertFromString("#E2E8F0");
+                    accent = (Color)ColorConverter.ConvertFromString("#3B82F6");
+                    text = (Color)ColorConverter.ConvertFromString("#0F172A");
+                    textSec = (Color)ColorConverter.ConvertFromString("#475569");
+                    textMuted = (Color)ColorConverter.ConvertFromString("#94A3B8");
+                    break;
+                case "cyberpunk":
+                    bg = (Color)ColorConverter.ConvertFromString("#0A0A0B");
+                    surface = (Color)ColorConverter.ConvertFromString("#170F24");
+                    surface2 = (Color)ColorConverter.ConvertFromString("#1F1332");
+                    border = (Color)ColorConverter.ConvertFromString("#35245A");
+                    accent = (Color)ColorConverter.ConvertFromString("#E879F9");
+                    text = (Color)ColorConverter.ConvertFromString("#F8FAFC");
+                    textSec = (Color)ColorConverter.ConvertFromString("#C084FC");
+                    textMuted = (Color)ColorConverter.ConvertFromString("#A855F7");
+                    break;
+                case "forest":
+                    bg = (Color)ColorConverter.ConvertFromString("#052E16");
+                    surface = (Color)ColorConverter.ConvertFromString("#14532D");
+                    surface2 = (Color)ColorConverter.ConvertFromString("#166534");
+                    border = (Color)ColorConverter.ConvertFromString("#22C55E");
+                    accent = (Color)ColorConverter.ConvertFromString("#4ADE80");
+                    text = (Color)ColorConverter.ConvertFromString("#F0FDF4");
+                    textSec = (Color)ColorConverter.ConvertFromString("#86EFAC");
+                    textMuted = (Color)ColorConverter.ConvertFromString("#BBF7D0");
+                    break;
+                case "sunset":
+                    bg = (Color)ColorConverter.ConvertFromString("#431407");
+                    surface = (Color)ColorConverter.ConvertFromString("#7C2D12");
+                    surface2 = (Color)ColorConverter.ConvertFromString("#9A3412");
+                    border = (Color)ColorConverter.ConvertFromString("#C2410C");
+                    accent = (Color)ColorConverter.ConvertFromString("#FB923C");
+                    text = (Color)ColorConverter.ConvertFromString("#FFF7ED");
+                    textSec = (Color)ColorConverter.ConvertFromString("#FFEDD5");
+                    textMuted = (Color)ColorConverter.ConvertFromString("#FED7AA");
+                    break;
+                case "crimson":
+                default:
+                    bg = (Color)ColorConverter.ConvertFromString("#0b1326");
+                    surface = (Color)ColorConverter.ConvertFromString("#131b2e");
+                    surface2 = (Color)ColorConverter.ConvertFromString("#171f33");
+                    border = (Color)ColorConverter.ConvertFromString("#2d3449");
+                    accent = (Color)ColorConverter.ConvertFromString("#4d8eff");
+                    text = (Color)ColorConverter.ConvertFromString("#dae2fd");
+                    textSec = (Color)ColorConverter.ConvertFromString("#c2c6d6");
+                    textMuted = (Color)ColorConverter.ConvertFromString("#8c909f");
+                    break;
+            }
+
+            res["BackgroundBrush"] = new SolidColorBrush(bg);
+            res["SurfaceBrush"] = new SolidColorBrush(surface);
+            res["Surface2Brush"] = new SolidColorBrush(surface2);
+            res["BorderBrush"] = new SolidColorBrush(border);
+            res["AccentBrush"] = new SolidColorBrush(accent);
+            res["TextPrimaryBrush"] = new SolidColorBrush(text);
+            res["TextSecBrush"] = new SolidColorBrush(textSec);
+            res["TextMutedBrush"] = new SolidColorBrush(textMuted);
+            
+            var primaryGradient = new LinearGradientBrush { StartPoint = new Point(0, 0), EndPoint = new Point(1, 1) };
+            primaryGradient.GradientStops.Add(new GradientStop(accent, 0.0));
+            // Just a slightly darker version for gradient
+            var darkAccent = Color.FromArgb(255, (byte)(accent.R * 0.8), (byte)(accent.G * 0.8), (byte)(accent.B * 0.8));
+            primaryGradient.GradientStops.Add(new GradientStop(darkAccent, 1.0));
+            res["PrimaryGradientBrush"] = primaryGradient;
+        }
+
+        private void BtnBrowseFolder_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new OpenFileDialog();
+            dlg.Title = "İndirme klasörü seçin (herhangi bir dosya seçin)";
+            dlg.CheckFileExists = false;
+            dlg.FileName = "Klasor_Sec";
+            if (!string.IsNullOrEmpty(TxtDownloadFolder.Text) && Directory.Exists(TxtDownloadFolder.Text))
+                dlg.InitialDirectory = TxtDownloadFolder.Text;
+            if (dlg.ShowDialog() == true)
+            {
+                string dir = System.IO.Path.GetDirectoryName(dlg.FileName) ?? "";
+                if (!string.IsNullOrEmpty(dir))
+                    TxtDownloadFolder.Text = dir;
+            }
+        }
+
+        private void BtnSaveSettings_Click(object sender, RoutedEventArgs e)
+        {
+            _settings.SaveDirectory = TxtDownloadFolder.Text;
+            _settings.DarkMode = ChkDarkMode.IsChecked == true;
+            _settings.AutoUpdate = ChkAutoUpdate.IsChecked == true;
+            _settings.AutoReceive = ChkAutoReceive.IsChecked == true;
+            if (int.TryParse(TxtPort.Text, out int port) && port > 0 && port < 65536)
+                _settings.Port = port;
+            SettingsService.Save(_settings);
+            AppendLog("Ayarlar kaydedildi.");
+            
+            int newPort = _settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort;
+            _discovery.Start(newPort, isReceiving: false);
+        }
+
+        private void UpdateNetworkInfo()
+        {
+            try
+            {
+                string localIp = Dosyaktar.Services.NetworkManager.GetLocalIP();
+                if (localIp == "127.0.0.1")
+                {
+                    if (TxtNetworkType != null) TxtNetworkType.Text = "Seçili ağ yok";
+                    if (NetSpeedBar != null) NetSpeedBar.Width = 0;
+                    if (TxtFooterStatus != null) TxtFooterStatus.Text = "Bağlantı yok";
+                    return;
+                }
+
+                System.Net.NetworkInformation.NetworkInterface activeNic = null;
+                foreach (var n in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    if (n.OperationalStatus != System.Net.NetworkInformation.OperationalStatus.Up) continue;
+                    foreach (var addr in n.GetIPProperties().UnicastAddresses)
+                    {
+                        if (addr.Address.ToString() == localIp)
+                        {
+                            activeNic = n;
+                            break;
+                        }
+                    }
+                    if (activeNic != null) break;
+                }
+
+                if (activeNic == null)
+                {
+                    if (TxtNetworkType != null) TxtNetworkType.Text = "Seçili ağ yok";
+                    if (NetSpeedBar != null) NetSpeedBar.Width = 0;
+                    if (TxtFooterStatus != null) TxtFooterStatus.Text = "Bağlantı yok";
+                    return;
+                }
+
+                bool isWifi = activeNic.NetworkInterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Wireless80211;
+                long speedMbps = activeNic.Speed / 1_000_000;
+                string typeName = isWifi ? $"WiFi ({speedMbps} Mbps)" : $"Ethernet ({speedMbps} Mbps)";
+                if (TxtNetworkType != null) TxtNetworkType.Text = typeName;
+                if (TxtFooterStatus != null) TxtFooterStatus.Text = isWifi ? "WiFi Bağlı" : "Kablolu Bağlı";
+                double barWidth = Math.Min(speedMbps / 10.0, 260);
+                if (NetSpeedBar != null) NetSpeedBar.Width = barWidth;
+            }
+            catch
+            {
+                if (TxtNetworkType != null) TxtNetworkType.Text = "Tespit edilemedi";
+            }
+        }
+
+        private void LoadSettingsToUI()
+        {
+            TxtHostname.Text = Environment.MachineName;
+            TxtDownloadFolder.Text = _settings.SaveDirectory;
+            TxtPort.Text = (_settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort).ToString();
+            ChkDarkMode.IsChecked = _settings.DarkMode;
+            ChkAutoUpdate.IsChecked = _settings.AutoUpdate;
+            ChkAutoReceive.IsChecked = _settings.AutoReceive;
         }
     }
 }
