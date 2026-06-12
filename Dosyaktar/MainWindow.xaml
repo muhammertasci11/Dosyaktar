@@ -123,15 +123,20 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="1">
-                    <RadioButton Content="Keşif" Tag="&#xE73E;" Style="{StaticResource SidebarTabButton}" IsChecked="True" Click="MenuDiscovery_Click"/>
-                    <RadioButton Content="Aktif Oturum" Tag="&#xE895;" Style="{StaticResource SidebarTabButton}" Click="MenuActiveSession_Click"/>
+                    <RadioButton Content="Keşif" Tag="&#xE721;" Style="{StaticResource SidebarTabButton}" IsChecked="True" Click="MenuDiscovery_Click"/>
+                    <RadioButton Content="Aktif Oturum" Tag="&#xE8CC;" Style="{StaticResource SidebarTabButton}" Click="MenuActiveSession_Click"/>
                     <RadioButton Content="Geçmiş" Tag="&#xE81C;" Style="{StaticResource SidebarTabButton}" Click="MenuHistory_Click"/>
                     
                     <Border Height="1" Background="{DynamicResource BorderBrush}" Margin="0,20" Opacity="0.5"/>
                     <RadioButton Content="Ayarlar" Tag="&#xE713;" Style="{StaticResource SidebarTabButton}" Click="MenuSettings_Click"/>
                 </StackPanel>
 
-                <Button Grid.Row="2" Content="&#xE710;  Cihaz Eşleştir" Style="{StaticResource GradientButton}" FontFamily="Segoe Fluent Icons, Segoe UI Emoji, Segoe MDL2 Assets, Segoe UI" Click="MenuPair_Click"/>
+                <Button Grid.Row="2" Style="{StaticResource GradientButton}" Click="MenuPair_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE710;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Cihaz Eşleştir" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
             </Grid>
         </Border>
 
@@ -153,8 +158,8 @@
                         <Ellipse Width="8" Height="8" Fill="{DynamicResource SuccessBrush}" Margin="0,0,8,0" x:Name="ElScanIndicator"/>
                         <TextBlock Text="Yerel ağ taranıyor..." Foreground="{DynamicResource SuccessBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,0,16,0" VerticalAlignment="Center"/>
                         
-                        <Button Style="{StaticResource IconButton}" Content="&#xE897;" FontFamily="Segoe MDL2 Assets" FontSize="16" Click="BtnRefresh_Click"/>
-                        <Button Style="{StaticResource IconButton}" Content="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="8,0,0,0" Click="BtnClose_Click"/>
+                        <Button Style="{StaticResource IconButton}" Content="&#xE72C;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Click="BtnRefresh_Click"/>
+                        <Button Style="{StaticResource IconButton}" Content="&#xE711;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Margin="8,0,0,0" Click="BtnClose_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -237,11 +242,16 @@
                     <!-- Drop Zone -->
                     <Border Grid.Row="2" x:Name="DropZoneBorder" Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" CornerRadius="20" AllowDrop="True" Drop="Border_Drop" DragEnter="Border_DragEnter" DragLeave="Border_DragLeave">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Text="&#xE898;" FontFamily="Segoe MDL2 Assets" FontSize="48" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                            <TextBlock Text="&#xE8D5;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="48" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,0,0,16"/>
                             <TextBlock Text="Dosya veya oyun göndermek için sürükleyip bırakın" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,8"/>
                             <TextBlock Text="Veya yerel depolamanızdan gözatın" FontSize="13" Foreground="{DynamicResource TextSecBrush}" HorizontalAlignment="Center" Margin="0,0,0,24"/>
                             
-                            <Button Content="&#xE909;  Oyun Gönder" Style="{StaticResource GlassPanelButton}" FontFamily="Segoe MDL2 Assets, Segoe UI" Width="180" Click="BtnGameTransfer_Click"/>
+                            <Button Style="{StaticResource GlassPanelButton}" Width="180" Click="BtnGameTransfer_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE909;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Oyun Gönder" FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -255,7 +265,10 @@
                     
                     <StackPanel Grid.Row="0" Margin="0,0,0,24">
                         <TextBlock Text="Transfer Geçmişi" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,16"/>
-                        <TextBox Style="{StaticResource ModernTextBox}" Width="350" HorizontalAlignment="Left" Text="&#xE721;  Dosya adı, türü veya tarih ile ara..." FontFamily="Segoe MDL2 Assets, Segoe UI"/>
+                        <Grid HorizontalAlignment="Left">
+                            <TextBox Style="{StaticResource ModernTextBox}" Width="350" Padding="36,10,12,10" Text="Dosya adı, türü veya tarih ile ara..."/>
+                            <TextBlock Text="&#xE721;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="12,0,0,0" IsHitTestVisible="False"/>
+                        </Grid>
                     </StackPanel>
                     
                     <!-- Table Header -->
@@ -280,29 +293,7 @@
                         
                         <ScrollViewer Grid.Row="1">
                             <StackPanel x:Name="HistoryList">
-                                <!-- Example item -->
-                                <Border Style="{StaticResource GlassPanelBorder}" Padding="16" Margin="0,0,0,8">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="100"/>
-                                            <ColumnDefinition Width="120"/>
-                                            <ColumnDefinition Width="100"/>
-                                        </Grid.ColumnDefinitions>
-                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                            <Border Width="36" Height="36" Background="{DynamicResource SurfaceBrush}" CornerRadius="8" Margin="0,0,12,0">
-                                                <TextBlock Text="&#xE8D5;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource AccentBrush}"/>
-                                            </Border>
-                                            <StackPanel VerticalAlignment="Center">
-                                                <TextBlock Text="Setup_Installer.exe" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
-                                                <TextBlock Text="Gönderen: Dev-Laptop" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
-                                            </StackPanel>
-                                        </StackPanel>
-                                        <TextBlock Grid.Column="1" Text="156 MB" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
-                                        <TextBlock Grid.Column="2" Text="Bugün, 11:05" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
-                                        <TextBlock Grid.Column="3" Text="Tamamlandı ✓" VerticalAlignment="Center" Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold" FontSize="12" HorizontalAlignment="Right"/>
-                                    </Grid>
-                                </Border>
+                                <TextBlock Text="Henüz bir transfer geçmişi yok." Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,40,0,0"/>
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>
@@ -311,211 +302,149 @@
                 <!-- AYARLAR PANELİ -->
                 <Grid x:Name="PanelSettings" Visibility="Collapsed">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <StackPanel Margin="0,0,0,24">
+                        <StackPanel Margin="0,0,16,24">
                             <!-- UYGULAMA TEMASI -->
-                            <StackPanel Margin="0,0,0,32">
-                                <TextBlock Text="Uygulama Teması" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
-                                <TextBlock Text="Görünümü tarzınıza göre özelleştirin." FontSize="13" Foreground="{DynamicResource TextSecBrush}" Margin="0,0,0,16"/>
-                                
-                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,4">
-                                        <!-- Nordic Frost -->
-                                        <Border Style="{StaticResource GlassPanelBorder}" Width="160" Height="140" Margin="0,0,16,0" Cursor="Hand">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                </Grid.RowDefinitions>
-                                                <Border Grid.Row="0" Margin="8,8,8,0" CornerRadius="8" Background="#E6F0FA"/>
-                                                <StackPanel Grid.Row="1" Margin="12">
-                                                    <TextBlock Text="Nordic Frost" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
-                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                                        <Ellipse Width="8" Height="8" Fill="#1E40AF" Margin="0,0,4,0"/>
-                                                        <Ellipse Width="8" Height="8" Fill="#93C5FD" Margin="0,0,4,0"/>
-                                                        <Ellipse Width="8" Height="8" Fill="#EFF6FF"/>
-                                                    </StackPanel>
-                                                </StackPanel>
-                                            </Grid>
-                                        </Border>
-                                        <!-- Cyberpunk -->
-                                        <Border Style="{StaticResource GlassPanelBorder}" Width="160" Height="140" Margin="0,0,16,0" Cursor="Hand">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                </Grid.RowDefinitions>
-                                                <Border Grid.Row="0" Margin="8,8,8,0" CornerRadius="8" Background="#170F24"/>
-                                                <StackPanel Grid.Row="1" Margin="12">
-                                                    <TextBlock Text="Cyberpunk" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
-                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                                        <Ellipse Width="8" Height="8" Fill="#E879F9" Margin="0,0,4,0"/>
-                                                        <Ellipse Width="8" Height="8" Fill="#2DD4BF" Margin="0,0,4,0"/>
-                                                        <Ellipse Width="8" Height="8" Fill="#0F172A"/>
-                                                    </StackPanel>
-                                                </StackPanel>
-                                            </Grid>
-                                        </Border>
-                                        <!-- Deep Forest -->
-                                        <Border Style="{StaticResource GlassPanelBorder}" Width="160" Height="140" Margin="0,0,16,0" Cursor="Hand">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                </Grid.RowDefinitions>
-                                                <Border Grid.Row="0" Margin="8,8,8,0" CornerRadius="8" Background="#14532D"/>
-                                                <StackPanel Grid.Row="1" Margin="12">
-                                                    <TextBlock Text="Deep Forest" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
-                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                                        <Ellipse Width="8" Height="8" Fill="#166534" Margin="0,0,4,0"/>
-                                                        <Ellipse Width="8" Height="8" Fill="#4ADE80" Margin="0,0,4,0"/>
-                                                        <Ellipse Width="8" Height="8" Fill="#86EFAC"/>
-                                                    </StackPanel>
-                                                </StackPanel>
-                                            </Grid>
-                                        </Border>
-                                        <!-- Crimson Slate (Active) -->
-                                        <Border Style="{StaticResource GlassPanelBorder}" Width="160" Height="140" Margin="0,0,16,0" BorderBrush="#7C3AED" BorderThickness="2" Cursor="Hand">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                </Grid.RowDefinitions>
-                                                <Border Grid.Row="0" Margin="8,8,8,0" CornerRadius="8">
-                                                    <Border.Background>
-                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                            <GradientStop Color="#312E81" Offset="0"/>
-                                                            <GradientStop Color="#4C1D95" Offset="1"/>
-                                                        </LinearGradientBrush>
-                                                    </Border.Background>
-                                                </Border>
-                                                <StackPanel Grid.Row="1" Margin="12">
-                                                    <TextBlock Text="Crimson Slate" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
-                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                                        <Ellipse Width="8" Height="8" Fill="#7C3AED" Margin="0,0,4,0"/>
-                                                        <Ellipse Width="8" Height="8" Fill="#A78BFA" Margin="0,0,4,0"/>
-                                                        <Ellipse Width="8" Height="8" Fill="#1E1B4B"/>
-                                                    </StackPanel>
-                                                </StackPanel>
-                                            </Grid>
-                                        </Border>
-                                        <!-- Sunset Breeze -->
-                                        <Border Style="{StaticResource GlassPanelBorder}" Width="160" Height="140" Margin="0,0,16,0" Cursor="Hand">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                </Grid.RowDefinitions>
-                                                <Border Grid.Row="0" Margin="8,8,8,0" CornerRadius="8">
-                                                    <Border.Background>
-                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                            <GradientStop Color="#F97316" Offset="0"/>
-                                                            <GradientStop Color="#FCA5A5" Offset="1"/>
-                                                        </LinearGradientBrush>
-                                                    </Border.Background>
-                                                </Border>
-                                                <StackPanel Grid.Row="1" Margin="12">
-                                                    <TextBlock Text="Sunset Breeze" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
-                                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                                        <Ellipse Width="8" Height="8" Fill="#EA580C" Margin="0,0,4,0"/>
-                                                        <Ellipse Width="8" Height="8" Fill="#FB923C" Margin="0,0,4,0"/>
-                                                        <Ellipse Width="8" Height="8" Fill="#FED7AA"/>
-                                                    </StackPanel>
-                                                </StackPanel>
-                                            </Grid>
-                                        </Border>
-                                    </StackPanel>
-                                </ScrollViewer>
-                            </StackPanel>
-
-                            <!-- MIDDLE SECTION (Cihaz & İndirme) -->
-                            <Grid Margin="0,0,0,32">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="24"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Cihaz Bilgileri -->
-                                <Border Grid.Column="0" Style="{StaticResource GlassPanelBorder}" Padding="24">
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
-                                            <TextBlock Text="&#xE7F4;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="{DynamicResource AccentBrush}" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                                            <TextBlock Text="Cihaz Bilgileri" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            <TextBlock Text="Uygulama Teması" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
+                            <TextBlock Text="Görünümü tarzınıza göre özelleştirin." FontSize="13" Foreground="{DynamicResource TextSecBrush}" Margin="0,0,0,16"/>
+                            
+                            <WrapPanel Orientation="Horizontal" Margin="0,0,0,32">
+                                <Border Style="{StaticResource GlassPanelBorder}" Width="120" Height="110" Margin="0,0,12,12" Cursor="Hand" MouseDown="ThemeCard_Click" Tag="nordic">
+                                    <Grid><Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Margin="6,6,6,0" CornerRadius="6" Background="#E6F0FA"/>
+                                        <StackPanel Grid.Row="1" Margin="8,6,8,8">
+                                            <TextBlock Text="Nordic Frost" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="11"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0"><Ellipse Width="7" Height="7" Fill="#1E40AF" Margin="0,0,3,0"/><Ellipse Width="7" Height="7" Fill="#93C5FD" Margin="0,0,3,0"/><Ellipse Width="7" Height="7" Fill="#EFF6FF"/></StackPanel>
                                         </StackPanel>
-
-                                        <TextBlock Text="CİHAZ ADI" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,8"/>
-                                        <Grid Margin="0,0,0,20">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBox x:Name="TxtHostname" Style="{StaticResource ModernTextBox}" Grid.Column="0" Margin="0,0,12,0" Text="Dosyaktar-PC-01"/>
-                                            <Border Grid.Column="1" Background="{DynamicResource AccentBrush}" Opacity="0.2" CornerRadius="8">
-                                                <Button Content="Değiştir" Style="{StaticResource GlassPanelButton}" Background="Transparent" Foreground="{DynamicResource AccentBrush}" BorderThickness="0" Width="80" FontWeight="Bold"/>
-                                            </Border>
-                                        </Grid>
-
-                                        <TextBlock Text="TRANSFER PROTOKOLÜ" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,8"/>
-                                        <ComboBox SelectedIndex="0" Height="40" Background="{DynamicResource Surface2Brush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderBrush="{DynamicResource BorderBrush}" Padding="12,10">
-                                            <ComboBoxItem Content="Ultra-Hızlı (P2P)"/>
-                                            <ComboBoxItem Content="Güvenli (Şifreli TCP)"/>
-                                        </ComboBox>
-                                    </StackPanel>
+                                    </Grid>
                                 </Border>
-
-                                <!-- İndirme Ayarları -->
-                                <Border Grid.Column="2" Style="{StaticResource GlassPanelBorder}" Padding="24">
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
-                                            <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="{DynamicResource AccentBrush}" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                                            <TextBlock Text="İndirme Ayarları" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                <Border Style="{StaticResource GlassPanelBorder}" Width="120" Height="110" Margin="0,0,12,12" Cursor="Hand" MouseDown="ThemeCard_Click" Tag="cyberpunk">
+                                    <Grid><Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Margin="6,6,6,0" CornerRadius="6" Background="#170F24"/>
+                                        <StackPanel Grid.Row="1" Margin="8,6,8,8">
+                                            <TextBlock Text="Cyberpunk" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="11"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0"><Ellipse Width="7" Height="7" Fill="#E879F9" Margin="0,0,3,0"/><Ellipse Width="7" Height="7" Fill="#2DD4BF" Margin="0,0,3,0"/><Ellipse Width="7" Height="7" Fill="#0F172A"/></StackPanel>
                                         </StackPanel>
-
-                                        <TextBlock Text="İNDİRME KLASÖRÜ" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,8"/>
-                                        <Grid Margin="0,0,0,20">
-                                            <TextBox x:Name="TxtDownloadFolder" Style="{StaticResource ModernTextBox}" Padding="36,10,80,10" Text="C:\Kullanıcılar\Belgeler\Dosyaktar\..."/>
-                                            <TextBlock Text="&#xE8D5;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource TextSecBrush}" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="12,0,0,0" IsHitTestVisible="False"/>
-                                            <Button Content="Gözat" Style="{StaticResource GlassPanelButton}" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,8,0"/>
-                                        </Grid>
-
-                                        <Border Height="1" Background="{DynamicResource BorderBrush}" Margin="0,0,0,16"/>
-
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <TextBlock Text="Otomatik Kabul Et" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14" Margin="0,0,0,4"/>
-                                                <TextBlock Text="Tanıdık cihazlardan gelenleri sorma" Foreground="{DynamicResource TextSecBrush}" FontSize="12"/>
-                                            </StackPanel>
-                                            <CheckBox x:Name="ChkDarkMode" Style="{StaticResource ToggleSwitch}" IsChecked="True" Grid.Column="1" VerticalAlignment="Center"/>
-                                        </Grid>
-                                    </StackPanel>
+                                    </Grid>
                                 </Border>
-                            </Grid>
+                                <Border Style="{StaticResource GlassPanelBorder}" Width="120" Height="110" Margin="0,0,12,12" Cursor="Hand" MouseDown="ThemeCard_Click" Tag="forest">
+                                    <Grid><Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Margin="6,6,6,0" CornerRadius="6" Background="#14532D"/>
+                                        <StackPanel Grid.Row="1" Margin="8,6,8,8">
+                                            <TextBlock Text="Deep Forest" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="11"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0"><Ellipse Width="7" Height="7" Fill="#166534" Margin="0,0,3,0"/><Ellipse Width="7" Height="7" Fill="#4ADE80" Margin="0,0,3,0"/><Ellipse Width="7" Height="7" Fill="#86EFAC"/></StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                                <Border x:Name="ThemeCrimson" Style="{StaticResource GlassPanelBorder}" Width="120" Height="110" Margin="0,0,12,12" BorderBrush="#7C3AED" BorderThickness="2" Cursor="Hand" MouseDown="ThemeCard_Click" Tag="crimson">
+                                    <Grid><Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Margin="6,6,6,0" CornerRadius="6">
+                                            <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#312E81" Offset="0"/><GradientStop Color="#4C1D95" Offset="1"/></LinearGradientBrush></Border.Background>
+                                        </Border>
+                                        <StackPanel Grid.Row="1" Margin="8,6,8,8">
+                                            <TextBlock Text="Crimson Slate" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="11"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0"><Ellipse Width="7" Height="7" Fill="#7C3AED" Margin="0,0,3,0"/><Ellipse Width="7" Height="7" Fill="#A78BFA" Margin="0,0,3,0"/><Ellipse Width="7" Height="7" Fill="#1E1B4B"/></StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                                <Border Style="{StaticResource GlassPanelBorder}" Width="120" Height="110" Margin="0,0,12,12" Cursor="Hand" MouseDown="ThemeCard_Click" Tag="sunset">
+                                    <Grid><Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Margin="6,6,6,0" CornerRadius="6">
+                                            <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#F97316" Offset="0"/><GradientStop Color="#FCA5A5" Offset="1"/></LinearGradientBrush></Border.Background>
+                                        </Border>
+                                        <StackPanel Grid.Row="1" Margin="8,6,8,8">
+                                            <TextBlock Text="Sunset Breeze" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="11"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0"><Ellipse Width="7" Height="7" Fill="#EA580C" Margin="0,0,3,0"/><Ellipse Width="7" Height="7" Fill="#FB923C" Margin="0,0,3,0"/><Ellipse Width="7" Height="7" Fill="#FED7AA"/></StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </WrapPanel>
+
+                            <!-- CİHAZ BİLGİLERİ -->
+                            <Border Style="{StaticResource GlassPanelBorder}" Padding="24" Margin="0,0,0,16">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                        <TextBlock Text="&#xE7F4;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="18" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Cihaz Bilgileri" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    
+                                    <TextBlock Text="CİHAZ ADI" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,8"/>
+                                    <TextBox x:Name="TxtHostname" Style="{StaticResource ModernTextBox}" Margin="0,0,0,16"/>
+
+                                    <TextBlock Text="PORT NUMARASI" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,8"/>
+                                    <TextBox x:Name="TxtPort" Style="{StaticResource ModernTextBox}" Text="5001" Margin="0,0,0,16"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- İNDİRME AYARLARI -->
+                            <Border Style="{StaticResource GlassPanelBorder}" Padding="24" Margin="0,0,0,16">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                        <TextBlock Text="&#xE896;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="18" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="İndirme Ayarları" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    
+                                    <TextBlock Text="İNDİRME KLASÖRÜ" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,8"/>
+                                    <Grid Margin="0,0,0,16">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="TxtDownloadFolder" Style="{StaticResource ModernTextBox}" Grid.Column="0" Margin="0,0,12,0"/>
+                                        <Button Grid.Column="1" Content="Gözat" Style="{StaticResource GlassPanelButton}" Width="80" Click="BtnBrowseFolder_Click"/>
+                                    </Grid>
+
+                                    <Border Height="1" Background="{DynamicResource BorderBrush}" Margin="0,0,0,16"/>
+
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="Otomatik Kabul Et" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14" Margin="0,0,0,2"/>
+                                            <TextBlock Text="Tanıdık cihazlardan gelenleri sorma" Foreground="{DynamicResource TextSecBrush}" FontSize="12"/>
+                                        </StackPanel>
+                                        <CheckBox x:Name="ChkAutoReceive" Style="{StaticResource ToggleSwitch}" Grid.Column="1" VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="Koyu Tema" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14" Margin="0,0,0,2"/>
+                                            <TextBlock Text="Arayüz karanlık modda çalışsın" Foreground="{DynamicResource TextSecBrush}" FontSize="12"/>
+                                        </StackPanel>
+                                        <CheckBox x:Name="ChkDarkMode" Style="{StaticResource ToggleSwitch}" IsChecked="True" Grid.Column="1" VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="Otomatik Güncelleme" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14" Margin="0,0,0,2"/>
+                                            <TextBlock Text="Yeni sürümler otomatik indirilsin" Foreground="{DynamicResource TextSecBrush}" FontSize="12"/>
+                                        </StackPanel>
+                                        <CheckBox x:Name="ChkAutoUpdate" Style="{StaticResource ToggleSwitch}" IsChecked="True" Grid.Column="1" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- KAYDET BUTONU -->
+                            <Button Style="{StaticResource GradientButton}" HorizontalAlignment="Left" Margin="0,0,0,16" Click="BtnSaveSettings_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE74E;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Ayarları Kaydet" FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
 
                             <!-- DANGER ZONE -->
-                            <Border BorderBrush="{DynamicResource DangerBrush}" BorderThickness="1" CornerRadius="12" Padding="24">
-                                <Border.Background>
-                                    <SolidColorBrush Color="{DynamicResource DangerColor}" Opacity="0.1"/>
-                                </Border.Background>
+                            <Border BorderBrush="{DynamicResource DangerBrush}" BorderThickness="1" CornerRadius="12" Padding="24" Background="Transparent">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    
-                                    <Border Grid.Column="0" Width="40" Height="40" Background="Transparent" BorderBrush="{DynamicResource DangerBrush}" BorderThickness="1" CornerRadius="20" Margin="0,0,16,0">
-                                        <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource DangerBrush}" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                    
+                                    <TextBlock Grid.Column="0" Text="&#xE7BA;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="24" Foreground="{DynamicResource DangerBrush}" VerticalAlignment="Center" Margin="0,0,16,0"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <TextBlock Text="Uygulama Verilerini Temizle" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14" Margin="0,0,0,4"/>
                                         <TextBlock Text="Tüm geçmişi ve ayarları sıfırlayarak uygulamayı baştan başlatın." Foreground="{DynamicResource TextSecBrush}" FontSize="12"/>
                                     </StackPanel>
-                                    
                                     <Button Grid.Column="2" Content="Sıfırla" Background="{DynamicResource DangerBrush}" Foreground="White" BorderThickness="0" Padding="24,10" FontWeight="Bold" Cursor="Hand" VerticalAlignment="Center">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
@@ -553,7 +482,7 @@
                 <!-- Empty State -->
                 <StackPanel x:Name="QueueEmptyState" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Border Width="80" Height="80" Background="{DynamicResource Surface2Brush}" CornerRadius="40" Margin="0,0,0,16" HorizontalAlignment="Center">
-                        <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="32" Foreground="{DynamicResource BorderBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="&#xE8B7;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="32" Foreground="{DynamicResource BorderBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <TextBlock Text="Aktif aktarım yok" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,8"/>
                     <TextBlock Text="Dosyaları yerel ışık hızında taşımaya&#x0a;başlamak için bir cihaza bağlanın." FontSize="13" Foreground="{DynamicResource TextMutedBrush}" TextAlignment="Center"/>
@@ -578,13 +507,13 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <Border Width="36" Height="36" Background="{DynamicResource PrimaryGradientBrush}" CornerRadius="8" Margin="0,0,12,0">
-                                        <TextBlock Text="&#xE898;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <TextBlock Text="&#xE898;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="16" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <TextBlock x:Name="TxtQueueFileName" Text="Dosyalar Gönderiliyor" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13"/>
                                         <TextBlock x:Name="TxtQueueFileSize" Text="Hesaplanıyor..." Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
                                     </StackPanel>
-                                    <Button x:Name="BtnCancelTransfer" Grid.Column="2" Style="{StaticResource IconButton}" Content="&#xE711;" FontFamily="Segoe MDL2 Assets" Click="BtnCancelTransfer_Click"/>
+                                    <Button x:Name="BtnCancelTransfer" Grid.Column="2" Style="{StaticResource IconButton}" Content="&#xE711;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Click="BtnCancelTransfer_Click"/>
                                 </Grid>
 
                                 <Grid Grid.Row="1" Margin="0,0,0,8">
@@ -603,10 +532,10 @@
                     <StackPanel>
                         <Grid Margin="0,0,0,12">
                             <TextBlock Text="Ağ Durumu" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextSecBrush}" HorizontalAlignment="Left"/>
-                            <TextBlock Text="Gigabit LAN" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Right"/>
+                            <TextBlock x:Name="TxtNetworkType" Text="Gigabit LAN" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Right"/>
                         </Grid>
                         <Border Height="4" Background="{DynamicResource SurfaceBrush}" CornerRadius="2">
-                            <Border HorizontalAlignment="Left" Width="200" Background="{DynamicResource SuccessBrush}" CornerRadius="2"/>
+                            <Border x:Name="NetSpeedBar" HorizontalAlignment="Left" Width="200" Background="{DynamicResource SuccessBrush}" CornerRadius="2"/>
                         </Border>
                     </StackPanel>
                 </Border>
@@ -614,8 +543,8 @@
                 <!-- Status Footer -->
                 <Border Grid.Row="3" Background="{DynamicResource BackgroundBrush}" Padding="16,12" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
                     <Grid>
-                        <TextBlock Text="Dosyaktar v1.6.7" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        <TextBlock Text="Bağlı" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBlock Text="Dosyaktar v1.7.0" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtFooterStatus" Text="Bağlı" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Grid>
                 </Border>
             </Grid>

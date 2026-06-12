@@ -58,7 +58,7 @@
                                     Padding="{TemplateBinding Padding}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <!-- Use Tag for icon unicode -->
-                                    <TextBlock Text="{TemplateBinding Tag}" FontFamily="Segoe Fluent Icons, Segoe UI Emoji, Segoe MDL2 Assets" 
+                                    <TextBlock Text="{TemplateBinding Tag}" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI" 
                                                FontSize="18" Margin="0,0,12,0" VerticalAlignment="Center"/>
                                     <ContentPresenter VerticalAlignment="Center"/>
                                 </StackPanel>
