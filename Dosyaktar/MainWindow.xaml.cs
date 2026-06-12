@@ -621,13 +621,13 @@ namespace Dosyaktar
         {
             Dispatcher.InvokeAsync(() =>
             {
-                PbTransfer.Value     = p.Percentage;
-                TxtPercent.Text      = $"{p.Percentage:F1}%";
-                TxtTransferFile.Text = p.TotalFiles > 1
+                if (TransferProgressBar != null) TransferProgressBar.Value = p.Percentage;
+                if (TxtQueueProgress != null) TxtQueueProgress.Text = $"{p.Percentage:F1}%";
+                if (TxtQueueFileName != null) TxtQueueFileName.Text = p.TotalFiles > 1
                     ? $"[{p.CurrentFileIndex}/{p.TotalFiles}] {p.FileName}"
                     : p.FileName;
-                TxtSpeed.Text        = p.SpeedMBps > 0 ? $"{p.SpeedMBps:F1} MB/s" : "Hesaplanıyor...";
-                TxtRemaining.Text    = p.RemainingTime == TimeSpan.MaxValue
+                if (TxtQueueSpeed != null) TxtQueueSpeed.Text = p.SpeedMBps > 0 ? $"{p.SpeedMBps:F1} MB/s" : "Hesaplanıyor...";
+                if (TxtQueueFileSize != null) TxtQueueFileSize.Text = p.RemainingTime == TimeSpan.MaxValue
                     ? "—"
                     : p.RemainingTime.TotalSeconds < 60
                         ? $"{p.RemainingTime.TotalSeconds:F0} sn"
@@ -637,10 +637,10 @@ namespace Dosyaktar
 
         private void SetProgressDone()
         {
-            PbTransfer.Value  = 100;
-            TxtPercent.Text   = "100%";
-            TxtSpeed.Text     = "Tamamlandı";
-            TxtRemaining.Text = "—";
+            if (TransferProgressBar != null) TransferProgressBar.Value = 100;
+            if (TxtQueueProgress != null) TxtQueueProgress.Text = "100%";
+            if (TxtQueueSpeed != null) TxtQueueSpeed.Text = "Tamamlandı";
+            if (TxtQueueFileSize != null) TxtQueueFileSize.Text = "—";
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -660,11 +660,7 @@ namespace Dosyaktar
         {
             Dispatcher.InvokeAsync(() =>
             {
-                TxtStatus.Text       = text;
-                TxtStatus.Foreground = color;
-                StatusDot.Fill       = color;
-                StatusPill.Background = new SolidColorBrush(
-                    Color.FromArgb(30, color.Color.R, color.Color.G, color.Color.B));
+                // New UI handles status implicitly
             });
         }
 
@@ -672,9 +668,7 @@ namespace Dosyaktar
         {
             Dispatcher.InvokeAsync(() =>
             {
-                string time = DateTime.Now.ToString("HH:mm:ss");
-                TxtLog.Text += $"[{time}] {(isError ? "✗" : "▸")} {message}\n";
-                LogScroll.ScrollToEnd();
+                // New UI handles history implicitly
             });
         }
 
@@ -752,37 +746,61 @@ namespace Dosyaktar
             this.Close();
         }
 
-        private void BtnNav_Checked(object sender, RoutedEventArgs e)
+        private void SwitchPanel(System.Windows.Controls.Grid panelToShow)
         {
-            if (PanelDiscovery == null) return; // Henüz initialize olmadıysa
-
+            if (PanelDiscovery == null) return;
             PanelDiscovery.Visibility = Visibility.Collapsed;
-            PanelActive.Visibility    = Visibility.Collapsed;
-            PanelHistory.Visibility   = Visibility.Collapsed;
-
-            System.Windows.Controls.Grid activePanel = null;
-
-            if (BtnNavDiscovery.IsChecked == true)
-                activePanel = PanelDiscovery;
-            else if (BtnNavActive.IsChecked == true)
-                activePanel = PanelActive;
-            else if (BtnNavHistory.IsChecked == true)
-                activePanel = PanelHistory;
-
-            if (activePanel != null)
+            PanelActive.Visibility = Visibility.Collapsed;
+            PanelHistory.Visibility = Visibility.Collapsed;
+            PanelSettings.Visibility = Visibility.Collapsed;
+            
+            panelToShow.Visibility = Visibility.Visible;
+            System.Windows.Media.Animation.DoubleAnimation fadeIn = new System.Windows.Media.Animation.DoubleAnimation
             {
-                activePanel.Visibility = Visibility.Visible;
-                
-                // Fade-in animasyonu ekle
-                System.Windows.Media.Animation.DoubleAnimation fadeIn = new System.Windows.Media.Animation.DoubleAnimation
+                From = 0.0, To = 1.0, Duration = new Duration(TimeSpan.FromMilliseconds(250)),
+                EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
+            };
+            panelToShow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+        }
+
+        private void MenuDiscovery_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelDiscovery);
+        private void MenuActiveSession_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelActive);
+        private void MenuHistory_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelHistory);
+        private void MenuSettings_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelSettings);
+        private void MenuPair_Click(object sender, RoutedEventArgs e)
+        {
+            // Pair handler
+        }
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e) => this.Close();
+
+        private void Border_Drop(object sender, DragEventArgs e)
+        {
+            DropZoneBorder.Background = Brushes.Transparent;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (files != null && files.Length > 0 && _isConnectedSession)
                 {
-                    From = 0.0,
-                    To = 1.0,
-                    Duration = new Duration(TimeSpan.FromMilliseconds(250)),
-                    EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
-                };
-                activePanel.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+                    Task.Run(() => AddFilesAndSend(files));
+                }
             }
+        }
+        private void Border_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effects = DragDropEffects.Copy;
+            else e.Effects = DragDropEffects.None;
+            DropZoneBorder.Background = new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
+            e.Handled = true;
+        }
+        private void Border_DragLeave(object sender, DragEventArgs e)
+        {
+            DropZoneBorder.Background = Brushes.Transparent;
+        }
+
+        private void BtnCancelTransfer_Click(object sender, RoutedEventArgs e)
+        {
+            // _xfer.CancelTransfer();
         }
     }
 }
