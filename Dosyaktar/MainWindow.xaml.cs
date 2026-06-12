@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Microsoft.Win32;
+using System.Windows.Controls;
 using Dosyaktar.Services;
 
 namespace Dosyaktar
@@ -38,6 +39,7 @@ namespace Dosyaktar
         private readonly NetworkManager      _net       = new();
         private readonly FileTransferService _xfer      = new();
         private readonly NetworkDiscovery    _discovery = new();
+        private readonly PairingService      _pairing   = new();
 
         // ── Durum ─────────────────────────────────────────────────────────────
         private readonly ObservableCollection<FileEntry>    _files = new();
@@ -47,6 +49,12 @@ namespace Dosyaktar
         private bool _isBusy;
         private bool _initialized;
         private bool _closing;
+        
+        // ── Oturum (Pairing) Durumu ───────────────────────────────────────────
+        private bool _isConnectedSession;
+        private string _connectedTargetIP = "";
+        private string _connectedTargetName = "";
+        private string _currentPairingPin = "";
 
         // ── Renk sabitleri ────────────────────────────────────────────────────
         private static readonly SolidColorBrush GreenBrush  = new(Color.FromRgb(0x10, 0xB9, 0x81));
@@ -83,6 +91,11 @@ namespace Dosyaktar
                 // Cihaz keşfini başlat
                 int port = _settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort;
                 _discovery.Start(port, isReceiving: false);
+
+                // Eşleştirme servisini başlat
+                _pairing.PairingRequested += Pairing_Requested;
+                _pairing.PairingResponseReceived += Pairing_ResponseReceived;
+                _pairing.StartListening();
 
                 // Tarama animasyonu
                 StartScanAnimation();
@@ -250,41 +263,7 @@ namespace Dosyaktar
 
         private void UpdateRoleUI()
         {
-            if (!_initialized) return;
-            bool isSender = RbSender.IsChecked == true;
-
-            if (DropZoneBorder != null)
-                DropZoneBorder.Visibility = isSender ? Visibility.Visible : Visibility.Collapsed;
-            
-            if (ReceiveModeUI != null)
-                ReceiveModeUI.Visibility = isSender ? Visibility.Collapsed : Visibility.Visible;
-
-            if (TxtTargetLabel != null)
-                TxtTargetLabel.Text = isSender ? "Hedef Cihaz" : "Gönderici Cihaz (opsiyonel)";
-
-            if (BtnSend != null)
-            {
-                BtnSend.Visibility = isSender ? Visibility.Visible : Visibility.Collapsed;
-                BtnSend.IsEnabled = isSender && _files.Count > 0 && !_isBusy;
-            }
-
-            // Discovery'ye modunu bildir
-            _discovery.SetReceivingMode(!isSender);
-            
-            if (TxtReceiveSavePath != null)
-            {
-                if (string.IsNullOrEmpty(_settings.SaveDirectory))
-                {
-                    _settings.SaveDirectory = System.IO.Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                        "Dosyaktar Alınanlar");
-                    SettingsService.Save(_settings);
-                }
-                TxtReceiveSavePath.Text = _settings.SaveDirectory;
-            }
-
-            if (TxtTransferFile != null)
-                TxtTransferFile.Text = isSender ? "Bekleniyor..." : "Bağlantı bekleniyor...";
+            // Eski Gönder/Al mantığı ShareIt Session moduyla iptal edildi.
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -353,48 +332,40 @@ namespace Dosyaktar
         private void BtnBrowse_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new OpenFileDialog { Title = "Gönderilecek Dosyaları Seç", Multiselect = true };
-            if (dlg.ShowDialog() == true) AddFiles(dlg.FileNames);
+            if (dlg.ShowDialog() == true) AddFilesAndSend(dlg.FileNames);
         }
 
-        public void AddFiles(IEnumerable<string> paths)
+        public async void AddFilesAndSend(IEnumerable<string> paths)
         {
+            var newFiles = new List<string>();
             foreach (var p in paths)
             {
-                if (!File.Exists(p)) continue;
-                if (_files.Any(f => f.Path.Equals(p, StringComparison.OrdinalIgnoreCase))) continue;
-                _files.Add(new FileEntry(p));
+                if (File.Exists(p)) newFiles.Add(p);
             }
-            RefreshFileUI();
-        }
+            if (newFiles.Count == 0) return;
 
-        private void BtnClearFiles_Click(object sender, RoutedEventArgs e)
-        {
-            _files.Clear();
-            RefreshFileUI();
-        }
-
-        private void BtnRemoveFile_Click(object sender, RoutedEventArgs e)
-        {
-            if ((sender as FrameworkElement)?.Tag is FileEntry entry)
+            if (!_isConnectedSession || string.IsNullOrEmpty(_connectedTargetIP))
             {
-                _files.Remove(entry);
-                RefreshFileUI();
+                MessageBox.Show("Lütfen önce bir cihaza bağlanın.", "Hata", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
-        }
 
-        private void RefreshFileUI()
-        {
-            bool hasFiles = _files.Count > 0;
-            DropHint.Visibility      = hasFiles ? Visibility.Collapsed : Visibility.Visible;
-            FileListPanel.Visibility = hasFiles ? Visibility.Visible   : Visibility.Collapsed;
+            SetBusy(true);
+            int port = _settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort;
+            AppendLog($"Dosyalar gönderiliyor: {_connectedTargetIP}:{port}");
 
-            if (hasFiles)
+            var result = await _xfer.SendFilesAsync(newFiles.ToArray(), _connectedTargetIP, port);
+            SetBusy(false);
+
+            if (result.Success)
             {
-                long total = _files.Sum(f => f.Size);
-                TxtFileCount.Text = $"{_files.Count} dosya — {FileTransferService.FormatSize(total)}";
+                SetProgressDone();
+                AppendLog("Transfer başarıyla tamamlandı.");
             }
-
-            BtnSend.IsEnabled = RbSender.IsChecked == true && hasFiles && !_isBusy;
+            else if (!result.Message.Contains("iptal", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show($"Transfer başarısız:\n{result.Message}", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -405,151 +376,165 @@ namespace Dosyaktar
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                DropZone.BorderBrush = BlueBrush;
-                DropZone.Background  = new SolidColorBrush(Color.FromRgb(0xEE, 0xF2, 0xFF));
-                e.Effects            = DragDropEffects.Copy;
+                if (sender is Border dropZone)
+                {
+                    dropZone.BorderBrush = BlueBrush;
+                    dropZone.Background  = new SolidColorBrush(Color.FromRgb(0xEE, 0xF2, 0xFF));
+                }
+                e.Effects = DragDropEffects.Copy;
             }
         }
 
         private void DropZone_DragLeave(object sender, DragEventArgs e)
         {
-            DropZone.BorderBrush = (SolidColorBrush)FindResource("BorderBrush");
-            DropZone.Background  = (SolidColorBrush)FindResource("SurfaceBrush");
+            if (sender is Border dropZone)
+            {
+                dropZone.BorderBrush = (SolidColorBrush)FindResource("BorderBrush");
+                dropZone.Background  = (SolidColorBrush)FindResource("BackgroundBrush");
+            }
         }
 
         private void DropZone_Drop(object sender, DragEventArgs e)
         {
-            DropZone.BorderBrush = (SolidColorBrush)FindResource("BorderBrush");
-            DropZone.Background  = (SolidColorBrush)FindResource("SurfaceBrush");
+            if (sender is Border dropZone)
+            {
+                dropZone.BorderBrush = (SolidColorBrush)FindResource("BorderBrush");
+                dropZone.Background  = (SolidColorBrush)FindResource("BackgroundBrush");
+            }
             if (e.Data.GetData(DataFormats.FileDrop) is string[] files && files.Length > 0)
-                AddFiles(files);
+                AddFilesAndSend(files);
         }
 
         // ═════════════════════════════════════════════════════════════════════
         //  Transfer — GÖNDER
         // ═════════════════════════════════════════════════════════════════════
 
-        private async void BtnSend_Click(object sender, RoutedEventArgs e)
-        {
-            if (_files.Count == 0)
-            {
-                MessageBox.Show("Önce gönderilecek dosyaları seçin.", "Dosya Seçilmedi",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            string targetIP = _selectedPeer?.IP ?? TxtTargetIP.Text.Trim();
-            if (!NetworkManager.IsValidIP(targetIP))
-            {
-                MessageBox.Show(
-                    "Hedef cihaz seçilmedi.\n\n" +
-                    "Sol listeden bir cihaz seçin veya manuel IP girin.\n" +
-                    "Alıcı PC'de Dosyaktar'ın açık olduğundan emin olun.",
-                    "Hedef Seçilmedi", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            _settings.LastTargetIP = targetIP;
-            SettingsService.Save(_settings);
-
-            SetBusy(true);
-            int port = _settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort;
-            AppendLog($"Bağlanılıyor: {targetIP}:{port}");
-
-            var paths  = _files.Select(f => f.Path).ToArray();
-            var result = await _xfer.SendFilesAsync(paths, targetIP, port);
-            SetBusy(false);
-
-            if (result.Success)
-            {
-                SetProgressDone();
-                MessageBox.Show($"✓ Transfer tamamlandı!\n\n{result.Message}",
-                    "Başarılı", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else if (!result.Message.Contains("iptal", StringComparison.OrdinalIgnoreCase))
-            {
-                MessageBox.Show(
-                    $"Transfer başarısız:\n{result.Message}\n\n" +
-                    "İpuçları:\n" +
-                    "• Alıcı PC'de 'Almaya Başla' tıklandı mı?\n" +
-                    "• Aynı ağda mısınız?\n" +
-                    "• Güvenlik duvarı 5001 portunu engelliyor olabilir",
-                    "Transfer Hatası", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
         // ═════════════════════════════════════════════════════════════════════
-        //  Transfer — AL
+        //  Eşleştirme ve Oturum (Session) Modu
         // ═════════════════════════════════════════════════════════════════════
 
-        private void BtnChangeReceivePath_Click(object sender, RoutedEventArgs e)
+        private void Pairing_Requested(object? sender, (string IP, string Hostname, string Pin) e)
         {
-            var dlg = new Microsoft.Win32.OpenFolderDialog { Title = "Alınan Dosyalar Klasörü" };
-            if (dlg.ShowDialog() == true)
+            Dispatcher.InvokeAsync(() =>
             {
-                _settings.SaveDirectory = dlg.FolderName;
-                SettingsService.Save(_settings);
-                if (TxtReceiveSavePath != null)
-                    TxtReceiveSavePath.Text = dlg.FolderName;
-                AppendLog($"Kayıt dizini değiştirildi: {dlg.FolderName}");
+                _connectedTargetIP = e.IP;
+                _connectedTargetName = e.Hostname;
+                
+                PairingModal.Visibility = Visibility.Visible;
+                if (FindName("TxtPairingTitle") is System.Windows.Controls.TextBlock title) title.Text = "Bağlantı İsteği";
+                if (FindName("TxtPairingMessage") is System.Windows.Controls.TextBlock msg) msg.Text = $"{e.Hostname} cihazı size bağlanmak istiyor.\nKodları karşılaştırın:";
+                if (FindName("TxtPairingPin") is System.Windows.Controls.TextBlock pin) pin.Text = e.Pin;
+                
+                if (FindName("PairingReceiveButtons") is Grid recvBtns) recvBtns.Visibility = Visibility.Visible;
+                if (FindName("PairingSendButtons") is Grid sendBtns) sendBtns.Visibility = Visibility.Collapsed;
+            });
+        }
+
+        private void Pairing_ResponseReceived(object? sender, (string IP, bool Accepted) e)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                PairingModal.Visibility = Visibility.Collapsed;
+                if (e.Accepted)
+                {
+                    AppendLog("Bağlantı isteği KABUL EDİLDİ.");
+                    _connectedTargetIP = e.IP;
+                    _connectedTargetName = _selectedPeer?.Hostname ?? e.IP;
+                    StartSession();
+                }
+                else
+                {
+                    AppendLog("Bağlantı isteği REDDEDİLDİ.");
+                    MessageBox.Show("Karşı cihaz bağlantı isteğini reddetti.", "Reddedildi", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            });
+        }
+
+        private async void BtnPairingAccept_Click(object sender, RoutedEventArgs e)
+        {
+            PairingModal.Visibility = Visibility.Collapsed;
+            AppendLog($"{_connectedTargetName} eşleşmesi kabul edildi.");
+            await _pairing.SendResponseAsync(_connectedTargetIP, true);
+            StartSession();
+        }
+
+        private async void BtnPairingReject_Click(object sender, RoutedEventArgs e)
+        {
+            PairingModal.Visibility = Visibility.Collapsed;
+            AppendLog($"{_connectedTargetName} eşleşmesi reddedildi.");
+            await _pairing.SendResponseAsync(_connectedTargetIP, false);
+            _connectedTargetIP = "";
+            _connectedTargetName = "";
+        }
+
+        private void BtnPairingCancel_Click(object sender, RoutedEventArgs e)
+        {
+            PairingModal.Visibility = Visibility.Collapsed;
+            AppendLog("Eşleşme isteği iptal edildi.");
+        }
+
+        private void StartSession()
+        {
+            _isConnectedSession = true;
+            if (FindName("PanelDiscovery") is Grid pd) pd.Visibility = Visibility.Collapsed;
+            if (FindName("PanelHistory") is Grid ph) ph.Visibility = Visibility.Collapsed;
+            if (FindName("PanelActive") is Grid pa) pa.Visibility = Visibility.Visible;
+            
+            if (FindName("BtnNavActive") is System.Windows.Controls.RadioButton rba) rba.IsChecked = true;
+            
+            if (FindName("TxtActiveTargetName") is System.Windows.Controls.TextBlock tn) tn.Text = _connectedTargetName;
+            if (FindName("TxtActiveTargetIP") is System.Windows.Controls.TextBlock tip) tip.Text = _connectedTargetIP;
+            
+            // Arka planda sürekli alıcı modunu dinle
+            _ = Task.Run(ReceiveLoopAsync);
+        }
+
+        private async Task ReceiveLoopAsync()
+        {
+            while (_isConnectedSession)
+            {
+                string saveDir = _settings.SaveDirectory;
+                if (string.IsNullOrEmpty(saveDir) || !Directory.Exists(saveDir))
+                {
+                    saveDir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Dosyaktar Alınanlar");
+                }
+                
+                int port = _settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort;
+                
+                try
+                {
+                    // StartReceivingAsync is blocking until a transfer completes
+                    var result = await _xfer.StartReceivingAsync(saveDir, port);
+                    if (result.Success)
+                    {
+                        Dispatcher.Invoke(() => SetProgressDone());
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    // Normal during disconnect
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"Oturum dinleme hatası: {ex.Message}");
+                    await Task.Delay(1000); // Prevent tight loop crash
+                }
             }
         }
 
-        private async void BtnReceive_Click(object sender, RoutedEventArgs e)
+        private void BtnDisconnect_Click(object sender, RoutedEventArgs e)
         {
-            SetBusy(true);
-
-            if (BtnCancelReceive != null) BtnCancelReceive.Visibility = Visibility.Visible;
-            if (BtnReceive != null) BtnReceive.Visibility = Visibility.Collapsed;
-            if (RbSender != null) RbSender.IsEnabled = false;
-
-            string saveDir = _settings.SaveDirectory;
-            if (string.IsNullOrEmpty(saveDir) || !Directory.Exists(saveDir))
-            {
-                saveDir = System.IO.Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                    "Dosyaktar Alınanlar");
-                _settings.SaveDirectory = saveDir;
-                SettingsService.Save(_settings);
-            }
-
-            int port = _settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort;
-
-            SetStatus($"Bekleniyor... ({port})", GreenBrush);
-            TxtTransferFile.Text = $"Bağlantı bekleniyor — Port {port}";
-            AppendLog($"Alınan dosyalar → {saveDir}");
-
-            _discovery.SetReceivingMode(true);
-            var result = await _xfer.StartReceivingAsync(saveDir, port);
-            _discovery.SetReceivingMode(false);
-
-            SetBusy(false);
-
-            if (BtnCancelReceive != null) BtnCancelReceive.Visibility = Visibility.Collapsed;
-            if (BtnReceive != null) BtnReceive.Visibility = Visibility.Visible;
-            if (RbSender != null) RbSender.IsEnabled = true;
-
-            if (result.Success)
-            {
-                SetProgressDone();
-                MessageBox.Show($"✓ Dosya(lar) alındı!\n\nKaydedildi: {saveDir}",
-                    "Başarılı", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else if (!result.Message.Contains("İptal", StringComparison.OrdinalIgnoreCase))
-            {
-                MessageBox.Show($"Alma başarısız:\n{result.Message}",
-                    "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            else 
-            {
-                SetStatus("İptal Edildi", YellowBrush);
-                TxtTransferFile.Text = "Bekleme iptal edildi.";
-            }
-        }
-
-        private void BtnCancelReceive_Click(object sender, RoutedEventArgs e)
-        {
-            _xfer.Cancel();
+            _isConnectedSession = false;
+            _xfer.Cancel(); // stop receiving loop
+            
+            _connectedTargetIP = "";
+            _connectedTargetName = "";
+            
+            if (FindName("PanelActive") is Grid pa) pa.Visibility = Visibility.Collapsed;
+            if (FindName("PanelDiscovery") is Grid pd) pd.Visibility = Visibility.Visible;
+            if (FindName("BtnNavDiscovery") is System.Windows.Controls.RadioButton rbd) rbd.IsChecked = true;
+            
+            AppendLog("Oturum sonlandırıldı.");
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -575,16 +560,13 @@ namespace Dosyaktar
 
         private void BtnGameTransfer_Click(object sender, RoutedEventArgs e)
         {
-            string targetIP = _selectedPeer?.IP ?? TxtTargetIP.Text.Trim();
-            if (!NetworkManager.IsValidIP(targetIP))
+            if (!_isConnectedSession || string.IsNullOrEmpty(_connectedTargetIP))
             {
-                MessageBox.Show(
-                    "Oyun taşıma başlatmadan önce sol listeden bir cihaz seçin.",
-                    "Hedef Seçilmedi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Oyun taşıma başlatmadan önce sol listeden bir cihaza bağlanın.", "Hata", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             int port = _settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort;
-            var dlg  = new GameTransferWindow(_xfer, targetIP, port) { Owner = this };
+            var dlg  = new GameTransferWindow(_xfer, _connectedTargetIP, port) { Owner = this };
             dlg.ShowDialog();
         }
 
@@ -635,12 +617,7 @@ namespace Dosyaktar
         private void SetBusy(bool busy)
         {
             _isBusy              = busy;
-            bool isSender        = RbSender.IsChecked == true;
-            BtnSend.IsEnabled    = !busy && _files.Count > 0 && isSender;
-            BtnReceive.IsEnabled = !busy && !isSender;
-            BtnCancel.IsEnabled  = busy;
-            RbSender.IsEnabled   = !busy;
-            RbReceiver.IsEnabled = !busy;
+            if (FindName("BtnCancel") is System.Windows.Controls.Button btnCancel) btnCancel.IsEnabled  = busy;
 
             SetStatus(busy ? "Transfer devam ediyor..." : "Hazır",
                       busy ? OrangeBrush : GreenBrush);
@@ -676,6 +653,8 @@ namespace Dosyaktar
         {
             if (_closing) return;
             _closing = true;
+            _isConnectedSession = false;
+            _pairing.Dispose();
             _discovery.Dispose();
             _xfer.Cancel();
             _net.Dispose();
@@ -689,12 +668,29 @@ namespace Dosyaktar
             _discovery.Start(port, isReceiving: false); 
         }
 
-        private void BtnSendToPeer_Click(object sender, RoutedEventArgs e) 
+        private async void BtnSendToPeer_Click(object sender, RoutedEventArgs e) 
         { 
             if ((sender as System.Windows.Controls.Button)?.Tag is DiscoveredPeer peer) 
             { 
                 _selectedPeer = peer; 
-                BtnSend_Click(null, null); 
+                _currentPairingPin = new Random().Next(100000, 999999).ToString();
+                
+                if (FindName("PairingModal") is Grid pm) pm.Visibility = Visibility.Visible;
+                if (FindName("TxtPairingTitle") is System.Windows.Controls.TextBlock title) title.Text = "Bağlanılıyor...";
+                if (FindName("TxtPairingMessage") is System.Windows.Controls.TextBlock msg) msg.Text = $"{peer.Hostname} cihazının onayı bekleniyor.";
+                if (FindName("TxtPairingPin") is System.Windows.Controls.TextBlock pin) pin.Text = _currentPairingPin;
+                
+                if (FindName("PairingReceiveButtons") is Grid recvBtns) recvBtns.Visibility = Visibility.Collapsed;
+                if (FindName("PairingSendButtons") is Grid sendBtns) sendBtns.Visibility = Visibility.Visible;
+
+                AppendLog($"{peer.Hostname} cihazına eşleşme isteği gönderiliyor. Kod: {_currentPairingPin}");
+                
+                bool sent = await _pairing.SendRequestAsync(peer.IP, _currentPairingPin, Environment.MachineName);
+                if (!sent)
+                {
+                    MessageBox.Show("İstek gönderilemedi. Cihaz çevrimdışı olabilir.", "Hata", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    if (FindName("PairingModal") is Grid pm2) pm2.Visibility = Visibility.Collapsed;
+                }
             } 
         }
 
