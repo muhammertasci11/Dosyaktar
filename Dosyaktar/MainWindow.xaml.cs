@@ -581,7 +581,7 @@ namespace Dosyaktar
                         Dispatcher.InvokeAsync(() => 
                         {
                             SetProgressDone();
-                            AddHistoryItem("Alınan Klasör/Dosyalar", "Tamamlandı");
+                            AddHistoryItem($"Alınan Klasör/Dosyalar", _lastTotalSizeStr);
                             MessageBox.Show($"Aktarım tamamlandı!\n\nDosyalar şuraya kaydedildi:\n{saveDir}", "Dosyaktar", MessageBoxButton.OK, MessageBoxImage.Information);
                             AppendLog($"[Alındı] Dosyalar kaydedildi: {saveDir}");
                         });
@@ -661,6 +661,18 @@ namespace Dosyaktar
         //  İlerleme
         // ═════════════════════════════════════════════════════════════════════
 
+        private string _lastTotalSizeStr = "0 MB";
+
+        private string FormatSize(long bytes)
+        {
+            string[] suf = { "B", "KB", "MB", "GB", "TB" };
+            if (bytes == 0) return "0 B";
+            long bytesAbs = Math.Abs(bytes);
+            int place = Convert.ToInt32(Math.Floor(Math.Log(bytesAbs, 1024)));
+            double num = Math.Round(bytesAbs / Math.Pow(1024, place), 1);
+            return (Math.Sign(bytes) * num).ToString("0.##") + " " + suf[place];
+        }
+
         private void UpdateProgress(TransferProgress p)
         {
             Dispatcher.InvokeAsync(() =>
@@ -671,17 +683,22 @@ namespace Dosyaktar
                     if (FindName("QueueEmptyState") is System.Windows.Controls.StackPanel qEmpty) qEmpty.Visibility = Visibility.Collapsed;
                 }
                 
+                _lastTotalSizeStr = FormatSize(p.TotalBytes);
+
                 if (TransferProgressBar != null) TransferProgressBar.Value = p.Percentage;
                 if (TxtQueueProgress != null) TxtQueueProgress.Text = $"{p.Percentage:F1}%";
                 if (TxtQueueFileName != null) TxtQueueFileName.Text = p.TotalFiles > 1
                     ? $"[{p.CurrentFileIndex}/{p.TotalFiles}] {p.FileName}"
                     : p.FileName;
-                if (TxtQueueSpeed != null) TxtQueueSpeed.Text = p.SpeedMBps > 0 ? $"{p.SpeedMBps:F1} MB/s" : "Hesaplanıyor...";
-                if (TxtQueueFileSize != null) TxtQueueFileSize.Text = p.RemainingTime == TimeSpan.MaxValue
-                    ? "—"
+                
+                string remTimeStr = p.RemainingTime == TimeSpan.MaxValue
+                    ? "Hesaplanıyor..."
                     : p.RemainingTime.TotalSeconds < 60
-                        ? $"{p.RemainingTime.TotalSeconds:F0} sn"
-                        : $"{p.RemainingTime.Minutes}d {p.RemainingTime.Seconds}sn";
+                        ? $"{p.RemainingTime.TotalSeconds:F0} sn kaldı"
+                        : $"{p.RemainingTime.Minutes}d {p.RemainingTime.Seconds}sn kaldı";
+
+                if (TxtQueueSpeed != null) TxtQueueSpeed.Text = p.SpeedMBps > 0 ? $"{p.SpeedMBps:F1} MB/s  -  {remTimeStr}" : "Hesaplanıyor...";
+                if (TxtQueueFileSize != null) TxtQueueFileSize.Text = $"{FormatSize(p.BytesSent)} / {_lastTotalSizeStr}";
             });
         }
 
@@ -736,17 +753,25 @@ namespace Dosyaktar
 
                 var grid = new System.Windows.Controls.Grid();
                 grid.ColumnDefinitions.Add(new System.Windows.Controls.ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                grid.ColumnDefinitions.Add(new System.Windows.Controls.ColumnDefinition { Width = new GridLength(100) });
+                grid.ColumnDefinitions.Add(new System.Windows.Controls.ColumnDefinition { Width = new GridLength(80) });
                 grid.ColumnDefinitions.Add(new System.Windows.Controls.ColumnDefinition { Width = new GridLength(120) });
-                grid.ColumnDefinitions.Add(new System.Windows.Controls.ColumnDefinition { Width = new GridLength(100) });
+                grid.ColumnDefinitions.Add(new System.Windows.Controls.ColumnDefinition { Width = new GridLength(80) });
 
                 // Dosya Adı
-                var txtTitle = new System.Windows.Controls.TextBlock { Text = title, FontWeight = FontWeights.Bold, Foreground = (System.Windows.Media.Brush)FindResource("TextPrimaryBrush"), VerticalAlignment = VerticalAlignment.Center };
+                var txtTitle = new System.Windows.Controls.TextBlock { 
+                    Text = title, 
+                    FontWeight = FontWeights.Bold, 
+                    Foreground = (System.Windows.Media.Brush)FindResource("TextPrimaryBrush"), 
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    Margin = new Thickness(0,0,12,0),
+                    ToolTip = title
+                };
                 System.Windows.Controls.Grid.SetColumn(txtTitle, 0);
                 grid.Children.Add(txtTitle);
 
                 // Boyut
-                var txtSize = new System.Windows.Controls.TextBlock { Text = sizeText, Foreground = (System.Windows.Media.Brush)FindResource("TextSecBrush"), VerticalAlignment = VerticalAlignment.Center };
+                var txtSize = new System.Windows.Controls.TextBlock { Text = sizeText, FontWeight = FontWeights.SemiBold, Foreground = (System.Windows.Media.Brush)FindResource("TextPrimaryBrush"), VerticalAlignment = VerticalAlignment.Center };
                 System.Windows.Controls.Grid.SetColumn(txtSize, 1);
                 grid.Children.Add(txtSize);
 
@@ -756,9 +781,11 @@ namespace Dosyaktar
                 grid.Children.Add(txtDate);
 
                 // Durum
-                var txtStatus = new System.Windows.Controls.TextBlock { Text = "Başarılı", Foreground = (System.Windows.Media.Brush)FindResource("SuccessBrush"), FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Right };
-                System.Windows.Controls.Grid.SetColumn(txtStatus, 3);
-                grid.Children.Add(txtStatus);
+                var borderStatus = new System.Windows.Controls.Border { Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(30, 16, 185, 129)), Padding = new Thickness(8,4,8,4), CornerRadius = new CornerRadius(4), HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center };
+                var txtStatus = new System.Windows.Controls.TextBlock { Text = "Tamamlandı", Foreground = (System.Windows.Media.Brush)FindResource("SuccessBrush"), FontWeight = FontWeights.Bold, FontSize = 11 };
+                borderStatus.Child = txtStatus;
+                System.Windows.Controls.Grid.SetColumn(borderStatus, 3);
+                grid.Children.Add(borderStatus);
 
                 border.Child = grid;
                 historyList.Children.Insert(0, border);
