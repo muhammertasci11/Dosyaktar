@@ -528,7 +528,7 @@
                 <!-- Status Footer -->
                 <Border Grid.Row="3" Background="{DynamicResource BackgroundBrush}" Padding="16,12" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
                     <Grid>
-                        <TextBlock Text="Dosyaktar v1.7.2" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtAppVersion" Text="Dosyaktar v1.7.x" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         <TextBlock x:Name="TxtFooterStatus" Text="Bağlı" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Grid>
                 </Border>

@@ -103,6 +103,10 @@ namespace Dosyaktar
                 // Ayarları UI'a yükle ve ağ bilgisini güncelle
                 LoadSettingsToUI();
                 UpdateNetworkInfo();
+                
+                // Dinamik Sürüm Bilgisi
+                var ver = UpdateService.GetCurrentVersion();
+                TxtAppVersion.Text = $"Dosyaktar v{ver.Major}.{ver.Minor}.{ver.Build}";
 
                 Loaded += async (_, _) => await CheckForUpdatesAsync();
             }
