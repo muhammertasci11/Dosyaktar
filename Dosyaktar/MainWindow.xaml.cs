@@ -753,8 +753,25 @@ namespace Dosyaktar
                 bool sent = await _pairing.SendRequestAsync(peer.IP, _currentPairingPin, Environment.MachineName);
                 if (!sent)
                 {
-                    MessageBox.Show("İstek gönderilemedi. Cihaz çevrimdışı olabilir.", "Hata", MessageBoxButton.OK, MessageBoxImage.Warning);
                     if (FindName("PairingModal") is Grid pm2) pm2.Visibility = Visibility.Collapsed;
+                    
+                    var result = MessageBox.Show(
+                        "İstek gönderilemedi.\n\nEğer cihazları doğrudan Ethernet kablosu ile bağladıysanız, Windows Güvenlik Duvarı bağlantıyı engelliyor olabilir.\n\nOtomatik olarak Güvenlik Duvarı izni vermek ister misiniz? (Yönetici izni gerektirir)", 
+                        "Bağlantı Engellendi", 
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                        
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        try
+                        {
+                            NetworkManager.AddFirewallRule();
+                            MessageBox.Show("Güvenlik Duvarı izni eklendi. Lütfen tekrar bağlanmayı deneyin.", "Başarılı", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"İzin eklenirken hata oluştu: {ex.Message}", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
                 }
             } 
         }

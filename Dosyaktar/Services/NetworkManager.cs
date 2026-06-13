@@ -23,6 +23,26 @@ namespace Dosyaktar.Services
         private void Err(string m) => Error?.Invoke(this, m);
 
         // ═════════════════════════════════════════════════════════════════════
+        //  Güvenlik Duvarı İzni
+        // ═════════════════════════════════════════════════════════════════════
+
+        public static void AddFirewallRule()
+        {
+            string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName ?? "";
+            if (string.IsNullOrEmpty(exePath)) return;
+
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "netsh",
+                Arguments = $"advfirewall firewall add rule name=\"Dosyaktar (TCP/UDP)\" dir=in action=allow program=\"{exePath}\" enable=yes profile=any",
+                Verb = "runas",
+                UseShellExecute = true,
+                WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden
+            };
+            System.Diagnostics.Process.Start(psi)?.WaitForExit();
+        }
+
+        // ═════════════════════════════════════════════════════════════════════
         //  Yerel IP Tespiti
         // ═════════════════════════════════════════════════════════════════════
 

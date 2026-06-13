@@ -188,7 +188,10 @@ namespace Dosyaktar.Services
                             using var doc  = JsonDocument.Parse(json);
                             var root = doc.RootElement;
 
-                            string ip   = result.RemoteEndPoint.Address.ToString();
+                            var remoteAddr = result.RemoteEndPoint.Address;
+                            if (remoteAddr.IsIPv4MappedToIPv6)
+                                remoteAddr = remoteAddr.MapToIPv4();
+                            string ip = remoteAddr.ToString();
                             string host = root.TryGetProperty("hostname",    out var hEl)    ? hEl.GetString()    ?? "" : ip;
                             int    port = root.TryGetProperty("port",        out var portEl) ? portEl.GetInt32()       : FileTransferService.DefaultPort;
                             string ver  = root.TryGetProperty("version",     out var verEl)  ? verEl.GetString()  ?? "" : "";
