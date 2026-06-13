@@ -750,13 +750,16 @@ namespace Dosyaktar
             this.Close();
         }
 
-        private void SwitchPanel(System.Windows.Controls.Grid panelToShow)
+        private void SwitchPanel(System.Windows.Controls.Grid panelToShow, string title)
         {
             if (PanelDiscovery == null) return;
             PanelDiscovery.Visibility = Visibility.Collapsed;
             PanelActive.Visibility = Visibility.Collapsed;
             PanelHistory.Visibility = Visibility.Collapsed;
             PanelSettings.Visibility = Visibility.Collapsed;
+            
+            if (TxtHeaderTitle != null) TxtHeaderTitle.Text = title;
+            if (BtnPairDevice != null) BtnPairDevice.Visibility = (panelToShow == PanelDiscovery) ? Visibility.Visible : Visibility.Collapsed;
             
             panelToShow.Visibility = Visibility.Visible;
             System.Windows.Media.Animation.DoubleAnimation fadeIn = new System.Windows.Media.Animation.DoubleAnimation
@@ -767,16 +770,21 @@ namespace Dosyaktar
             panelToShow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
         }
 
-        private void MenuDiscovery_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelDiscovery);
-        private void MenuActiveSession_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelActive);
-        private void MenuHistory_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelHistory);
-        private void MenuSettings_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelSettings);
+        private void MenuDiscovery_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelDiscovery, "Keşif Modu");
+        private void MenuActiveSession_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelActive, "Aktif Oturum");
+        private void MenuHistory_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelHistory, "Transfer Geçmişi");
+        private void MenuSettings_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelSettings, "Ayarlar");
         private void MenuPair_Click(object sender, RoutedEventArgs e)
         {
             // Pair handler
         }
 
-        private void BtnClose_Click(object sender, RoutedEventArgs e) => this.Close();
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+
 
         private void Border_Drop(object sender, DragEventArgs e)
         {
@@ -813,6 +821,23 @@ namespace Dosyaktar
             {
                 ApplyTheme(theme);
                 AppendLog($"Tema uygulandı: {theme}");
+                
+                // Remove highlight from all theme cards
+                if (ThemeWrapPanel != null)
+                {
+                    foreach (var child in ThemeWrapPanel.Children)
+                    {
+                        if (child is Border b)
+                        {
+                            b.BorderBrush = Application.Current.Resources["BorderBrush"] as SolidColorBrush;
+                            b.BorderThickness = new Thickness(1);
+                        }
+                    }
+                }
+                
+                // Highlight selected
+                border.BorderBrush = Application.Current.Resources["AccentBrush"] as SolidColorBrush;
+                border.BorderThickness = new Thickness(2);
             }
         }
 
@@ -909,19 +934,17 @@ namespace Dosyaktar
             }
         }
 
-        private void BtnSaveSettings_Click(object sender, RoutedEventArgs e)
+        private void Setting_Changed(object sender, RoutedEventArgs e)
         {
+            if (!_initialized) return;
+            
             _settings.SaveDirectory = TxtDownloadFolder.Text;
-            _settings.DarkMode = ChkDarkMode.IsChecked == true;
             _settings.AutoUpdate = ChkAutoUpdate.IsChecked == true;
             _settings.AutoReceive = ChkAutoReceive.IsChecked == true;
             if (int.TryParse(TxtPort.Text, out int port) && port > 0 && port < 65536)
                 _settings.Port = port;
+                
             SettingsService.Save(_settings);
-            AppendLog("Ayarlar kaydedildi.");
-            
-            int newPort = _settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort;
-            _discovery.Start(newPort, isReceiving: false);
         }
 
         private void UpdateNetworkInfo()
@@ -979,7 +1002,6 @@ namespace Dosyaktar
             TxtHostname.Text = Environment.MachineName;
             TxtDownloadFolder.Text = _settings.SaveDirectory;
             TxtPort.Text = (_settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort).ToString();
-            ChkDarkMode.IsChecked = _settings.DarkMode;
             ChkAutoUpdate.IsChecked = _settings.AutoUpdate;
             ChkAutoReceive.IsChecked = _settings.AutoReceive;
         }

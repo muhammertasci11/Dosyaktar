@@ -4,7 +4,7 @@
         Title="Dosyaktar" Height="750" Width="1100"
         MinHeight="700" MinWidth="1000"
         WindowStartupLocation="CenterScreen"
-        Background="{DynamicResource BackgroundBrush}"
+        Background="Transparent"
         Icon="Assets/icon.png"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -71,12 +71,13 @@
         </DataTemplate>
     </Window.Resources>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="260"/> <!-- Sidebar -->
-            <ColumnDefinition Width="*"/>   <!-- Main Area -->
-            <ColumnDefinition Width="320"/> <!-- Right Panel -->
-        </Grid.ColumnDefinitions>
+    <Border CornerRadius="16" Background="{DynamicResource BackgroundBrush}" ClipToBounds="True">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260"/> <!-- Sidebar -->
+                <ColumnDefinition Width="*"/>   <!-- Main Area -->
+                <ColumnDefinition Width="320"/> <!-- Right Panel -->
+            </Grid.ColumnDefinitions>
 
         <!-- Dummy Elements for Legacy C# Code Compatibility -->
         <Grid x:Name="LegacyDummies" Visibility="Collapsed" Grid.Column="0">
@@ -131,7 +132,7 @@
                     <RadioButton Content="Ayarlar" Tag="&#xE713;" Style="{StaticResource SidebarTabButton}" Click="MenuSettings_Click"/>
                 </StackPanel>
 
-                <Button Grid.Row="2" Style="{StaticResource GradientButton}" Click="MenuPair_Click">
+                <Button x:Name="BtnPairDevice" Grid.Row="2" Style="{StaticResource GradientButton}" Click="MenuPair_Click">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#xE710;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/>
                         <TextBlock Text="Cihaz Eşleştir" FontWeight="Bold" VerticalAlignment="Center"/>
@@ -159,6 +160,7 @@
                         <TextBlock Text="Yerel ağ taranıyor..." Foreground="{DynamicResource SuccessBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,0,16,0" VerticalAlignment="Center"/>
                         
                         <Button Style="{StaticResource IconButton}" Content="&#xE72C;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Click="BtnRefresh_Click"/>
+                        <Button Style="{StaticResource IconButton}" Content="&#xE921;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Margin="8,0,0,0" Click="BtnMinimize_Click"/>
                         <Button Style="{StaticResource IconButton}" Content="&#xE711;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="14" Margin="8,0,0,0" Click="BtnClose_Click"/>
                     </StackPanel>
                 </Grid>
@@ -307,7 +309,7 @@
                             <TextBlock Text="Uygulama Teması" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
                             <TextBlock Text="Görünümü tarzınıza göre özelleştirin." FontSize="13" Foreground="{DynamicResource TextSecBrush}" Margin="0,0,0,16"/>
                             
-                            <WrapPanel Orientation="Horizontal" Margin="0,0,0,32">
+                            <WrapPanel x:Name="ThemeWrapPanel" Orientation="Horizontal" Margin="0,0,0,32">
                                 <Border Style="{StaticResource GlassPanelBorder}" Width="120" Height="110" Margin="0,0,12,12" Cursor="Hand" MouseDown="ThemeCard_Click" Tag="nordic">
                                     <Grid><Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                                         <Border Grid.Row="0" Margin="6,6,6,0" CornerRadius="6" Background="#E6F0FA"/>
@@ -335,7 +337,7 @@
                                         </StackPanel>
                                     </Grid>
                                 </Border>
-                                <Border x:Name="ThemeCrimson" Style="{StaticResource GlassPanelBorder}" Width="120" Height="110" Margin="0,0,12,12" BorderBrush="#7C3AED" BorderThickness="2" Cursor="Hand" MouseDown="ThemeCard_Click" Tag="crimson">
+                                <Border Style="{StaticResource GlassPanelBorder}" Width="120" Height="110" Margin="0,0,12,12" Cursor="Hand" MouseDown="ThemeCard_Click" Tag="crimson">
                                     <Grid><Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                                         <Border Grid.Row="0" Margin="6,6,6,0" CornerRadius="6">
                                             <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#312E81" Offset="0"/><GradientStop Color="#4C1D95" Offset="1"/></LinearGradientBrush></Border.Background>
@@ -368,10 +370,10 @@
                                     </StackPanel>
                                     
                                     <TextBlock Text="CİHAZ ADI" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,8"/>
-                                    <TextBox x:Name="TxtHostname" Style="{StaticResource ModernTextBox}" Margin="0,0,0,16"/>
+                                    <TextBox x:Name="TxtHostname" Style="{StaticResource ModernTextBox}" Margin="0,0,0,16" LostFocus="Setting_Changed"/>
 
                                     <TextBlock Text="PORT NUMARASI" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,8"/>
-                                    <TextBox x:Name="TxtPort" Style="{StaticResource ModernTextBox}" Text="5001" Margin="0,0,0,16"/>
+                                    <TextBox x:Name="TxtPort" Style="{StaticResource ModernTextBox}" Text="5001" Margin="0,0,0,16" LostFocus="Setting_Changed"/>
                                 </StackPanel>
                             </Border>
 
@@ -389,7 +391,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBox x:Name="TxtDownloadFolder" Style="{StaticResource ModernTextBox}" Grid.Column="0" Margin="0,0,12,0"/>
+                                        <TextBox x:Name="TxtDownloadFolder" Style="{StaticResource ModernTextBox}" Grid.Column="0" Margin="0,0,12,0" LostFocus="Setting_Changed"/>
                                         <Button Grid.Column="1" Content="Gözat" Style="{StaticResource GlassPanelButton}" Width="80" Click="BtnBrowseFolder_Click"/>
                                     </Grid>
 
@@ -401,16 +403,7 @@
                                             <TextBlock Text="Otomatik Kabul Et" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14" Margin="0,0,0,2"/>
                                             <TextBlock Text="Tanıdık cihazlardan gelenleri sorma" Foreground="{DynamicResource TextSecBrush}" FontSize="12"/>
                                         </StackPanel>
-                                        <CheckBox x:Name="ChkAutoReceive" Style="{StaticResource ToggleSwitch}" Grid.Column="1" VerticalAlignment="Center"/>
-                                    </Grid>
-
-                                    <Grid Margin="0,0,0,12">
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                        <StackPanel Grid.Column="0">
-                                            <TextBlock Text="Koyu Tema" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14" Margin="0,0,0,2"/>
-                                            <TextBlock Text="Arayüz karanlık modda çalışsın" Foreground="{DynamicResource TextSecBrush}" FontSize="12"/>
-                                        </StackPanel>
-                                        <CheckBox x:Name="ChkDarkMode" Style="{StaticResource ToggleSwitch}" IsChecked="True" Grid.Column="1" VerticalAlignment="Center"/>
+                                        <CheckBox x:Name="ChkAutoReceive" Style="{StaticResource ToggleSwitch}" Grid.Column="1" VerticalAlignment="Center" Click="Setting_Changed"/>
                                     </Grid>
 
                                     <Grid>
@@ -419,18 +412,10 @@
                                             <TextBlock Text="Otomatik Güncelleme" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14" Margin="0,0,0,2"/>
                                             <TextBlock Text="Yeni sürümler otomatik indirilsin" Foreground="{DynamicResource TextSecBrush}" FontSize="12"/>
                                         </StackPanel>
-                                        <CheckBox x:Name="ChkAutoUpdate" Style="{StaticResource ToggleSwitch}" IsChecked="True" Grid.Column="1" VerticalAlignment="Center"/>
+                                        <CheckBox x:Name="ChkAutoUpdate" Style="{StaticResource ToggleSwitch}" IsChecked="True" Grid.Column="1" VerticalAlignment="Center" Click="Setting_Changed"/>
                                     </Grid>
                                 </StackPanel>
                             </Border>
-
-                            <!-- KAYDET BUTONU -->
-                            <Button Style="{StaticResource GradientButton}" HorizontalAlignment="Left" Margin="0,0,0,16" Click="BtnSaveSettings_Click">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="&#xE74E;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="Ayarları Kaydet" FontWeight="Bold" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
 
                             <!-- DANGER ZONE -->
                             <Border BorderBrush="{DynamicResource DangerBrush}" BorderThickness="1" CornerRadius="12" Padding="24" Background="Transparent">
@@ -543,11 +528,12 @@
                 <!-- Status Footer -->
                 <Border Grid.Row="3" Background="{DynamicResource BackgroundBrush}" Padding="16,12" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
                     <Grid>
-                        <TextBlock Text="Dosyaktar v1.7.0" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Text="Dosyaktar v1.7.1" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         <TextBlock x:Name="TxtFooterStatus" Text="Bağlı" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Grid>
                 </Border>
             </Grid>
         </Border>
     </Grid>
+    </Border>
 </Window>
