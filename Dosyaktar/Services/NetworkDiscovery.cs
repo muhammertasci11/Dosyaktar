@@ -188,14 +188,17 @@ namespace Dosyaktar.Services
                             using var doc  = JsonDocument.Parse(json);
                             var root = doc.RootElement;
 
-                            string ip   = root.TryGetProperty("ip",          out var ipEl)   ? ipEl.GetString()   ?? "" : result.RemoteEndPoint.Address.ToString();
+                            string ip   = result.RemoteEndPoint.Address.ToString();
                             string host = root.TryGetProperty("hostname",    out var hEl)    ? hEl.GetString()    ?? "" : ip;
                             int    port = root.TryGetProperty("port",        out var portEl) ? portEl.GetInt32()       : FileTransferService.DefaultPort;
                             string ver  = root.TryGetProperty("version",     out var verEl)  ? verEl.GetString()  ?? "" : "";
                             bool   recv = root.TryGetProperty("isReceiving", out var recvEl) && recvEl.GetBoolean();
 
-                            // Kendi broadcast paketini yoksay
-                            if (ip == myIP) continue;
+                            // Kendi broadcast paketini yoksay (tüm arayüzler için kontrol et)
+                            bool isLocal = NetworkInterface.GetAllNetworkInterfaces()
+                                .SelectMany(n => n.GetIPProperties().UnicastAddresses)
+                                .Any(a => a.Address.ToString() == ip);
+                            if (isLocal) continue;
 
                             bool changed;
                             if (_peers.TryGetValue(ip, out var existing))
