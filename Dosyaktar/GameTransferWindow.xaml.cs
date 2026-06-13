@@ -123,9 +123,15 @@ namespace Dosyaktar
 
         private void BtnSelectFolder_Click(object sender, RoutedEventArgs e)
         {
-            string? picked = FolderPicker.ShowDialog(this, "Göndermek istediğin klasörü seç");
-            if (picked != null)
+            var dialog = new Microsoft.Win32.OpenFolderDialog
             {
+                Title = "Göndermek istediğin klasörü seç",
+                Multiselect = false
+            };
+            
+            if (dialog.ShowDialog(this) == true)
+            {
+                string picked = dialog.FolderName;
                 _selectedFolderPath = picked;
                 _manifestPath       = null;
                 long size = PlatformScanner.DirectorySize(picked);

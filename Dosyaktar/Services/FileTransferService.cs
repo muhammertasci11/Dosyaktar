@@ -222,6 +222,12 @@ namespace Dosyaktar.Services
                 }
 
                 await stream.FlushAsync(token);
+                
+                OnStatus("Alıcının onay (ACK) göndermesi bekleniyor...");
+                var ackBuf = new byte[1];
+                int ackRead = await stream.ReadAsync(ackBuf, token);
+                if (ackRead == 0) throw new IOException("Alıcı aktarımı tamamlamadan bağlantıyı kesti.");
+
                 OnStatus($"✓ Transfer tamamlandı: {entries.Count} dosya, {FormatSize(totalBytes)}");
                 return new TransferResult(true, "Transfer başarılı.");
             }
@@ -371,6 +377,10 @@ namespace Dosyaktar.Services
                         }
                     }
                 }
+
+                OnStatus("Veriler alındı, onay (ACK) gönderiliyor...");
+                await stream.WriteAsync(new byte[] { 1 }, token);
+                await stream.FlushAsync(token);
 
                 OnStatus($"✓ {fileCount} dosya alındı → {saveDirectory}");
                 return new TransferResult(true, $"{fileCount} dosya kaydedildi: {saveDirectory}");

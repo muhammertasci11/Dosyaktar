@@ -577,7 +577,12 @@ namespace Dosyaktar
                     var result = await _xfer.StartReceivingAsync(saveDir, port);
                     if (result.Success)
                     {
-                        Dispatcher.Invoke(() => SetProgressDone());
+                        Dispatcher.Invoke(() => 
+                        {
+                            SetProgressDone();
+                            MessageBox.Show($"Aktarım tamamlandı!\n\nDosyalar şuraya kaydedildi:\n{saveDir}", "Dosyaktar", MessageBoxButton.OK, MessageBoxImage.Information);
+                            AppendLog($"[Alındı] Dosyalar kaydedildi: {saveDir}");
+                        });
                     }
                 }
                 catch (OperationCanceledException)
@@ -658,6 +663,11 @@ namespace Dosyaktar
         {
             Dispatcher.InvokeAsync(() =>
             {
+                if (FindName("TransferCard") is System.Windows.Controls.Border card && card.Visibility != Visibility.Visible)
+                {
+                    card.Visibility = Visibility.Visible;
+                }
+                
                 if (TransferProgressBar != null) TransferProgressBar.Value = p.Percentage;
                 if (TxtQueueProgress != null) TxtQueueProgress.Text = $"{p.Percentage:F1}%";
                 if (TxtQueueFileName != null) TxtQueueFileName.Text = p.TotalFiles > 1
