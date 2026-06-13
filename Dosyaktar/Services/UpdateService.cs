@@ -150,8 +150,7 @@ namespace Dosyaktar.Services
             foreach (var asset in assets.EnumerateArray())
             {
                 string? name = asset.GetProperty("name").GetString();
-                if (string.Equals(name, UpdateConfig.AssetName,
-                                  StringComparison.OrdinalIgnoreCase))
+                if (name != null && name.StartsWith("Dosyaktar", StringComparison.OrdinalIgnoreCase) && name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
                     return asset.GetProperty("browser_download_url").GetString();
             }
             return null;
