@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://img.icons8.com/fluent/128/000000/data-transfer.png" width="128" height="128" alt="Dosyaktar Icon"/>
+  <img src="Dosyaktar/Assets/icon.png" width="128" height="128" alt="Dosyaktar Icon"/>
   <h1>🚀 Dosyaktar</h1>
   <p><strong>Modern, High-Speed Local Network File & Game Transfer Tool</strong></p>
 
