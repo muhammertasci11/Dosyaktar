@@ -12,9 +12,9 @@
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
 
     <!-- Sürüm — her release'de artırın: 1.0.0 → 1.1.0 → 1.2.0 -->
-    <Version>1.7.9</Version>
-    <AssemblyVersion>1.7.9.0</AssemblyVersion>
-    <FileVersion>1.7.9.0</FileVersion>
+    <Version>1.8.0</Version>
+    <AssemblyVersion>1.8.0.0</AssemblyVersion>
+    <FileVersion>1.8.0.0</FileVersion>
     <Product>Dosyaktar</Product>
     <Company>muhammertasci11</Company>
 
