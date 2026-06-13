@@ -226,7 +226,7 @@ namespace Dosyaktar
 
         private async Task CheckForUpdatesAsync()
         {
-            if (!_settings.CheckUpdates) return;
+            if (!_settings.AutoUpdate) return;
             await Task.Delay(2000); // Pencere açıldıktan 2 sn sonra kontrol et
 
             var svc = new UpdateService();
