@@ -826,7 +826,41 @@ namespace Dosyaktar
         private void MenuSettings_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelSettings, "Ayarlar");
         private void MenuPair_Click(object sender, RoutedEventArgs e)
         {
-            // Pair handler
+            var w = new Window { Title = "Manuel Cihaz Ekle", Width = 300, Height = 180, WindowStartupLocation = WindowStartupLocation.CenterOwner, Owner = this, ResizeMode = ResizeMode.NoResize, Background = (SolidColorBrush)FindResource("SurfaceBrush"), Foreground = (SolidColorBrush)FindResource("TextPrimaryBrush") };
+            var sp = new StackPanel { Margin = new Thickness(16) };
+            sp.Children.Add(new TextBlock { Text = "Hedef IP Adresi:", FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,8) });
+            var txt = new TextBox { Style = (Style)FindResource("ModernTextBox"), Margin = new Thickness(0, 0, 0, 16) };
+            sp.Children.Add(txt);
+            var btn = new Button { Content = "Bağlan", Style = (Style)FindResource("GradientButton"), Padding = new Thickness(0, 8, 0, 8) };
+            btn.Click += async (s, args) => {
+                string ip = txt.Text.Trim();
+                if (NetworkManager.IsValidIP(ip)) {
+                    w.DialogResult = true;
+                    _selectedPeer = new DiscoveredPeer { IP = ip, Hostname = ip };
+                    _currentPairingPin = new Random().Next(100000, 999999).ToString();
+                    
+                    if (FindName("PairingModal") is Grid pm) pm.Visibility = Visibility.Visible;
+                    if (FindName("TxtPairingTitle") is TextBlock title) title.Text = "Bağlanılıyor...";
+                    if (FindName("TxtPairingMessage") is TextBlock msg) msg.Text = $"{ip} cihazının onayı bekleniyor.";
+                    if (FindName("TxtPairingPin") is TextBlock pin) pin.Text = _currentPairingPin;
+                    if (FindName("PairingReceiveButtons") is Grid recvBtns) recvBtns.Visibility = Visibility.Collapsed;
+                    if (FindName("PairingSendButtons") is Grid sendBtns) sendBtns.Visibility = Visibility.Visible;
+                    
+                    bool sent = await _pairing.SendRequestAsync(ip, _currentPairingPin, Environment.MachineName);
+                    if (!sent)
+                    {
+                        if (FindName("PairingModal") is Grid pm2) pm2.Visibility = Visibility.Collapsed;
+                        var res = MessageBox.Show("İstek gönderilemedi.\n\nGüvenlik duvarı izni vermek ister misiniz?", "Hata", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                        if (res == MessageBoxResult.Yes) {
+                            try { NetworkManager.AddFirewallRule(); MessageBox.Show("İzin eklendi. Tekrar deneyin."); }
+                            catch (Exception ex) { MessageBox.Show("Hata: " + ex.Message); }
+                        }
+                    }
+                } else MessageBox.Show("Geçersiz IP adresi.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+            };
+            sp.Children.Add(btn);
+            w.Content = sp;
+            w.ShowDialog();
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)

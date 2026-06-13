@@ -93,8 +93,6 @@
             <TextBlock x:Name="TxtTargetIP"/>
             <TextBlock x:Name="TxtNetStatus"/>
             <Button x:Name="BtnTestConn"/>
-            <Grid x:Name="PairingModal"/>
-            
             <ListBox x:Name="FileListControl"/>
             <TextBlock x:Name="NoPeersHint"/>
             <Border x:Name="PeerCountBadge"/>
@@ -537,6 +535,39 @@
                 </Border>
             </Grid>
         </Border>
+        <!-- EŞLEŞTİRME EKRANI (OVERLAY) -->
+        <Grid x:Name="PairingModal" Visibility="Collapsed" Grid.ColumnSpan="3" Background="#B2000000" Panel.ZIndex="100">
+            <Border Style="{StaticResource GlassPanelBorder}" Width="400" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="32">
+                <StackPanel>
+                    <TextBlock Text="🔄" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                    <TextBlock x:Name="TxtPairingTitle" Text="Bağlantı İsteği" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBlock x:Name="TxtPairingMessage" Text="Bekleniyor..." FontSize="14" Foreground="{DynamicResource TextSecBrush}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,24"/>
+                    
+                    <Border Background="{DynamicResource Surface2Brush}" CornerRadius="12" Padding="24" Margin="0,0,0,32">
+                        <StackPanel>
+                            <TextBlock Text="DOĞRULAMA KODU" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="TxtPairingPin" Text="000000" FontSize="48" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Alıcı Butonları -->
+                    <Grid x:Name="PairingReceiveButtons" Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Reddet" Style="{StaticResource GlassPanelButton}" Foreground="{DynamicResource DangerBrush}" Padding="0,12" Click="BtnPairingReject_Click"/>
+                        <Button Grid.Column="2" Content="Kabul Et" Style="{StaticResource GradientButton}" Padding="0,12" Click="BtnPairingAccept_Click"/>
+                    </Grid>
+                    
+                    <!-- Gönderici Butonları -->
+                    <Grid x:Name="PairingSendButtons" Visibility="Collapsed">
+                        <Button Content="İptal Et" Style="{StaticResource GlassPanelButton}" Foreground="{DynamicResource DangerBrush}" Padding="0,12" Click="BtnPairingCancel_Click"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
     </Border>
 </Window>
