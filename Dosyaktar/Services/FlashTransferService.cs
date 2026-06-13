@@ -18,16 +18,18 @@ namespace Dosyaktar.Services
     {
         public double OverallPercentage { get; }
         public long TotalBytesReceived { get; }
+        public long TotalBytes { get; }
         public double SpeedMBps { get; }
         public TimeSpan RemainingTime { get; }
         public int ActiveConnections { get; }
         // Bağlantı başına anlık durumlar: ThreadId -> Yüzde (0-100)
         public Dictionary<int, double> ThreadProgress { get; }
 
-        public FlashProgressEventArgs(double percentage, long bytes, double speed, TimeSpan rem, int conns, Dictionary<int, double> threadProgress)
+        public FlashProgressEventArgs(double percentage, long bytes, long totalBytes, double speed, TimeSpan rem, int conns, Dictionary<int, double> threadProgress)
         {
             OverallPercentage = percentage;
             TotalBytesReceived = bytes;
+            TotalBytes = totalBytes;
             SpeedMBps = speed;
             RemainingTime = rem;
             ActiveConnections = conns;
@@ -144,7 +146,7 @@ namespace Dosyaktar.Services
                         double pct = totalBytes > 0 ? (currentSent * 100.0) / totalBytes : 100;
                         var remTime = mbps > 0 ? TimeSpan.FromSeconds((totalBytes - currentSent) / (mbps * 1048576.0)) : TimeSpan.Zero;
                         
-                        ProgressChanged?.Invoke(this, new FlashProgressEventArgs(pct, currentSent, mbps, remTime, activeConns, new Dictionary<int, double>()));
+                        ProgressChanged?.Invoke(this, new FlashProgressEventArgs(pct, currentSent, totalBytes, mbps, remTime, activeConns, new Dictionary<int, double>()));
                     }
                 });
 
@@ -299,7 +301,7 @@ namespace Dosyaktar.Services
                         var remTime = mbps > 0 ? TimeSpan.FromSeconds((totalBytes - currentRecv) / (mbps * 1048576.0)) : TimeSpan.Zero;
                         
                         var tp = new Dictionary<int, double>(threadProgressDict);
-                        ProgressChanged?.Invoke(this, new FlashProgressEventArgs(pct, currentRecv, mbps, remTime, activeConns, tp));
+                        ProgressChanged?.Invoke(this, new FlashProgressEventArgs(pct, currentRecv, totalBytes, mbps, remTime, activeConns, tp));
                     }
                 });
 
@@ -386,7 +388,7 @@ namespace Dosyaktar.Services
                 masterWriter.Write((byte)1);
                 await masterClient.GetStream().FlushAsync(token);
 
-                ProgressChanged?.Invoke(this, new FlashProgressEventArgs(100.0, totalBytes, 0, TimeSpan.Zero, 0, new Dictionary<int, double>()));
+                ProgressChanged?.Invoke(this, new FlashProgressEventArgs(100.0, totalBytes, totalBytes, 0, TimeSpan.Zero, 0, new Dictionary<int, double>()));
                 OnStatus("✓ Dosyalar başarıyla birleştirildi.");
 
                 return new TransferResult(true, "Flash transfer başarılı.");

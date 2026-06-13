@@ -711,16 +711,6 @@ namespace Dosyaktar
                     qActive.Visibility = Visibility.Visible;
                     if (FindName("QueueEmptyState") is System.Windows.Controls.StackPanel qEmpty) qEmpty.Visibility = Visibility.Collapsed;
                 }
-
-                if (FindName("FlashProgressList") is System.Windows.Controls.ItemsControl flashList)
-                {
-                    var bars = new List<object>();
-                    foreach (var kvp in e.ThreadProgress)
-                    {
-                        bars.Add(new { Width = (kvp.Value * 16) / 100.0 }); // 16 is total width of mini bar
-                    }
-                    flashList.ItemsSource = bars;
-                }
             });
         }
 
@@ -1104,6 +1094,16 @@ namespace Dosyaktar
                     text = (Color)ColorConverter.ConvertFromString("#F0FDF4");
                     textSec = (Color)ColorConverter.ConvertFromString("#86EFAC");
                     textMuted = (Color)ColorConverter.ConvertFromString("#BBF7D0");
+                    break;
+                case "grey":
+                    bg = (Color)ColorConverter.ConvertFromString("#1A1A1A");
+                    surface = (Color)ColorConverter.ConvertFromString("#242424");
+                    surface2 = (Color)ColorConverter.ConvertFromString("#2E2E2E");
+                    border = (Color)ColorConverter.ConvertFromString("#404040");
+                    accent = (Color)ColorConverter.ConvertFromString("#E0E0E0");
+                    text = (Color)ColorConverter.ConvertFromString("#F5F5F5");
+                    textSec = (Color)ColorConverter.ConvertFromString("#B0B0B0");
+                    textMuted = (Color)ColorConverter.ConvertFromString("#8E8E8E");
                     break;
                 case "sunset":
                     bg = (Color)ColorConverter.ConvertFromString("#431407");

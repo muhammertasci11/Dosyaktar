@@ -321,7 +321,7 @@ namespace Dosyaktar.Services
                     flash.ProgressChanged += (s, p) => 
                     {
                         OnProgress(new TransferProgress(
-                            p.TotalBytesReceived, 1, p.SpeedMBps, p.RemainingTime, 
+                            p.TotalBytesReceived, p.TotalBytes, p.SpeedMBps, p.RemainingTime, 
                             "Flash Modu Çoklu Aktarım", 1, 1));
                         FlashProgressChanged?.Invoke(this, p);
                     };
