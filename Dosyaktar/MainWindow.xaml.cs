@@ -792,6 +792,33 @@ namespace Dosyaktar
             }
         }
 
+        private void BtnClearHistory_Click(object sender, RoutedEventArgs e)
+        {
+            if (FindName("HistoryList") is System.Windows.Controls.StackPanel historyList)
+            {
+                historyList.Children.Clear();
+                var emptyText = new System.Windows.Controls.TextBlock 
+                { 
+                    Text = "Henüz bir transfer geçmişi yok.", 
+                    Foreground = (System.Windows.Media.SolidColorBrush)FindResource("TextMutedBrush"), 
+                    HorizontalAlignment = HorizontalAlignment.Center, 
+                    Margin = new Thickness(0, 40, 0, 0) 
+                };
+                historyList.Children.Add(emptyText);
+            }
+        }
+
+        private void BtnResetApp_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Tüm ayarlar ve geçmiş silinecek. Uygulama yeniden başlatılacak. Onaylıyor musunuz?", "Sıfırla", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                SettingsService.Save(new AppSettings()); // Varsayılanlara döndür
+                BtnClearHistory_Click(this, new RoutedEventArgs()); // Geçmişi temizle
+                System.Diagnostics.Process.Start(System.Environment.ProcessPath ?? "Dosyaktar.exe");
+                Application.Current.Shutdown();
+            }
+        }
+
         // ═════════════════════════════════════════════════════════════════════
         //  Yardımcı UI
         // ═════════════════════════════════════════════════════════════════════
@@ -938,7 +965,7 @@ namespace Dosyaktar
         private void MenuSettings_Click(object sender, RoutedEventArgs e) => SwitchPanel(PanelSettings, "Ayarlar");
         private void MenuPair_Click(object sender, RoutedEventArgs e)
         {
-            var w = new Window { Title = "Manuel Cihaz Ekle", Width = 300, Height = 180, WindowStartupLocation = WindowStartupLocation.CenterOwner, Owner = this, ResizeMode = ResizeMode.NoResize, Background = (SolidColorBrush)FindResource("SurfaceBrush"), Foreground = (SolidColorBrush)FindResource("TextPrimaryBrush") };
+            var w = new Window { Title = "Manuel Cihaz Ekle", Width = 340, Height = 220, WindowStartupLocation = WindowStartupLocation.CenterOwner, Owner = this, ResizeMode = ResizeMode.NoResize, Background = (SolidColorBrush)FindResource("SurfaceBrush"), Foreground = (SolidColorBrush)FindResource("TextPrimaryBrush") };
             var sp = new StackPanel { Margin = new Thickness(16) };
             sp.Children.Add(new TextBlock { Text = "Hedef IP Adresi:", FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,8) });
             var txt = new TextBox { Style = (Style)FindResource("ModernTextBox"), Margin = new Thickness(0, 0, 0, 16) };

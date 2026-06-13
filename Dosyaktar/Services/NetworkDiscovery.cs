@@ -19,6 +19,8 @@ namespace Dosyaktar.Services
         public string IP        { get; init; } = string.Empty;
         public int    Port      { get; init; }
         public string Version   { get; init; } = string.Empty;
+        public bool   IsWifi    { get; init; }
+        public string ConnectionIcon => IsWifi ? "\uE701" : "\uE839";
         public bool   IsReceiving { get; set; }   // "Almaya Başla" modunda mı?
         public DateTime LastSeen  { get; set; }
 
@@ -108,19 +110,6 @@ namespace Dosyaktar.Services
                 {
                     try
                     {
-                        string mainIP = NetworkManager.GetLocalIP();
-                        var payload = new
-                        {
-                            hostname    = Environment.MachineName,
-                            ip          = mainIP,
-                            port        = _transferPort,
-                            version     = UpdateService.GetCurrentVersion().ToString(),
-                            isReceiving = _isReceiving
-                        };
-
-                        byte[] data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(payload));
-
-                        // Tüm aktif arayüzlerden (VirtualBox vb. hariç) aynı anda yayınla
                         var interfaces = NetworkInterface.GetAllNetworkInterfaces()
                             .Where(n => n.OperationalStatus == OperationalStatus.Up && 
                                         n.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
@@ -131,10 +120,24 @@ namespace Dosyaktar.Services
 
                         foreach (var nic in interfaces)
                         {
+                            bool isWifi = nic.NetworkInterfaceType == NetworkInterfaceType.Wireless80211;
+
                             foreach (var addr in nic.GetIPProperties().UnicastAddresses)
                             {
                                 if (addr.Address.AddressFamily == AddressFamily.InterNetwork)
                                 {
+                                    var payload = new
+                                    {
+                                        hostname    = Environment.MachineName,
+                                        ip          = addr.Address.ToString(),
+                                        port        = _transferPort,
+                                        version     = UpdateService.GetCurrentVersion().ToString(),
+                                        isReceiving = _isReceiving,
+                                        isWifi      = isWifi
+                                    };
+
+                                    byte[] data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(payload));
+
                                     try
                                     {
                                         using var udp = new UdpClient(new IPEndPoint(addr.Address, 0));
@@ -196,6 +199,7 @@ namespace Dosyaktar.Services
                             int    port = root.TryGetProperty("port",        out var portEl) ? portEl.GetInt32()       : FileTransferService.DefaultPort;
                             string ver  = root.TryGetProperty("version",     out var verEl)  ? verEl.GetString()  ?? "" : "";
                             bool   recv = root.TryGetProperty("isReceiving", out var recvEl) && recvEl.GetBoolean();
+                            bool   wifi = root.TryGetProperty("isWifi",      out var wifiEl) && wifiEl.GetBoolean();
 
                             // Kendi broadcast paketini yoksay (tüm arayüzler için kontrol et)
                             bool isLocal = NetworkInterface.GetAllNetworkInterfaces()
@@ -219,6 +223,7 @@ namespace Dosyaktar.Services
                                     IP          = ip,
                                     Port        = port,
                                     Version     = ver,
+                                    IsWifi      = wifi,
                                     IsReceiving = recv,
                                     LastSeen    = DateTime.UtcNow
                                 };
