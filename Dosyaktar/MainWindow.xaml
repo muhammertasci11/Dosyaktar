@@ -346,6 +346,15 @@
                                         </StackPanel>
                                     </Grid>
                                 </Border>
+                                <Border Style="{StaticResource GlassPanelBorder}" Width="120" Height="110" Margin="0,0,12,12" Cursor="Hand" MouseDown="ThemeCard_Click" Tag="grey">
+                                    <Grid><Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Margin="6,6,6,0" CornerRadius="6" Background="#242424"/>
+                                        <StackPanel Grid.Row="1" Margin="8,6,8,8">
+                                            <TextBlock Text="Sleek Grey" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="11"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,3,0,0"><Ellipse Width="7" Height="7" Fill="#8E8E8E" Margin="0,0,3,0"/><Ellipse Width="7" Height="7" Fill="#404040" Margin="0,0,3,0"/><Ellipse Width="7" Height="7" Fill="#B0B0B0"/></StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
                                 <Border Style="{StaticResource GlassPanelBorder}" Width="120" Height="110" Margin="0,0,12,12" Cursor="Hand" MouseDown="ThemeCard_Click" Tag="forest">
                                     <Grid><Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                                         <Border Grid.Row="0" Margin="6,6,6,0" CornerRadius="6" Background="#14532D"/>
@@ -544,23 +553,7 @@
                                     <TextBlock x:Name="TxtQueueSpeed" Text="-- MB/s" Foreground="{DynamicResource SuccessBrush}" FontWeight="Bold" FontSize="12" HorizontalAlignment="Left"/>
                                     <TextBlock x:Name="TxtQueueProgress" Text="--%" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Bold" FontSize="12" HorizontalAlignment="Right"/>
                                 </Grid>
-
                                 <ProgressBar x:Name="TransferProgressBar" Grid.Row="2" Height="4" Background="{DynamicResource SurfaceBrush}" Foreground="{DynamicResource ProgressGradientBrush}" BorderThickness="0" Value="0" Margin="0,0,0,8"/>
-                                
-                                <ItemsControl x:Name="FlashProgressList" Grid.Row="3" Margin="0,8,0,0">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Width="16" Height="4" Margin="0,0,4,4" Background="{DynamicResource SurfaceBrush}" CornerRadius="2">
-                                                <Border Width="{Binding Width}" Height="4" HorizontalAlignment="Left" Background="{DynamicResource SuccessBrush}" CornerRadius="2"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
                             </Grid>
                         </Border>
                     </StackPanel>
