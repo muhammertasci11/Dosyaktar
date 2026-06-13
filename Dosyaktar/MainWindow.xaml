@@ -430,7 +430,7 @@
                                             <TextBlock Text="Maksimum TCP Bağlantısı" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="12" HorizontalAlignment="Left"/>
                                             <TextBlock x:Name="TxtFlashConns" Text="16" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" FontSize="12" HorizontalAlignment="Right"/>
                                         </Grid>
-                                        <Slider x:Name="SliFlashConns" Minimum="1" Maximum="32" Value="16" IsSnapToTickEnabled="True" TickFrequency="1" ValueChanged="SliFlashConns_ValueChanged"/>
+                                        <Slider x:Name="SliFlashConns" Minimum="1" Maximum="128" Value="16" IsSnapToTickEnabled="True" TickFrequency="1" ValueChanged="SliFlashConns_ValueChanged"/>
                                     </StackPanel>
 
                                     <Button Content="Güncellemeleri Kontrol Et" Style="{StaticResource GlassPanelButton}" Margin="0,16,0,0" Padding="12,8" Click="BtnCheckUpdates_Click"/>
@@ -497,7 +497,7 @@
                 <ScrollViewer x:Name="QueueActiveState" Grid.Row="1" Visibility="Collapsed" Padding="16">
                     <StackPanel>
                         <!-- Example Active Transfer Card -->
-                        <Border x:Name="TransferCard" Style="{StaticResource GlassPanelBorder}" Padding="16" Margin="0,0,0,12" Background="#111827">
+                        <Border x:Name="TransferCard" Style="{StaticResource GlassPanelBorder}" Padding="16" Margin="0,0,0,12" Background="{DynamicResource SurfaceBrush}">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
