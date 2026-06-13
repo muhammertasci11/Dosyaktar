@@ -19,24 +19,19 @@ namespace Dosyaktar
 
                 if (exePath != null && !File.Exists(shortcutPath))
                 {
-                    string vbsPath = Path.Combine(Path.GetTempPath(), "CreateDosyaktarShortcut.vbs");
-                    string vbsCode = $@"
-Set WshShell = CreateObject(""WScript.Shell"")
-Set Shortcut = WshShell.CreateShortcut(""{shortcutPath}"")
-Shortcut.TargetPath = ""{exePath}""
-Shortcut.WorkingDirectory = ""{Path.GetDirectoryName(exePath)}""
-Shortcut.Save
-";
-                    File.WriteAllText(vbsPath, vbsCode);
-                    var p = Process.Start(new ProcessStartInfo
+                    Type shellType = Type.GetTypeFromProgID("WScript.Shell");
+                    if (shellType != null)
                     {
-                        FileName = "wscript.exe",
-                        Arguments = $"\"{vbsPath}\"",
-                        UseShellExecute = false,
-                        CreateNoWindow = true
-                    });
-                    p?.WaitForExit();
-                    if (File.Exists(vbsPath)) File.Delete(vbsPath);
+                        object shell = Activator.CreateInstance(shellType);
+                        object shortcut = shellType.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, shell, new object[] { shortcutPath });
+                        if (shortcut != null)
+                        {
+                            Type shortcutType = shortcut.GetType();
+                            shortcutType.InvokeMember("TargetPath", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { exePath });
+                            shortcutType.InvokeMember("WorkingDirectory", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { Path.GetDirectoryName(exePath) });
+                            shortcutType.InvokeMember("Save", System.Reflection.BindingFlags.InvokeMethod, null, shortcut, null);
+                        }
+                    }
                 }
             }
             catch { /* Sessizce devam et */ }
