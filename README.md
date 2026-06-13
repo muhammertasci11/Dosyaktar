@@ -23,10 +23,11 @@ Featuring an elegant, custom borderless UI inspired by modern design principles,
 
 *   🔍 **Auto-Discovery:** Instantly detects other devices running Dosyaktar on your network within 2 seconds using UDP Broadcasts.
 *   🔒 **PIN-Protected Pairing:** Securely connect devices using an automatically generated 6-digit PIN code.
+*   🚀 **Flash Mode (Torrent-Style Multiplexing):** Slices files into 8MB chunks and transmits them concurrently across up to 32 parallel TCP threads. Receiver uses lock-free `RandomAccess` to write directly to disk, completely eliminating I/O bottlenecks for massive 50GB+ games or thousands of small files.
 *   ⚡ **Ultra-Fast Transfers:** Utilizes TCP protocol to transfer data at the maximum speed supported by your network hardware (e.g., Gigabit LAN).
 *   🎮 **Game Transfer Module:** Automatically scans installed games (via Registry & Folders) and transfers them entirely to the target device.
 *   🔄 **Active Session Architecture:** Once paired, simply drag & drop files/folders into the active session window for instant transmission.
-*   🎨 **Dynamic UI/UX:** Built with WPF, featuring fluid animations, dark/light themes, and custom rounded-corner panels.
+*   🎨 **Dynamic UI/UX:** Built with WPF, featuring fluid animations, real-time multi-thread progress monitoring (IDM-style), dark/light themes, and custom rounded-corner panels.
 *   📡 **Built-in Auto Updater:** Seamlessly checks for new GitHub releases and automatically applies updates in the background.
 
 ---
@@ -37,7 +38,7 @@ The application handles network communication asynchronously across three dedica
 
 1.  **UDP 5002 (Discovery):** Broadcasts signals every 2 seconds to locate peers on the local network (`NetworkDiscovery.cs`).
 2.  **TCP 5003 (Pairing):** Handles the handshake and 6-digit secure PIN verification between two devices (`PairingService.cs`).
-3.  **TCP 5001 (Data Transfer):** Dedicated high-bandwidth pipeline for transferring heavy payloads, files, and game directories (`FileTransferService.cs`).
+3.  **TCP 5001 (Data Transfer):** Dedicated high-bandwidth pipeline for transferring payloads. In **Flash Mode**, this acts as the "Master" connection that coordinates up to 32 dynamic "Worker" TCP channels (`FlashTransferService.cs`).
 
 ---
 
