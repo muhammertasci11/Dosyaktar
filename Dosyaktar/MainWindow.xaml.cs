@@ -133,6 +133,7 @@ namespace Dosyaktar
             _xfer.StatusChanged   += (_, msg) => AppendLog(msg);
             _xfer.Error           += (_, msg) => AppendLog(msg, isError: true);
             _xfer.ProgressChanged += (_, p)   => UpdateProgress(p);
+            _xfer.FlashProgressChanged += Xfer_FlashProgressChanged;
 
             _discovery.PeersChanged += (_, peers) => Dispatcher.InvokeAsync(() => UpdatePeerList(peers));
             _discovery.LogMessage   += (_, msg)   => AppendLog($"[Keşif] {msg}");
@@ -577,9 +578,10 @@ namespace Dosyaktar
                     var result = await _xfer.StartReceivingAsync(saveDir, port);
                     if (result.Success)
                     {
-                        Dispatcher.Invoke(() => 
+                        Dispatcher.InvokeAsync(() => 
                         {
                             SetProgressDone();
+                            AddHistoryItem("Alınan Klasör/Dosyalar", "Tamamlandı");
                             MessageBox.Show($"Aktarım tamamlandı!\n\nDosyalar şuraya kaydedildi:\n{saveDir}", "Dosyaktar", MessageBoxButton.OK, MessageBoxImage.Information);
                             AppendLog($"[Alındı] Dosyalar kaydedildi: {saveDir}");
                         });
@@ -663,9 +665,10 @@ namespace Dosyaktar
         {
             Dispatcher.InvokeAsync(() =>
             {
-                if (FindName("TransferCard") is System.Windows.Controls.Border card && card.Visibility != Visibility.Visible)
+                if (FindName("QueueActiveState") is System.Windows.Controls.ScrollViewer qActive && qActive.Visibility != Visibility.Visible)
                 {
-                    card.Visibility = Visibility.Visible;
+                    qActive.Visibility = Visibility.Visible;
+                    if (FindName("QueueEmptyState") is System.Windows.Controls.StackPanel qEmpty) qEmpty.Visibility = Visibility.Collapsed;
                 }
                 
                 if (TransferProgressBar != null) TransferProgressBar.Value = p.Percentage;
@@ -682,12 +685,84 @@ namespace Dosyaktar
             });
         }
 
+        private void Xfer_FlashProgressChanged(object? sender, FlashProgressEventArgs e)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                if (FindName("QueueActiveState") is System.Windows.Controls.ScrollViewer qActive && qActive.Visibility != Visibility.Visible)
+                {
+                    qActive.Visibility = Visibility.Visible;
+                    if (FindName("QueueEmptyState") is System.Windows.Controls.StackPanel qEmpty) qEmpty.Visibility = Visibility.Collapsed;
+                }
+
+                if (FindName("FlashProgressList") is System.Windows.Controls.ItemsControl flashList)
+                {
+                    var bars = new List<object>();
+                    foreach (var kvp in e.ThreadProgress)
+                    {
+                        bars.Add(new { Width = (kvp.Value * 16) / 100.0 }); // 16 is total width of mini bar
+                    }
+                    flashList.ItemsSource = bars;
+                }
+            });
+        }
+
         private void SetProgressDone()
         {
             if (TransferProgressBar != null) TransferProgressBar.Value = 100;
             if (TxtQueueProgress != null) TxtQueueProgress.Text = "100%";
             if (TxtQueueSpeed != null) TxtQueueSpeed.Text = "Tamamlandı";
             if (TxtQueueFileSize != null) TxtQueueFileSize.Text = "—";
+            
+            // Queue state reset happens when a new transfer starts or user dismisses
+        }
+
+        private void AddHistoryItem(string title, string sizeText)
+        {
+            if (FindName("HistoryList") is System.Windows.Controls.StackPanel historyList)
+            {
+                if (historyList.Children.Count > 0 && historyList.Children[0] is System.Windows.Controls.TextBlock)
+                {
+                    historyList.Children.Clear(); // Remove "Henüz bir transfer geçmişi yok"
+                }
+
+                var border = new System.Windows.Controls.Border
+                {
+                    Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(20, 255, 255, 255)),
+                    CornerRadius = new CornerRadius(8),
+                    Padding = new Thickness(16, 12, 16, 12),
+                    Margin = new Thickness(0, 0, 0, 8)
+                };
+
+                var grid = new System.Windows.Controls.Grid();
+                grid.ColumnDefinitions.Add(new System.Windows.Controls.ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                grid.ColumnDefinitions.Add(new System.Windows.Controls.ColumnDefinition { Width = new GridLength(100) });
+                grid.ColumnDefinitions.Add(new System.Windows.Controls.ColumnDefinition { Width = new GridLength(120) });
+                grid.ColumnDefinitions.Add(new System.Windows.Controls.ColumnDefinition { Width = new GridLength(100) });
+
+                // Dosya Adı
+                var txtTitle = new System.Windows.Controls.TextBlock { Text = title, FontWeight = FontWeights.Bold, Foreground = (System.Windows.Media.Brush)FindResource("TextPrimaryBrush"), VerticalAlignment = VerticalAlignment.Center };
+                System.Windows.Controls.Grid.SetColumn(txtTitle, 0);
+                grid.Children.Add(txtTitle);
+
+                // Boyut
+                var txtSize = new System.Windows.Controls.TextBlock { Text = sizeText, Foreground = (System.Windows.Media.Brush)FindResource("TextSecBrush"), VerticalAlignment = VerticalAlignment.Center };
+                System.Windows.Controls.Grid.SetColumn(txtSize, 1);
+                grid.Children.Add(txtSize);
+
+                // Tarih
+                var txtDate = new System.Windows.Controls.TextBlock { Text = DateTime.Now.ToString("dd MMM, HH:mm"), Foreground = (System.Windows.Media.Brush)FindResource("TextSecBrush"), VerticalAlignment = VerticalAlignment.Center };
+                System.Windows.Controls.Grid.SetColumn(txtDate, 2);
+                grid.Children.Add(txtDate);
+
+                // Durum
+                var txtStatus = new System.Windows.Controls.TextBlock { Text = "Başarılı", Foreground = (System.Windows.Media.Brush)FindResource("SuccessBrush"), FontWeight = FontWeights.Bold, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Right };
+                System.Windows.Controls.Grid.SetColumn(txtStatus, 3);
+                grid.Children.Add(txtStatus);
+
+                border.Child = grid;
+                historyList.Children.Insert(0, border);
+            }
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -1039,9 +1114,23 @@ namespace Dosyaktar
             _settings.SaveDirectory = TxtDownloadFolder.Text;
             _settings.AutoUpdate = ChkAutoUpdate.IsChecked == true;
             _settings.AutoReceive = ChkAutoReceive.IsChecked == true;
+            _settings.UseFlashMode = ChkFlashMode.IsChecked == true;
+            
+            FlashConnectionPanel.Opacity = _settings.UseFlashMode ? 1.0 : 0.5;
+            FlashConnectionPanel.IsEnabled = _settings.UseFlashMode;
+
             if (int.TryParse(TxtPort.Text, out int port) && port > 0 && port < 65536)
                 _settings.Port = port;
                 
+            SettingsService.Save(_settings);
+        }
+
+        private void SliFlashConns_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!_initialized) return;
+            int val = (int)e.NewValue;
+            if (TxtFlashConns != null) TxtFlashConns.Text = val.ToString();
+            _settings.FlashConnections = val;
             SettingsService.Save(_settings);
         }
 
@@ -1102,6 +1191,12 @@ namespace Dosyaktar
             TxtPort.Text = (_settings.Port > 0 ? _settings.Port : FileTransferService.DefaultPort).ToString();
             ChkAutoUpdate.IsChecked = _settings.AutoUpdate;
             ChkAutoReceive.IsChecked = _settings.AutoReceive;
+            ChkFlashMode.IsChecked = _settings.UseFlashMode;
+            SliFlashConns.Value = _settings.FlashConnections;
+            TxtFlashConns.Text = _settings.FlashConnections.ToString();
+            
+            FlashConnectionPanel.Opacity = _settings.UseFlashMode ? 1.0 : 0.5;
+            FlashConnectionPanel.IsEnabled = _settings.UseFlashMode;
         }
     }
 }
