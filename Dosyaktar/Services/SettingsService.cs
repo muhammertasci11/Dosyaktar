@@ -16,6 +16,8 @@ namespace Dosyaktar.Services
         public string Theme         { get; set; } = "crimson";
         public string LastTargetIP  { get; set; } = string.Empty;
         public string Language      { get; set; } = "tr";
+        public bool   UseFlashMode  { get; set; } = false;
+        public int    FlashConnections { get; set; } = 8;
 
         public static string DefaultSaveDir =>
             Path.Combine(

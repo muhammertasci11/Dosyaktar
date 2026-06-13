@@ -27,7 +27,7 @@ namespace Dosyaktar.Services
     public sealed record TransferResult(bool Success, string Message);
 
     // ─── Protokol Modları ─────────────────────────────────────────────────────
-    internal enum TransferMode { Files = 0, Folder = 1 }
+    internal enum TransferMode { Files = 0, Folder = 1, Flash = 2 }
 
     /// <summary>
     /// TCP tabanlı çoklu dosya / klasör transferi.
@@ -50,6 +50,7 @@ namespace Dosyaktar.Services
         public event EventHandler<TransferProgress>? ProgressChanged;
         public event EventHandler<string>?           StatusChanged;
         public event EventHandler<string>?           Error;
+        public event EventHandler<FlashProgressEventArgs>? FlashProgressChanged;
 
         private void OnProgress(TransferProgress p) => ProgressChanged?.Invoke(this, p);
         private void OnStatus(string msg)            => StatusChanged?.Invoke(this, msg);
@@ -141,6 +142,26 @@ namespace Dosyaktar.Services
             int port,
             long totalBytes)
         {
+            var settings = SettingsService.Load();
+            if (settings.UseFlashMode)
+            {
+                var flash = new FlashTransferService();
+                flash.StatusChanged += (s, msg) => OnStatus(msg);
+                flash.Error += (s, msg) => OnError(msg);
+                flash.ProgressChanged += (s, p) => 
+                {
+                    OnProgress(new TransferProgress(
+                        p.TotalBytesReceived, totalBytes, p.SpeedMBps, p.RemainingTime, 
+                        "Flash Modu Çoklu Aktarım", 1, entries.Count));
+                    FlashProgressChanged?.Invoke(this, p);
+                };
+                
+                // Add event handler logic to MainWindow to handle the new UI later
+                // The actual ThreadProgress will be consumed if the UI supports it.
+                
+                return await flash.SendFlashAsync(entries, receiverIP, port, settings.FlashConnections);
+            }
+
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
 
@@ -288,8 +309,25 @@ namespace Dosyaktar.Services
 
                 await using var stream = client.GetStream();
                 using var reader = new BinaryReader(stream, Encoding.UTF8, leaveOpen: true);
+                using var writer = new BinaryWriter(stream, Encoding.UTF8, leaveOpen: true);
 
                 var mode      = (TransferMode)reader.ReadInt32();
+                
+                if (mode == TransferMode.Flash)
+                {
+                    var flash = new FlashTransferService();
+                    flash.StatusChanged += (s, msg) => OnStatus(msg);
+                    flash.Error += (s, msg) => OnError(msg);
+                    flash.ProgressChanged += (s, p) => 
+                    {
+                        OnProgress(new TransferProgress(
+                            p.TotalBytesReceived, 1, p.SpeedMBps, p.RemainingTime, 
+                            "Flash Modu Çoklu Aktarım", 1, 1));
+                        FlashProgressChanged?.Invoke(this, p);
+                    };
+                    return await flash.ReceiveFlashAsync(client, reader, writer, saveDirectory);
+                }
+
                 int fileCount = reader.ReadInt32();
 
                 OnStatus($"{fileCount} dosya alınacak (mod: {mode})...");

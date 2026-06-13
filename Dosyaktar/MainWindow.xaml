@@ -414,6 +414,25 @@
                                         <CheckBox x:Name="ChkAutoUpdate" Style="{StaticResource ToggleSwitch}" IsChecked="True" Grid.Column="1" VerticalAlignment="Center" Click="Setting_Changed"/>
                                     </Grid>
 
+                                    <Border Height="1" Background="{DynamicResource BorderBrush}" Margin="0,16,0,16"/>
+
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="Flash Aktarım Modu" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" FontSize="14" Margin="0,0,0,2"/>
+                                            <TextBlock Text="IDM tarzı paralel / çok kanallı süper hızlı aktarım." Foreground="{DynamicResource TextSecBrush}" FontSize="12"/>
+                                        </StackPanel>
+                                        <CheckBox x:Name="ChkFlashMode" Style="{StaticResource ToggleSwitch}" Grid.Column="1" VerticalAlignment="Center" Click="Setting_Changed"/>
+                                    </Grid>
+
+                                    <StackPanel Margin="0,0,0,12" x:Name="FlashConnectionPanel">
+                                        <Grid Margin="0,0,0,8">
+                                            <TextBlock Text="Maksimum TCP Bağlantısı" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="12" HorizontalAlignment="Left"/>
+                                            <TextBlock x:Name="TxtFlashConns" Text="16" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" FontSize="12" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                        <Slider x:Name="SliFlashConns" Minimum="1" Maximum="32" Value="16" IsSnapToTickEnabled="True" TickFrequency="1" ValueChanged="SliFlashConns_ValueChanged"/>
+                                    </StackPanel>
+
                                     <Button Content="Güncellemeleri Kontrol Et" Style="{StaticResource GlassPanelButton}" Margin="0,16,0,0" Padding="12,8" Click="BtnCheckUpdates_Click"/>
                                 </StackPanel>
                             </Border>
@@ -507,7 +526,22 @@
                                     <TextBlock x:Name="TxtQueueProgress" Text="--%" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Bold" FontSize="12" HorizontalAlignment="Right"/>
                                 </Grid>
 
-                                <ProgressBar x:Name="TransferProgressBar" Grid.Row="2" Height="4" Background="{DynamicResource SurfaceBrush}" Foreground="{DynamicResource ProgressGradientBrush}" BorderThickness="0" Value="45"/>
+                                <ProgressBar x:Name="TransferProgressBar" Grid.Row="2" Height="4" Background="{DynamicResource SurfaceBrush}" Foreground="{DynamicResource ProgressGradientBrush}" BorderThickness="0" Value="0" Margin="0,0,0,8"/>
+                                
+                                <ItemsControl x:Name="FlashProgressList" Grid.Row="3" Margin="0,8,0,0">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Width="16" Height="4" Margin="0,0,4,4" Background="{DynamicResource SurfaceBrush}" CornerRadius="2">
+                                                <Border Width="{Binding Width}" Height="4" HorizontalAlignment="Left" Background="{DynamicResource SuccessBrush}" CornerRadius="2"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </Grid>
                         </Border>
                     </StackPanel>
