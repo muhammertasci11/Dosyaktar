@@ -103,6 +103,7 @@ namespace Dosyaktar
                 // Ayarları UI'a yükle ve ağ bilgisini güncelle
                 LoadSettingsToUI();
                 UpdateNetworkInfo();
+                ApplyTheme(_settings.Theme);
                 
                 // Dinamik Sürüm Bilgisi
                 var ver = UpdateService.GetCurrentVersion();
@@ -261,6 +262,34 @@ namespace Dosyaktar
                 }
             }
             catch { }
+        }
+
+        private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn) btn.IsEnabled = false;
+            try
+            {
+                var svc = new UpdateService();
+                svc.StatusChanged += (_, msg) => Dispatcher.InvokeAsync(() => AppendLog($"[Manuel Güncelleme] {msg}"));
+                
+                var info = await svc.CheckAndMaybeAutoUpdateAsync(silent: false);
+                if (info != null)
+                {
+                    await Dispatcher.InvokeAsync(() => new UpdateWindow(info) { Owner = this }.ShowDialog());
+                }
+                else
+                {
+                    MessageBox.Show("Sisteminiz güncel veya yeni bir sürüm bulunamadı (GitHub önbelleği nedeniyle 5 dakika sürebilir).", "Güncelleme Kontrolü", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Hata oluştu: {ex.Message}", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                if (sender is Button b) b.IsEnabled = true;
+            }
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -842,6 +871,10 @@ namespace Dosyaktar
                 // Highlight selected
                 border.BorderBrush = Application.Current.Resources["AccentBrush"] as SolidColorBrush;
                 border.BorderThickness = new Thickness(2);
+
+                // Save to settings
+                _settings.Theme = theme;
+                SettingsService.Save(_settings);
             }
         }
 
