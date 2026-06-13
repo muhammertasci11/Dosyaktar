@@ -406,7 +406,7 @@
                                         <CheckBox x:Name="ChkAutoReceive" Style="{StaticResource ToggleSwitch}" Grid.Column="1" VerticalAlignment="Center" Click="Setting_Changed"/>
                                     </Grid>
 
-                                    <Grid>
+                                        <Grid>
                                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
                                             <TextBlock Text="Otomatik Güncelleme" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="14" Margin="0,0,0,2"/>
@@ -414,6 +414,8 @@
                                         </StackPanel>
                                         <CheckBox x:Name="ChkAutoUpdate" Style="{StaticResource ToggleSwitch}" IsChecked="True" Grid.Column="1" VerticalAlignment="Center" Click="Setting_Changed"/>
                                     </Grid>
+
+                                    <Button Content="Güncellemeleri Kontrol Et" Style="{StaticResource GlassPanelButton}" Margin="0,16,0,0" Padding="12,8" Click="BtnCheckUpdates_Click"/>
                                 </StackPanel>
                             </Border>
 
