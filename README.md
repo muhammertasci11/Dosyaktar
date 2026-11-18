@@ -56,7 +56,7 @@ Tüm temalar WCAG AA metin kontrastı hedefiyle üretilir; metin ve ikon renkler
 | `Services/FileTransferService.cs` | TCP 5001 veri hattı; Flash Mode'da 32 işçi kanalı yönetir. |
 | `Services/GameLibraryService.cs` | Sağlayıcı bazlı kitaplık taraması (Steam, Epic, GOG, Battle.net, Ubisoft, EA, Riot). |
 | `Services/GameTransferService.cs` | Oyun aktarımı ve hedefte sağlayıcı metadata'sının yeniden yazılması. |
-| `Services/MobileServer.cs` | Gömülü HTTP sunucusu (varsayılan 5050) + `Assets/mobile/` PWA. |
+| `Services/MobileServer.cs` | Gömülü HTTP sunucusu (varsayılan 5050) + `Assets/mobile/` telefon arayüzü. |
 | `Services/HistoryService.cs` | Transfer geçmişi ve kalıcılığı. |
 | `Services/UpdateService.cs` | GitHub Releases üzerinden güncelleme kontrolü. |
 | `ThemeManager.cs` | 8 palet üretir, `MergedDictionaries[0]` üzerinden uygular. |
@@ -80,7 +80,7 @@ Arayüz tek yüzeydir: `MainWindow.xaml` içindeki Keşif, Oturum, Oyunlar, Mobi
 - **Framework:** .NET 8.0
 - **Arayüz:** WPF (özel çerçevesiz pencere, veri odaklı temalar)
 - **Ağ:** Async TCP/UDP soketleri, 32 paralel kanal
-- **Mobil:** Gömülü HTTP sunucusu + servis çalışanı (service worker) ile PWA
+- **Mobil:** Gömülü HTTP sunucusu + telefon tarayıcısında çalışan tek sayfalık arayüz (kurulum gerekmez)
 - **İşletim sistemi:** Windows 10 / 11 (x64)
 - **Dağıtım:** Self-contained tek dosya
 
