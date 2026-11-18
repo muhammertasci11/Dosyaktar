@@ -1,72 +1,120 @@
 <div align="center">
   <img src="Dosyaktar/Assets/icon.png" width="128" height="128" alt="Dosyaktar Icon"/>
-  <h1>🚀 Dosyaktar</h1>
-  <p><strong>Modern, High-Speed Local Network File & Game Transfer Tool</strong></p>
+  <h1>Dosyaktar</h1>
+  <p><strong>Aynı ağda ışık hızında dosya, klasör ve oyun transferi</strong></p>
 
   <p>
     <img src="https://img.shields.io/badge/.NET-8.0-5C2D91?style=for-the-badge&logo=.net&logoColor=white" alt=".NET 8.0">
     <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white" alt="C#">
     <img src="https://img.shields.io/badge/WPF-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="WPF">
-    <img src="https://img.shields.io/github/v/release/muhammertasci11/Dosyaktar?style=for-the-badge&color=2DD4BF" alt="Release">
+    <img src="https://img.shields.io/badge/version-2.1.0-6C3BFF?style=for-the-badge" alt="v2.1.0">
   </p>
 </div>
 
 ---
 
-## 📖 About The Project
+## Hakkında
 
-**Dosyaktar** is a modern, high-performance desktop application designed to securely transfer files, folders, and installed games between devices on the same local network (Wi-Fi or Ethernet) without using any internet quota. 
+**Dosyaktar**, aynı yerel ağdaki (Wi-Fi veya Ethernet) Windows bilgisayarlar arasında dosya, klasör ve **kurulu oyunları** internet kotası harcamadan taşıyan bir masaüstü uygulamasıdır. Bulut yok, hesap yok, reklam yok.
 
-Featuring an elegant, custom borderless UI inspired by modern design principles, Dosyaktar provides a seamless "AirDrop" or "ShareIt" style experience for Windows PCs.
+Sürükle-bırak kadar basit bir akış: cihazı seç, PIN'i onayla, dosyaları bırak. Arka planda 8 MB'lik parçalar hâlinde, **32 paralel TCP kanalıyla** aktarım yapılır.
 
-### ✨ Key Features
+## Öne çıkanlar
 
-*   🔍 **Auto-Discovery:** Instantly detects other devices running Dosyaktar on your network within 2 seconds using UDP Broadcasts.
-*   🔒 **PIN-Protected Pairing:** Securely connect devices using an automatically generated 6-digit PIN code.
-*   🚀 **Flash Mode (Torrent-Style Multiplexing):** Slices files into 8MB chunks and transmits them concurrently across up to 32 parallel TCP threads. Receiver uses lock-free `RandomAccess` to write directly to disk, completely eliminating I/O bottlenecks for massive 50GB+ games or thousands of small files.
-*   ⚡ **Ultra-Fast Transfers:** Utilizes TCP protocol to transfer data at the maximum speed supported by your network hardware (e.g., Gigabit LAN).
-*   🎮 **Game Transfer Module:** Automatically scans installed games (via Registry & Folders) and transfers them entirely to the target device.
-*   🔄 **Active Session Architecture:** Once paired, simply drag & drop files/folders into the active session window for instant transmission.
-*   🎨 **Dynamic UI/UX:** Built with WPF, featuring fluid animations, real-time multi-thread progress monitoring (IDM-style), dark/light themes, and custom rounded-corner panels.
-*   📡 **Built-in Auto Updater:** Seamlessly checks for new GitHub releases and automatically applies updates in the background.
+### Hızlı transfer
+- **Flash Mode:** Dosyalar 8 MB'lik parçalara bölünür, 32 paralel TCP kanalı üzerinden eşzamanlı taşınır.
+- **Kilitlenmesiz yazma:** Alıcı taraf `RandomAccess` ile doğrudan diske yazar; büyük dosyalarda G/Ç darboğazı oluşmaz.
+- **Sıfır kurulum:** Tek dosya çalıştırılabilir (`win-x64`, self-contained).
 
----
+### Oyun kitaplığı ve oyun transferi — *yeni*
+- **7 sağlayıcı:** Steam, Epic Games, GOG, Battle.net, Ubisoft Connect, EA App, Riot Client.
+- **Gerçek kitaplık taraması:** Kayıt defteri anahtarları ve sağlayıcı manifest dosyalarından kurulu oyunlar bulunur; elle klasör seçmek gerekmez.
+- **Oyunu taşı, oynanabilir kalsın:** Steam `.acf` ve Epic manifest dosyaları hedef makinede yeniden yazılır; oyun hedefte kitaplıkta görünür ve açılır.
+- **Tek tıkla aktarım:** Oyun, mevcut transfer hattı üzerinden taşınır — ayrı bir araç yok.
 
-## 🛠️ Technical Architecture
+### Telefon köprüsü — *kurulum gerekmez*
+- Masaüstü uygulama yerel ağda bir köprü açar; karşı ekranda **QR kod** ve adres görünür.
+- Telefon tarayıcısından adres açılır, **6 haneli PIN** girilir. Uygulama kurmak gerekmez.
+- **Gönder:** telefondan bilgisayara dosya/fotoğraf yükle. **Al:** bilgisayarın paylaştığı dosyaları indir. **Durum:** canlı aktarım bilgisi.
+- PIN **tek kullanımlıktır** ve her başarılı girişten sonra yenilenir.
+- Telefon arayüzü ayrı bir uygulama kurmadan çalışır; tarayıcı menüsünden **ana ekrana kısayol** olarak eklenebilir.
+- Hiçbir dosya buluta gitmez; trafik doğrudan bilgisayara akar.
 
-The application handles network communication asynchronously across three dedicated ports to ensure maximum stability and speed:
+### 8 tema
+Prism (parlak cam), Midnight (derin mavi), Nordic (buz mavisi), Aurora (kutup yeşili), Sunset (sıcak kum), Cyber (neon gece), Forest (orman), Graphite (saf gri).
 
-1.  **UDP 5002 (Discovery):** Broadcasts signals every 2 seconds to locate peers on the local network (`NetworkDiscovery.cs`).
-2.  **TCP 5003 (Pairing):** Handles the handshake and 6-digit secure PIN verification between two devices (`PairingService.cs`).
-3.  **TCP 5001 (Data Transfer):** Dedicated high-bandwidth pipeline for transferring payloads. In **Flash Mode**, this acts as the "Master" connection that coordinates up to 32 dynamic "Worker" TCP channels (`FlashTransferService.cs`).
-
----
-
-## 🚀 How to Use
-
-1.  **Launch:** Open Dosyaktar on both the sender and receiver PCs connected to the same network.
-2.  **Discover:** Navigate to the **Keşif (Discovery)** tab. The other device will appear as a card automatically.
-3.  **Pair:** Click on the target device. A 6-digit PIN will appear on the sender's screen. The receiver must click **"Accept" (Onayla)**.
-4.  **Transfer:** Once the active session starts, drag and drop any file, video, or folder into the central designated drop zone.
-5.  **Track:** Monitor real-time transfer progress, speed, and status in the right-side Queue Panel.
+Tüm temalar WCAG AA metin kontrastı hedefiyle üretilir; metin ve ikon renkleri `*InkBrush` / `*FillBrush` rolleri üzerinden gelir.
 
 ---
 
-## 💻 Tech Stack & Requirements
+## Mimari
 
-*   **Framework:** .NET 8.0
-*   **UI Technology:** WPF (Windows Presentation Foundation)
-*   **Architecture:** Async TCP/UDP Sockets, MVVM (partial)
-*   **OS Compatibility:** Windows 10 / Windows 11 (x64)
-*   **Deployment:** Compiled as a Self-Contained single executable.
+| Katman | Sorumluluk |
+|---|---|
+| `Services/NetworkDiscovery.cs` | UDP 5002 üzerinden 2 saniyede bir yayın; aynı ağdaki cihazları bulur. |
+| `Services/PairingService.cs` | TCP 5003 el sıkışması ve 6 haneli PIN doğrulaması. |
+| `Services/FileTransferService.cs` | TCP 5001 veri hattı; Flash Mode'da 32 işçi kanalı yönetir. |
+| `Services/GameLibraryService.cs` | Sağlayıcı bazlı kitaplık taraması (Steam, Epic, GOG, Battle.net, Ubisoft, EA, Riot). |
+| `Services/GameTransferService.cs` | Oyun aktarımı ve hedefte sağlayıcı metadata'sının yeniden yazılması. |
+| `Services/MobileServer.cs` | Gömülü HTTP sunucusu (varsayılan 5050) + `Assets/mobile/` PWA. |
+| `Services/HistoryService.cs` | Transfer geçmişi ve kalıcılığı. |
+| `Services/UpdateService.cs` | GitHub Releases üzerinden güncelleme kontrolü. |
+| `ThemeManager.cs` | 8 palet üretir, `MergedDictionaries[0]` üzerinden uygular. |
+
+Arayüz tek yüzeydir: `MainWindow.xaml` içindeki Keşif, Oturum, Oyunlar, Mobil, Geçmiş ve Ayarlar sayfaları.
 
 ---
 
-## 📜 License & Author
+## Kullanım
 
-Developed with ❤️ by **[Muhammer Taşçı](https://github.com/muhammertasci11)**.  
-*Mechatronics Engineering Student | Software & Automation Developer*
+1. **Başlat:** Dosyaktar'ı aynı ağdaki iki bilgisayarda da aç.
+2. **Keşfet:** Karşı cihaz kartı otomatik olarak belirir.
+3. **Eşleştir:** Hedef cihaza tıkla, 6 haneli PIN'i karşı tarafta onayla.
+4. **Aktar:** Oturum sayfasına dosya/klasör bırak ya da **Oyunlar** sayfasından bir oyun seçip taşı.
+5. **Telefondan bağlan:** **Mobil** sayfasındaki QR kodu okut veya adresi aç, PIN'i gir.
+
+---
+
+## Teknoloji ve gereksinimler
+
+- **Framework:** .NET 8.0
+- **Arayüz:** WPF (özel çerçevesiz pencere, veri odaklı temalar)
+- **Ağ:** Async TCP/UDP soketleri, 32 paralel kanal
+- **Mobil:** Gömülü HTTP sunucusu + servis çalışanı (service worker) ile PWA
+- **İşletim sistemi:** Windows 10 / 11 (x64)
+- **Dağıtım:** Self-contained tek dosya
+
+### Derleme
+
+```powershell
+cd Dosyaktar
+dotnet build -c Debug --nologo
+```
+
+Çıktı: `Dosyaktar/bin/Debug/net8.0-windows/win-x64/Dosyaktar.exe`
+
+### Yayınlama
+
+```powershell
+cd Dosyaktar
+dotnet publish -c Release --nologo
+```
+
+---
+
+## Ayarlar ve veriler
+
+- Ayarlar: `%APPDATA%\Dosyaktar\settings.json`
+- Geçmiş: aynı klasörde, uygulama içindeki **Geçmiş** sayfasından yönetilir.
+- Mobil köprü varsayılan olarak **5050** portunu kullanır.
+
+---
+
+## Lisans ve geliştirici
+
+Geliştirici: **[Muhammer Taşçı](https://github.com/muhammertasci11)**  
+*Mekatronik Mühendisliği Öğrencisi | Yazılım ve Otomasyon Geliştirici*
 
 <div align="center">
-  <i>"Redefining local area network transfers with elegance and speed."</i>
+  <i>"Yerel ağ transferini zarafet ve hızla yeniden tanımlıyor."</i>
 </div>

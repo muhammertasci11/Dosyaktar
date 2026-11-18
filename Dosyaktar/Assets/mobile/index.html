@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Dosyaktar — Windows LAN dosya transferi. Telefonunuzdan bilgisayara, bilgisayardan telefonunuza anında dosya gönderin.">
+<meta name="theme-color" content="#6C3BFF">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='192' y2='192'%3E%3Cstop offset='0' stop-color='%236C3BFF'/%3E%3Cstop offset='1' stop-color='%230FC9DE'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='192' height='192' rx='40' fill='url(%23g)'/%3E%3Cpath d='M96 40 L96 152 M40 96 L152 96' stroke='white' stroke-width='12' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dosyaktar">
+<title>Dosyaktar</title>
+<style>
+:root {
+  --violet: #6C3BFF;
+  --violet-soft: rgba(108,59,255,.18);
+  --cyan: #0FC9DE;
+  --cyan-soft: rgba(15,201,222,.18);
+  --mint: #12D6A3;
+  --mint-soft: rgba(18,214,163,.18);
+  --pink: #FF5FA2;
+  --pink-soft: rgba(255,95,162,.18);
+  --ink-dark: #E8E6FF;
+  --ink-light: #0A0A16;
+  --bg-dark: #0A0A16;
+  --bg-light: #F8F7FF;
+  --card-dark: rgba(22,20,40,.72);
+  --card-light: rgba(255,255,255,.82);
+  --border-dark: rgba(255,255,255,.1);
+  --border-light: rgba(10,10,22,.08);
+  --shadow-1: 0 2px 8px rgba(10,10,22,.12), 0 1px 2px rgba(10,10,22,.08);
+  --shadow-2: 0 8px 32px rgba(10,10,22,.18), 0 2px 8px rgba(10,10,22,.1);
+  --shadow-glow: 0 0 40px rgba(108,59,255,.25), 0 0 80px rgba(15,201,222,.15);
+  --radius-s: 10px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --radius-xl: 32px;
+  --transition-fast: 120ms cubic-bezier(.2,.8,.2,1);
+  --transition: 200ms cubic-bezier(.2,.8,.2,1);
+  --transition-slow: 350ms cubic-bezier(.2,.8,.2,1);
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  --safe-top: env(safe-area-inset-top, 0);
+  --safe-bottom: env(safe-area-inset-bottom, 0);
+  --safe-left: env(safe-area-inset-left, 0);
+  --safe-right: env(safe-area-inset-right, 0);
+}
+
+[data-theme="dark"] {
+  --bg: var(--bg-dark);
+  --bg-elevated: var(--card-dark);
+  --ink: var(--ink-dark);
+  --ink-muted: rgba(232,230,255,.68);
+  --ink-subtle: rgba(232,230,255,.52);
+  --border: var(--border-dark);
+  --border-strong: rgba(255,255,255,.18);
+  --shadow: var(--shadow-2);
+  --shadow-card: var(--shadow-1);
+  --glass: rgba(22,20,40,.68);
+  --glass-border: rgba(255,255,255,.12);
+  --gloss: inset 0 1px 0 rgba(255,255,255,.18);
+  --input-bg: rgba(255,255,255,.06);
+  --input-border: rgba(255,255,255,.14);
+  --btn-primary: linear-gradient(135deg, var(--violet), #8B5CF6);
+  --btn-primary-hover: linear-gradient(135deg, #8B5CF6, var(--violet));
+  --danger-ink: #FFA8C6;
+  --danger-bg: rgba(255,95,162,.14);
+  --danger-border: rgba(255,95,162,.42);
+  --toast-bg: rgba(22,20,40,.94);
+  --toast-border: rgba(255,255,255,.12);
+  --pulse-color: var(--cyan);
+}
+
+[data-theme="light"] {
+  --bg: var(--bg-light);
+  --bg-elevated: var(--card-light);
+  --ink: var(--ink-light);
+  --ink-muted: rgba(10,10,22,.68);
+  --ink-subtle: rgba(10,10,22,.58);
+  --border: var(--border-light);
+  --border-strong: rgba(10,10,22,.14);
+  --shadow: var(--shadow-2);
+  --shadow-card: var(--shadow-1);
+  --glass: rgba(255,255,255,.82);
+  --glass-border: rgba(10,10,22,.08);
+  --gloss: inset 0 1px 0 rgba(255,255,255,.9);
+  --input-bg: rgba(10,10,22,.04);
+  --input-border: rgba(10,10,22,.1);
+  --btn-primary: linear-gradient(135deg, var(--violet), #8B5CF6);
+  --btn-primary-hover: linear-gradient(135deg, #8B5CF6, var(--violet));
+  --danger-ink: #C2185B;
+  --danger-bg: rgba(255,95,162,.09);
+  --danger-border: rgba(194,24,91,.28);
+  --toast-bg: rgba(255,255,255,.94);
+  --toast-border: rgba(10,10,22,.08);
+  --pulse-color: var(--violet);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; font-size: 16px; }
+[hidden] { display: none !important; }
+body { font-family: var(--font-sans); background: var(--bg); color: var(--ink); min-height: 100vh; min-height: 100dvh; line-height: 1.5; overflow-x: hidden; }
+
+/* Background atmosphere */
+.bg-atmosphere { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.bg-atmosphere::before,
+.bg-atmosphere::after { content: ''; position: absolute; border-radius: 50%; filter: blur(80px); opacity: .35; transition: opacity var(--transition-slow); }
+[data-theme="dark"] .bg-atmosphere::before { background: radial-gradient(circle at 30% 20%, var(--violet), transparent 60%); width: 320px; height: 320px; top: -100px; left: -60px; }
+[data-theme="dark"] .bg-atmosphere::after { background: radial-gradient(circle at 70% 80%, var(--cyan), transparent 60%); width: 280px; height: 280px; bottom: -80px; right: -40px; }
+[data-theme="light"] .bg-atmosphere::before { background: radial-gradient(circle at 30% 20%, var(--violet-soft), transparent 60%); width: 320px; height: 320px; top: -100px; left: -60px; opacity: .5; }
+[data-theme="light"] .bg-atmosphere::after { background: radial-gradient(circle at 70% 80%, var(--cyan-soft), transparent 60%); width: 280px; height: 280px; bottom: -80px; right: -40px; opacity: .5; }
+
+/* Glossy prism logo */
+.prism { position: relative; width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, var(--violet), var(--cyan)); box-shadow: var(--shadow-glow); overflow: hidden; flex-shrink: 0; }
+.prism::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.4) 0%, transparent 50%), linear-gradient(225deg, rgba(255,255,255,.25) 0%, transparent 40%); border-radius: 14px; pointer-events: none; }
+.prism::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; background: linear-gradient(135deg, #FFFFFF, rgba(255,255,255,.72)); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); opacity: .95; }
+.prism-small { width: 36px; height: 36px; border-radius: 10px; }
+.prism-small::after { width: 18px; height: 18px; }
+.prism-tiny { width: 28px; height: 28px; border-radius: 8px; }
+.prism-tiny::after { width: 14px; height: 14px; }
+
+/* Glass card */
+.glass { background: var(--glass); backdrop-filter: saturate(180%) blur(24px); -webkit-backdrop-filter: saturate(180%) blur(24px); border: 1px solid var(--glass-border); border-radius: var(--radius-l); box-shadow: var(--shadow-card); }
+.glass-strong { background: var(--bg-elevated); backdrop-filter: saturate(180%) blur(24px); -webkit-backdrop-filter: saturate(180%) blur(24px); border: 1px solid var(--border); border-radius: var(--radius-l); box-shadow: var(--shadow); }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 24px; border-radius: var(--radius-m); font: 600 15px/1 var(--font-sans); color: white; border: none; cursor: pointer; transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast); touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.btn-primary { background: var(--btn-primary); box-shadow: 0 4px 20px rgba(108,59,255,.35), 0 2px 8px rgba(108,59,255,.25); }
+.btn-primary:not(:disabled):hover { background: var(--btn-primary-hover); box-shadow: 0 6px 28px rgba(108,59,255,.45), 0 3px 12px rgba(108,59,255,.3); }
+.btn-secondary { background: var(--glass); color: var(--ink); border: 1px solid var(--glass-border); box-shadow: var(--shadow-card); }
+.btn-secondary:not(:disabled):hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+.btn-danger { background: var(--danger-bg); color: var(--danger-ink); border: 1px solid var(--danger-border); box-shadow: none; }
+.btn-danger:not(:disabled):hover { background: var(--danger-bg); border-color: var(--danger-ink); box-shadow: 0 0 0 3px var(--danger-bg); }
+.btn-ghost { background: transparent; color: var(--ink-muted); padding: 10px; }
+.btn-ghost:not(:disabled):hover { background: var(--input-bg); color: var(--ink); }
+.btn-icon { width: 44px; height: 44px; padding: 0; border-radius: var(--radius-s); }
+.btn-lg { padding: 16px 32px; font-size: 16px; border-radius: var(--radius-l); }
+.btn-block { width: 100%; }
+
+/* Inputs */
+.input { width: 100%; padding: 14px 16px; border-radius: var(--radius-m); border: 1px solid var(--input-border); background: var(--input-bg); color: var(--ink); font: 500 16px/1 var(--font-sans); transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast); }
+.input:focus { outline: none; border-color: var(--violet); box-shadow: 0 0 0 3px var(--violet-soft); background: var(--bg-elevated); }
+.input::placeholder { color: var(--ink-subtle); }
+.input-error { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-soft); }
+
+/* PIN inputs */
+.pin-grid { display: flex; gap: 10px; justify-content: center; margin: 8px 0 24px; }
+.pin-input { width: 48px; height: 56px; border-radius: var(--radius-m); border: 1px solid var(--input-border); background: var(--input-bg); color: var(--ink); font: 700 28px/1 var(--font-sans); text-align: center; transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast), background var(--transition-fast); -webkit-text-security: disc; }
+.pin-input:focus { outline: none; border-color: var(--violet); box-shadow: 0 0 0 3px var(--violet-soft); background: var(--bg-elevated); transform: scale(1.05); z-index: 1; }
+.pin-input.filled { border-color: var(--violet); background: var(--violet-soft); }
+.pin-input.error { animation: shake 400ms cubic-bezier(.36,.07,.19,.97); border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-soft); }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+
+/* Top bar */
+.top-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: calc(8px + var(--safe-top)) 16px 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; pointer-events: none; }
+.top-bar > * { pointer-events: auto; }
+.top-bar-left { display: flex; align-items: center; gap: 10px; }
+.top-bar-title { font: 700 17px/1 var(--font-sans); color: var(--ink); letter-spacing: -.3px; }
+.device-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 100px; font: 500 12px/1 var(--font-sans); color: var(--ink-muted); background: var(--glass); border: 1px solid var(--glass-border); backdrop-filter: blur(12px); }
+.device-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 8px var(--mint), 0 0 16px var(--mint); animation: pulse-dot 2s ease-in-out infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.9)} }
+.top-bar-right { display: flex; align-items: center; gap: 6px; }
+
+/* Tabs */
+.tab-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; padding: 8px calc(16px + var(--safe-left)) calc(8px + var(--safe-bottom)) calc(16px + var(--safe-right)); pointer-events: none; }
+.tab-bar-inner { display: flex; align-items: center; justify-content: space-around; background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-xl); padding: 6px; backdrop-filter: saturate(180%) blur(24px); -webkit-backdrop-filter: saturate(180%) blur(24px); box-shadow: var(--shadow); pointer-events: auto; max-width: 520px; margin: 0 auto; position: relative; }
+.tab-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 8px; border-radius: var(--radius-m); color: var(--ink-muted); font: 500 11px/1 var(--font-sans); background: transparent; border: none; cursor: pointer; transition: color var(--transition-fast); touch-action: manipulation; -webkit-tap-highlight-color: transparent; position: relative; z-index: 1; }
+.tab-btn svg { width: 22px; height: 22px; stroke-width: 2.2; transition: stroke var(--transition-fast), transform var(--transition-fast); }
+.tab-btn.active { color: #FFFFFF; }
+.tab-btn.active svg { stroke: #FFFFFF; transform: scale(1.1); }
+.tab-btn:not(.active):active svg { transform: scale(.95); }
+.tab-indicator { position: absolute; bottom: 6px; left: 6px; height: calc(100% - 12px); background: linear-gradient(135deg, var(--violet), #8B5CF6); border-radius: var(--radius-m); box-shadow: 0 2px 12px rgba(108,59,255,.4), 0 1px 4px rgba(108,59,255,.3); transition: transform 300ms cubic-bezier(.2,.8,.2,1), width 300ms cubic-bezier(.2,.8,.2,1); z-index: 0; pointer-events: none; }
+
+/* Screens */
+.screen { display: none; padding: calc(72px + var(--safe-top)) 16px calc(88px + var(--safe-bottom)) 16px; max-width: 520px; margin: 0 auto; min-height: 100vh; min-height: 100dvh; position: relative; z-index: 1; }
+.screen.active { display: block; }
+.screen.animating { animation: screen-in 300ms cubic-bezier(.2,.8,.2,1); }
+@keyframes screen-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Pair screen */
+.pair-screen { text-align: center; }
+#screenPair.active { display: flex; flex-direction: column; justify-content: safe center; }
+.prism-logo { margin: 0 auto 32px; filter: drop-shadow(0 8px 32px rgba(108,59,255,.4)) drop-shadow(0 4px 16px rgba(15,201,222,.25)); }
+.prism-logo::after { width: 40px; height: 40px; }
+.pair-title { font: 700 28px/1.2 var(--font-sans); color: var(--ink); letter-spacing: -.5px; margin-bottom: 8px; }
+.pair-subtitle { color: var(--ink-muted); font-size: 15px; margin-bottom: 32px; }
+.pair-hint { margin-top: 28px; color: var(--ink-subtle); font-size: 13px; line-height: 1.5; }
+.pair-hint code { background: var(--input-bg); padding: 2px 6px; border-radius: 6px; font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); }
+
+/* Upload zone */
+.upload-zone { border: 2px dashed var(--border); border-radius: var(--radius-xl); padding: 40px 20px; text-align: center; cursor: pointer; transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast); background: var(--glass); }
+.upload-zone:hover, .upload-zone.drag-active { border-color: var(--violet); background: var(--violet-soft); transform: scale(1.01); }
+.upload-zone:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--violet-soft); }
+.upload-zone-icon { width: 56px; height: 56px; margin: 0 auto 16px; stroke: var(--violet); stroke-width: 2; }
+.upload-zone-title { font: 600 17px/1.3 var(--font-sans); color: var(--ink); margin-bottom: 6px; }
+.upload-zone-subtitle { color: var(--ink-muted); font-size: 14px; }
+.upload-zone-or { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--ink-subtle); font-size: 13px; }
+.upload-zone-or::before, .upload-zone-or::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* Send screen: the drop zone is the task, so it owns the viewport */
+#screenSend.active { display: flex; flex-direction: column; justify-content: safe center; }
+#screenSend .upload-zone { padding: 46px 20px; }
+.send-note { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 18px; padding: 0 8px; font-size: 12.5px; line-height: 1.45; color: var(--ink-muted); text-align: center; }
+.send-note svg { flex-shrink: 0; }
+.send-note span { text-wrap: balance; }
+
+/* File queue */
+.file-queue { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+.file-card { display: grid; grid-template-columns: 48px 1fr auto; gap: 12px; align-items: center; padding: 14px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-l); box-shadow: var(--shadow-card); transition: transform var(--transition-fast), box-shadow var(--transition-fast); animation: card-in 250ms cubic-bezier(.2,.8,.2,1); }
+@keyframes card-in { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.file-card.complete { border-color: var(--mint-soft); }
+.file-card.error { border-color: var(--pink-soft); }
+.file-icon { width: 48px; height: 48px; border-radius: var(--radius-s); background: var(--input-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.file-icon svg { width: 24px; height: 24px; stroke: var(--violet); }
+.file-card.complete .file-icon svg { stroke: var(--mint); }
+.file-card.error .file-icon svg { stroke: var(--pink); }
+.file-info { min-width: 0; }
+.file-name { font: 500 14px/1.3 var(--font-sans); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.file-size { font: 500 12px/1 var(--font-mono); color: var(--ink-muted); margin-top: 2px; }
+.file-progress-wrap { width: 100%; height: 4px; background: var(--input-bg); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.file-progress { height: 100%; width: 0%; background: linear-gradient(90deg, var(--violet), var(--cyan)); border-radius: 2px; transition: width 150ms linear; }
+.file-card.complete .file-progress { background: var(--mint); }
+.file-card.error .file-progress { background: var(--pink); }
+.file-progress-text { font: 500 11px/1 var(--font-mono); color: var(--ink-muted); text-align: right; min-width: 52px; margin-top: 4px; }
+.file-actions { display: flex; gap: 6px; }
+.file-btn { width: 32px; height: 32px; border-radius: var(--radius-s); background: var(--input-bg); border: 1px solid var(--input-border); color: var(--ink-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all var(--transition-fast); }
+.file-btn:hover { background: var(--bg-elevated); color: var(--ink); border-color: var(--border-strong); }
+.file-btn:active { transform: scale(.95); }
+.file-btn svg { width: 16px; height: 16px; stroke-width: 2.2; }
+.file-check { display: none; width: 48px; height: 48px; border-radius: 50%; background: var(--mint); color: white; align-items: center; justify-content: center; animation: check-pop 400ms cubic-bezier(.2,.8,.2,1); }
+@keyframes check-pop { 0% { transform: scale(0) rotate(-45deg); opacity: 0; } 50% { transform: scale(1.2) rotate(-45deg); } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+.file-card.complete .file-check { display: flex; }
+.file-card.complete .file-progress-wrap { display: none; }
+.file-card.complete .file-progress-text { display: none; }
+.file-card.complete .file-actions { display: none; }
+
+/* Overall progress */
+.overall-progress { margin-top: 16px; padding: 16px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-l); display: none; }
+.overall-progress.visible { display: block; animation: card-in 250ms cubic-bezier(.2,.8,.2,1); }
+.overall-progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; color: var(--ink-muted); }
+.overall-progress-title { font: 600 14px/1 var(--font-sans); color: var(--ink); }
+.overall-progress-bar { height: 6px; background: var(--input-bg); border-radius: 3px; overflow: hidden; }
+.overall-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--violet), var(--cyan)); border-radius: 3px; transition: width 200ms linear; }
+.overall-progress-stats { display: flex; justify-content: space-between; margin-top: 10px; font: 500 12px/1 var(--font-mono); color: var(--ink-muted); }
+
+/* Download list */
+.download-list { display: flex; flex-direction: column; gap: 10px; }
+.download-item { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; padding: 14px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-l); box-shadow: var(--shadow-card); transition: transform var(--transition-fast), box-shadow var(--transition-fast); }
+.download-item:active { transform: scale(.99); }
+.download-icon { width: 44px; height: 44px; border-radius: var(--radius-s); background: var(--input-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.download-icon svg { width: 22px; height: 22px; stroke: var(--ink-muted); }
+.download-info { min-width: 0; }
+.download-name { font: 500 14px/1.3 var(--font-sans); color: var(--ink); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.download-size { font: 500 12px/1 var(--font-mono); color: var(--ink-muted); margin-top: 2px; }
+.download-btn { width: 40px; height: 40px; border-radius: var(--radius-m); background: var(--violet-soft); border: none; color: var(--violet); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all var(--transition-fast); }
+.download-btn:hover { background: var(--violet); color: white; transform: scale(1.05); }
+.download-btn:active { transform: scale(.95); }
+.download-btn svg { width: 20px; height: 20px; stroke-width: 2.2; }
+.download-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.download-empty { text-align: center; padding: 60px 20px; color: var(--ink-muted); }
+.download-empty .icon { width: 80px; height: 80px; margin: 0 auto 16px; stroke: var(--ink-subtle); stroke-width: 1.5; }
+.download-empty-title { font: 600 17px/1.3 var(--font-sans); color: var(--ink); margin-bottom: 6px; }
+.download-refresh { margin-top: 16px; width: 100%; }
+.download-empty p { max-width: 280px; margin: 0 auto; text-wrap: balance; }
+#screenReceive.active:has(#downloadEmpty:not(.hidden)) { display: flex; flex-direction: column; justify-content: safe center; }
+
+/* Status screen */
+.status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.status-card { padding: 16px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-l); box-shadow: var(--shadow-card); }
+.status-card.full { grid-column: 1 / -1; }
+.status-label { font: 500 11px/1 var(--font-sans); color: var(--ink-subtle); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+.status-value { font: 600 15px/1.3 var(--font-sans); color: var(--ink); word-break: break-word; }
+.status-value.mono { font-family: var(--font-mono); font-size: 13px; }
+.status-value.small { font-size: 13px; }
+.status-connection { display: flex; align-items: center; gap: 8px; }
+.status-connection .bar { flex: 1; height: 4px; background: var(--input-bg); border-radius: 2px; overflow: hidden; }
+.status-connection .bar-fill { height: 100%; background: linear-gradient(90deg, var(--mint), var(--cyan)); border-radius: 2px; transition: width 300ms ease; }
+.status-transfer { padding: 16px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-l); box-shadow: var(--shadow-card); display: none; }
+.status-transfer.active { display: block; animation: card-in 250ms cubic-bezier(.2,.8,.2,1); }
+.transfer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.transfer-direction { display: flex; align-items: center; gap: 8px; font: 600 14px/1 var(--font-sans); color: var(--ink); }
+.transfer-direction.up { color: var(--violet); }
+.transfer-direction.down { color: var(--cyan); }
+.transfer-direction svg { width: 18px; height: 18px; }
+.transfer-speed { font: 500 12px/1 var(--font-mono); color: var(--ink-muted); }
+.transfer-progress { height: 6px; background: var(--input-bg); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+.transfer-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--violet), var(--cyan)); border-radius: 3px; transition: width 200ms linear; }
+.transfer-details { display: flex; justify-content: space-between; font: 500 12px/1 var(--font-mono); color: var(--ink-muted); }
+.status-counters { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.counter-card { padding: 16px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-l); text-align: center; }
+.counter-value { font: 700 28px/1 var(--font-mono); color: var(--ink); }
+.counter-label { font: 500 12px/1 var(--font-sans); color: var(--ink-muted); margin-top: 4px; }
+.logout-btn { margin-top: 16px; width: 100%; }
+
+/* Toasts */
+.toast-container { position: fixed; top: calc(72px + var(--safe-top)); left: 16px; right: 16px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; max-width: 520px; margin: 0 auto; pointer-events: none; }
+.toast { padding: 14px 16px; background: var(--toast-bg); border: 1px solid var(--toast-border); border-radius: var(--radius-l); box-shadow: var(--shadow); display: flex; align-items: center; gap: 12px; animation: toast-in 300ms cubic-bezier(.2,.8,.2,1); pointer-events: auto; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(-20px) scale(.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.toast.removing { animation: toast-out 250ms cubic-bezier(.4,0,1,1) forwards; }
+@keyframes toast-out { to { opacity: 0; transform: translateX(100px) scale(.9); } }
+.toast-icon { width: 24px; height: 24px; flex-shrink: 0; }
+.toast-success .toast-icon { stroke: var(--mint); }
+.toast-error .toast-icon { stroke: var(--pink); }
+.toast-info .toast-icon { stroke: var(--violet); }
+.toast-text { flex: 1; font: 500 14px/1.4 var(--font-sans); color: var(--ink); }
+.toast-close { width: 28px; height: 28px; border-radius: var(--radius-s); background: var(--input-bg); border: 1px solid var(--input-border); color: var(--ink-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all var(--transition-fast); flex-shrink: 0; }
+.toast-close:hover { background: var(--bg-elevated); color: var(--ink); }
+
+/* iOS install hint */
+.ios-hint { position: fixed; bottom: calc(88px + var(--safe-bottom)); left: 16px; right: 16px; z-index: 90; max-width: 520px; margin: 0 auto; pointer-events: none; }
+.ios-hint-inner { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius-l); padding: 14px 16px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow); pointer-events: auto; animation: hint-in 400ms cubic-bezier(.2,.8,.2,1); }
+@keyframes hint-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.ios-hint.removing .ios-hint-inner { animation: hint-out 300ms cubic-bezier(.4,0,1,1) forwards; }
+@keyframes hint-out { to { opacity: 0; transform: translateY(20px); } }
+.ios-hint-icon { width: 28px; height: 28px; flex-shrink: 0; stroke: var(--violet); }
+.ios-hint-text { flex: 1; font: 500 13px/1.4 var(--font-sans); color: var(--ink); }
+.ios-hint-btn { padding: 8px 14px; border-radius: var(--radius-m); background: var(--violet); color: white; font: 600 12px/1 var(--font-sans); border: none; cursor: pointer; transition: transform var(--transition-fast); flex-shrink: 0; }
+.ios-hint-btn:active { transform: scale(.95); }
+.ios-hint-dismiss { width: 28px; height: 28px; border-radius: var(--radius-s); background: var(--input-bg); border: 1px solid var(--input-border); color: var(--ink-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all var(--transition-fast); flex-shrink: 0; }
+.ios-hint-dismiss:hover { background: var(--bg-elevated); color: var(--ink); }
+
+/* Live pulse */
+.live-pulse { display: inline-flex; align-items: center; gap: 6px; font: 500 11px/1 var(--font-sans); color: var(--pulse-color); }
+.live-pulse::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
+
+/* Hidden */
+.hidden { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* Focus visible */
+:focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .pin-input { width: 40px; height: 48px; font-size: 24px; }
+  .pair-title { font-size: 24px; }
+  .btn-lg { padding: 14px 24px; font-size: 15px; }
+  .status-value { font-size: 14px; }
+  .counter-value { font-size: 24px; }
+}
+@media (min-width: 768px) {
+  body { background: linear-gradient(180deg, var(--bg) 0%, color-mix(in oklab, var(--bg) 85%, var(--violet) 15%) 100%); }
+  .screen { padding-left: 24px; padding-right: 24px; }
+  .top-bar, .tab-bar { max-width: 520px; margin: 0 auto; left: 50%; transform: translateX(-50%); width: 520px; }
+  .top-bar { border-radius: 0 0 var(--radius-xl) var(--radius-xl); padding-top: calc(12px + var(--safe-top)); background: var(--glass); border: 1px solid var(--glass-border); border-top: none; box-shadow: var(--shadow-card); }
+  .tab-bar { border-radius: var(--radius-xl) var(--radius-xl) 0 0; padding-bottom: calc(12px + var(--safe-bottom)); background: var(--glass); border: 1px solid var(--glass-border); border-bottom: none; box-shadow: 0 -4px 24px rgba(10,10,22,.1); }
+  .toast-container, .ios-hint { left: 50%; transform: translateX(-50%); }
+}
+</style>
+</head>
+<body>
+<div class="bg-atmosphere" aria-hidden="true"></div>
+
+<!-- Top Bar -->
+<header class="top-bar" role="banner" id="topBar" hidden>
+  <div class="top-bar-left">
+    <div class="prism prism-small" aria-hidden="true"></div>
+    <span class="top-bar-title">Dosyaktar</span>
+    <span class="device-chip" id="deviceChip" hidden>
+      <span class="dot" aria-hidden="true"></span>
+      <span id="deviceName">Bilgisayar</span>
+    </span>
+  </div>
+  <div class="top-bar-right">
+    <button class="btn btn-ghost btn-icon" id="themeToggle" aria-label="Tema değiştir" title="Tema değiştir">
+      <svg id="themeIconLight" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg id="themeIconDark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <button class="btn btn-ghost btn-icon" id="menuToggle" aria-label="Menü" aria-expanded="false" aria-controls="menuPanel" title="Menü">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- Screens -->
+<main role="main">
+  <!-- Pair Screen -->
+  <section class="screen pair-screen active" id="screenPair" role="region" aria-label="Eşleştirme">
+    <div class="prism prism-logo" style="width:88px;height:88px;border-radius:22px;" aria-hidden="true"></div>
+    <h1 class="pair-title">Bilgisayardaki kodu gir</h1>
+    <p class="pair-subtitle">Bu oturum yalnızca bu cihaza bağlı</p>
+    <form id="pinForm" novalidate>
+      <div class="pin-grid" role="group" aria-label="6 haneli PIN kodu" id="pinGrid">
+        <input class="pin-input" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="PIN 1. hane" data-index="0">
+        <input class="pin-input" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="PIN 2. hane" data-index="1">
+        <input class="pin-input" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="PIN 3. hane" data-index="2">
+        <input class="pin-input" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="PIN 4. hane" data-index="3">
+        <input class="pin-input" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="PIN 5. hane" data-index="4">
+        <input class="pin-input" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="PIN 6. hane" data-index="5">
+      </div>
+      <p class="pair-hint" id="pinError" role="alert" aria-live="polite" hidden></p>
+      <button type="submit" class="btn btn-primary btn-lg btn-block" id="pairBtn">Bağlan</button>
+    </form>
+    <p class="pair-hint">Kodu masaüstü uygulamasının <code>Mobil</code> sekmesinde bul.</p>
+  </section>
+
+  <!-- Gönder Screen -->
+  <section class="screen" id="screenSend" role="region" aria-label="Dosya gönder" hidden>
+    <div class="upload-zone" id="uploadZone" tabindex="0" role="button" aria-label="Dosya seç veya buraya bırak">
+      <svg class="upload-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <div class="upload-zone-title">Dosya seç veya buraya bırak</div>
+      <div class="upload-zone-subtitle">Birden fazla dosya seçebilirsin</div>
+      <div class="upload-zone-or">veya</div>
+      <button type="button" class="btn btn-secondary" id="pickPhotosBtn" aria-label="Fotoğraf ve video seç">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M4 17l4-4 4 4 6-6"/></svg>
+        Fotoğraf seç
+      </button>
+      <input type="file" id="fileInput" multiple hidden>
+      <input type="file" id="photoInput" accept="image/*,video/*" multiple hidden>
+    </div>
+    <p class="send-note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span>Buluta yüklenmez, doğrudan bilgisayara gider.</span>
+    </p>
+    <div class="file-queue" id="fileQueue" role="list" aria-label="Yüklenecek dosyalar"></div>
+    <div class="overall-progress" id="overallProgress" role="status" aria-live="polite" aria-label="Genel yükleme ilerlemesi">
+      <div class="overall-progress-header">
+        <span class="overall-progress-title">Bilgisayara gönderiliyor</span>
+        <span id="overallSpeed">0 MB/s</span>
+      </div>
+      <div class="overall-progress-bar"><div class="overall-progress-fill" id="overallFill"></div></div>
+      <div class="overall-progress-stats">
+        <span id="overallPercent">0%</span>
+        <span id="overallEta">Kalan: —</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Al Screen -->
+  <section class="screen" id="screenReceive" role="region" aria-label="Dosya al" hidden>
+    <div class="download-list" id="downloadList" role="list" aria-label="Bilgisayardan gelen dosyalar"></div>
+    <div class="download-empty hidden" id="downloadEmpty">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <div class="download-empty-title">Henüz paylaşılan dosya yok</div>
+      <p style="font-size:14px">Bilgisayarda Mobil sekmesinden dosya ekle.</p>
+    </div>
+    <button class="btn btn-secondary btn-block download-refresh" id="refreshBtn" type="button">Yenile</button>
+  </section>
+
+  <!-- Durum Screen -->
+  <section class="screen" id="screenStatus" role="region" aria-label="Bağlantı durumu" hidden>
+    <div class="status-grid" id="statusGrid">
+      <div class="status-card">
+        <div class="status-label">Bağlantı kalitesi</div>
+        <div class="status-value status-connection">
+          <span id="connQuality">İyi</span>
+          <div class="bar"><div class="bar-fill" id="connBar" style="width:80%"></div></div>
+        </div>
+      </div>
+      <div class="status-card">
+        <div class="status-label">PC</div>
+        <div class="status-value" id="pcName">—</div>
+        <div class="status-value mono small" id="pcIp">—</div>
+      </div>
+      <div class="status-card full">
+        <div class="status-label">Oturum başladı</div>
+        <div class="status-value" id="sessionSince">—</div>
+      </div>
+      <div class="status-card full">
+        <div class="status-label">Kayıt klasörü</div>
+        <div class="status-value mono small" id="saveDir" style="white-space:pre-wrap;word-break:break-word">—</div>
+      </div>
+    </div>
+    <div class="status-transfer" id="statusTransfer" role="status" aria-live="polite" aria-label="Aktif transfer" hidden>
+      <div class="transfer-header">
+        <span class="transfer-direction" id="transferDir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg> Yükleniyor</span>
+        <span class="transfer-speed" id="transferSpeed">0 MB/s</span>
+      </div>
+      <div class="transfer-progress"><div class="transfer-progress-fill" id="transferFill"></div></div>
+      <div class="transfer-details">
+        <span id="transferName">—</span>
+        <span id="transferPercent">0%</span>
+      </div>
+    </div>
+    <div class="status-counters">
+      <div class="counter-card">
+        <div class="counter-value" id="sentToday">0</div>
+        <div class="counter-label">Gönderilen (bugün)</div>
+      </div>
+      <div class="counter-card">
+        <div class="counter-value" id="receivedToday">0</div>
+        <div class="counter-label">Alınan (bugün)</div>
+      </div>
+    </div>
+    <button class="btn btn-danger btn-block logout-btn" id="logoutBtn" type="button">Bağlantıyı kes</button>
+  </section>
+</main>
+
+<!-- Tab Bar -->
+<nav class="tab-bar" id="tabBar" role="tablist" aria-label="Ana navigasyon" hidden>
+  <div class="tab-bar-inner">
+    <div class="tab-indicator" id="tabIndicator" aria-hidden="true"></div>
+    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="screenSend" id="tabSend" data-tab="send">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span>Gönder</span>
+    </button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="screenReceive" id="tabReceive" data-tab="receive">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 16 12 11 17 16"/><line x1="12" y1="11" x2="12" y2="21"/></svg>
+      <span>Al</span>
+    </button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="screenStatus" id="tabStatus" data-tab="status">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span>Durum</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Toasts -->
+<div class="toast-container" id="toastContainer" role="region" aria-label="Bildirimler" aria-live="polite"></div>
+
+<!-- iOS Install Hint -->
+<div class="ios-hint hidden" id="iosHint" role="region" aria-label="Ana ekrana ekle ipucu">
+  <div class="ios-hint-inner">
+    <svg class="ios-hint-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-7 7-7"/><path d="M5 21l7-7-7-7"/></svg>
+    <span class="ios-hint-text">Dosyaktar'ı ana ekrana ekleyin: <strong>Paylaş → Ana Ekrana Ekle</strong></span>
+    <button class="ios-hint-btn" id="iosHintDismiss">Anladım</button>
+    <button class="ios-hint-dismiss" id="iosHintClose" aria-label="Kapat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+</div>
+
+<!-- Live pulse indicator (in top bar when paired) -->
+<span class="live-pulse hidden" id="livePulse" aria-live="off">canlı</span>
+
+<script>
+// ============ STATE & CONFIG ============
+const state = {
+  paired: false,
+  deviceName: '',
+  deviceIp: '',
+  saveDir: '',
+  sessionSince: null,
+  files: [],
+  transfer: null,
+  theme: 'auto',
+  sentToday: 0,
+  receivedToday: 0,
+  uploadQueue: [],
+  isUploading: false,
+  pollTimer: null,
+  lastStateHash: '',
+  hidden: false
+};
+
+const API = {
+  state: '/api/state',
+  login: '/api/login',
+  logout: '/api/logout',
+  upload: '/api/upload',
+  files: '/api/files',
+  download: (id) => `/api/download/${id}`,
+  pin: '/api/pin'
+};
+
+const STORAGE_KEYS = {
+  theme: 'dzt_theme',
+  sentToday: 'dzt_sent_today',
+  receivedToday: 'dzt_received_today',
+  sentDate: 'dzt_sent_date',
+  receivedDate: 'dzt_received_date'
+};
+
+const screens = {
+  pair: 'screenPair',
+  send: 'screenSend',
+  receive: 'screenReceive',
+  status: 'screenStatus'
+};
+
+const tabs = {
+  send: 'tabSend',
+  receive: 'tabReceive',
+  status: 'tabStatus'
+};
+
+const tabScreens = {
+  send: 'screenSend',
+  receive: 'screenReceive',
+  status: 'screenStatus'
+};
+
+// ============ UTILITIES ============
+const $ = (sel, ctx = document) => ctx.querySelector(sel);
+const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+
+const fmtBytes = (bytes) => {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const val = parseFloat((bytes / Math.pow(k, i)).toFixed(1));
+  return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(val) + ' ' + sizes[i];
+};
+
+const fmtSpeed = (mbps) => mbps.toFixed(1) + ' MB/s';
+
+const fmtDate = (iso) => {
+  if (!iso) return '—';
+  try {
+    const d = new Date(iso);
+    return new Intl.DateTimeFormat('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(d);
+  } catch { return iso; }
+};
+
+const fmtRelative = (iso) => {
+  if (!iso) return '—';
+  try {
+    const diff = Date.now() - new Date(iso).getTime();
+    const mins = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    if (mins < 1) return 'Az önce';
+    if (mins < 60) return `${mins} dk önce`;
+    if (hours < 24) return `${hours} sa önce`;
+    if (days < 7) return `${days} gün önce`;
+    return fmtDate(iso);
+  } catch { return iso; }
+};
+
+const haptic = (ms = 8) => navigator.vibrate?.(ms);
+
+const showToast = (message, type = 'info', duration = 3500) => {
+  const container = $('#toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.role = 'alert';
+  toast.ariaLive = 'polite';
+  const icons = {
+    success: '<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    error: '<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    info: '<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+  };
+  toast.innerHTML = `${icons[type]}<span class="toast-text">${message}</span><button class="toast-close" aria-label="Kapat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
+  toast.querySelector('.toast-close').onclick = () => removeToast(toast);
+  container.appendChild(toast);
+  setTimeout(() => removeToast(toast), duration);
+  return toast;
+};
+
+const removeToast = (toast) => {
+  toast.classList.add('removing');
+  toast.addEventListener('animationend', () => toast.remove());
+};
+
+const showScreen = (name) => {
+  Object.values(screens).forEach(id => {
+    const el = $('#' + id);
+    if (el) {
+      el.hidden = true;
+      el.classList.remove('active', 'animating');
+    }
+  });
+  const screen = $('#' + screens[name]);
+  if (screen) {
+    screen.hidden = false;
+    screen.classList.add('active');
+    void screen.offsetWidth;
+    screen.classList.add('animating');
+  }
+  Object.entries(tabs).forEach(([key, id]) => {
+    const btn = $('#' + id);
+    if (btn) {
+      const active = key === name;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-selected', active);
+    }
+  });
+  updateTabIndicator(name);
+};
+
+const updateTabIndicator = (activeTab) => {
+  const indicator = $('#tabIndicator');
+  const activeBtn = $('#' + tabs[activeTab]);
+  if (indicator && activeBtn) {
+    const rect = activeBtn.getBoundingClientRect();
+    const parentRect = activeBtn.parentElement.getBoundingClientRect();
+    indicator.style.width = rect.width + 'px';
+    indicator.style.transform = `translateX(${rect.left - parentRect.left}px)`;
+  }
+};
+
+const setTheme = (theme) => {
+  state.theme = theme;
+  const html = document.documentElement;
+  if (theme === 'auto') {
+    html.removeAttribute('data-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    html.dataset.theme = prefersDark ? 'dark' : 'light';
+  } else {
+    html.dataset.theme = theme;
+  }
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  if (themeMeta) themeMeta.content = html.dataset.theme === 'dark' ? '#0A0A16' : '#F8F7FF';
+  updateThemeIcons();
+  localStorage.setItem(STORAGE_KEYS.theme, theme);
+};
+
+const updateThemeIcons = () => {
+  const html = document.documentElement;
+  const isDark = html.dataset.theme === 'dark';
+  $('#themeIconLight').style.display = isDark ? 'block' : 'none';
+  $('#themeIconDark').style.display = isDark ? 'none' : 'block';
+};
+
+const loadCounters = () => {
+  const today = new Date().toDateString();
+  const sentDate = localStorage.getItem(STORAGE_KEYS.sentDate);
+  const receivedDate = localStorage.getItem(STORAGE_KEYS.receivedDate);
+  state.sentToday = sentDate === today ? parseInt(localStorage.getItem(STORAGE_KEYS.sentToday) || '0') : 0;
+  state.receivedToday = receivedDate === today ? parseInt(localStorage.getItem(STORAGE_KEYS.receivedToday) || '0') : 0;
+  if (sentDate !== today) { localStorage.setItem(STORAGE_KEYS.sentDate, today); localStorage.setItem(STORAGE_KEYS.sentToday, '0'); }
+  if (receivedDate !== today) { localStorage.setItem(STORAGE_KEYS.receivedDate, today); localStorage.setItem(STORAGE_KEYS.receivedToday, '0'); }
+  updateCountersUI();
+};
+
+const saveCounters = () => {
+  const today = new Date().toDateString();
+  localStorage.setItem(STORAGE_KEYS.sentToday, state.sentToday.toString());
+  localStorage.setItem(STORAGE_KEYS.sentDate, today);
+  localStorage.setItem(STORAGE_KEYS.receivedToday, state.receivedToday.toString());
+  localStorage.setItem(STORAGE_KEYS.receivedDate, today);
+};
+
+const updateCountersUI = () => {
+  $('#sentToday').textContent = state.sentToday.toLocaleString('tr-TR');
+  $('#receivedToday').textContent = state.receivedToday.toLocaleString('tr-TR');
+};
+
+const addCounter = (type, count = 1) => {
+  if (type === 'sent') state.sentToday += count;
+  else if (type === 'received') state.receivedToday += count;
+  saveCounters();
+  updateCountersUI();
+};
+
+// ============ API CALLS ============
+const apiGet = async (url) => {
+  const res = await fetch(url, { credentials: 'same-origin', headers: { 'Accept': 'application/json' } });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+};
+
+const apiPost = async (url, body) => {
+  const res = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body) });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+};
+
+const apiPostForm = async (url, formData) => {
+  const res = await fetch(url, { method: 'POST', credentials: 'same-origin', body: formData });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+};
+
+// Upload with XHR for progress
+const uploadFileXHR = (file, path) => new Promise((resolve, reject) => {
+  const xhr = new XMLHttpRequest();
+  const url = `${API.upload}?name=${encodeURIComponent(file.name)}${path ? `&path=${encodeURIComponent(path)}` : ''}`;
+  xhr.open('PUT', url, true);
+  xhr.withCredentials = true;
+  xhr.upload.onprogress = (e) => {
+    if (e.lengthComputable) {
+      const percent = Math.round((e.loaded / e.total) * 100);
+      updateFileProgress(file._id, percent, e.loaded, e.total);
+    }
+  };
+  xhr.onload = () => {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      try { resolve(JSON.parse(xhr.responseText)); } catch { resolve({ ok: true, saved: file.name }); }
+    } else {
+      try { reject(new Error(JSON.parse(xhr.responseText).error || `HTTP ${xhr.status}`)); } catch { reject(new Error(`HTTP ${xhr.status}`)); }
+    }
+  };
+  xhr.onerror = () => reject(new Error('Ağ hatası'));
+  xhr.send(file);
+});
+
+const updateFileProgress = (id, percent, loaded, total) => {
+  const card = document.querySelector(`.file-card[data-id="${id}"]`);
+  if (!card) return;
+  const fill = card.querySelector('.file-progress');
+  const text = card.querySelector('.file-progress-text');
+  if (fill) fill.style.width = percent + '%';
+  if (text) text.textContent = `${fmtBytes(loaded)} / ${fmtBytes(total)}`;
+};
+
+const markFileComplete = (id, success, errorMsg) => {
+  const card = document.querySelector(`.file-card[data-id="${id}"]`);
+  if (!card) return;
+  card.classList.remove('error');
+  if (success) {
+    card.classList.add('complete');
+    haptic(12);
+  } else {
+    card.classList.add('error');
+    const text = card.querySelector('.file-progress-text');
+    if (text) text.textContent = errorMsg || 'Hata';
+    haptic(50);
+  }
+};
+
+const setOverallProgress = (visible, percent, speed, eta, bytes, total) => {
+  const el = $('#overallProgress');
+  if (!el) return;
+  if (visible) {
+    el.classList.add('visible');
+    $('#overallFill').style.width = percent + '%';
+    $('#overallPercent').textContent = percent + '%';
+    $('#overallSpeed').textContent = fmtSpeed(speed);
+    $('#overallEta').textContent = eta ? `Kalan: ${eta}` : 'Kalan: —';
+  } else {
+    el.classList.remove('visible');
+  }
+};
+
+// ============ POLLING ============
+const startPolling = () => {
+  stopPolling();
+  const poll = async () => {
+    if (state.hidden) {
+      state.pollTimer = setTimeout(poll, 1500);
+      return;
+    }
+    try {
+      const data = await apiGet(API.state);
+      applyState(data);
+    } catch (e) {
+      if (e.message.includes('401') || e.message.includes('Unauthorized')) {
+        handleUnauthorized();
+      }
+    }
+    state.pollTimer = setTimeout(poll, 1500);
+  };
+  poll();
+};
+
+const stopPolling = () => {
+  if (state.pollTimer) clearTimeout(state.pollTimer);
+  state.pollTimer = null;
+};
+
+const applyState = (data) => {
+  // Hash check to avoid unnecessary DOM updates
+  const hash = JSON.stringify({
+    paired: data.paired,
+    device: data.device,
+    ip: data.ip,
+    saveDir: data.saveDir,
+    session: data.session ? { name: data.session.name, since: data.session.since } : null,
+    transfer: data.transfer ? { active: data.transfer.active, direction: data.transfer.direction, name: data.transfer.name, bytes: data.transfer.bytes, total: data.transfer.total, speedMBps: data.transfer.speedMBps, percent: data.transfer.percent } : null,
+    files: data.files?.map(f => ({ id: f.id, name: f.name, size: f.size })) || []
+  });
+  if (hash === state.lastStateHash) return;
+  state.lastStateHash = hash;
+
+  // Pair state change
+  const wasPaired = state.paired;
+  state.paired = data.paired;
+  state.deviceName = data.device;
+  state.deviceIp = data.ip;
+  state.saveDir = data.saveDir;
+  state.sessionSince = data.session?.since || null;
+  state.files = data.files || [];
+  state.transfer = data.transfer || null;
+
+  if (!state.paired && wasPaired) {
+    handleUnauthorized();
+    return;
+  }
+
+  if (state.paired) {
+    $('#topBar').hidden = false;
+    $('#tabBar').hidden = false;
+    $('#deviceChip').hidden = false;
+    $('#deviceName').textContent = state.deviceName;
+    $('#pcName').textContent = state.deviceName;
+    $('#pcIp').textContent = state.deviceIp;
+    $('#saveDir').textContent = state.saveDir;
+    $('#sessionSince').textContent = state.sessionSince ? fmtDate(state.sessionSince) : '—';
+    $('#livePulse').hidden = false;
+    if (!wasPaired) showScreen('send');
+  } else {
+    $('#topBar').hidden = true;
+    $('#tabBar').hidden = true;
+    $('#livePulse').hidden = true;
+    showScreen('pair');
+    clearPinInputs();
+  }
+
+  // Files list (receive tab)
+  renderDownloadList();
+
+  // Transfer status
+  renderTransferStatus();
+
+  // Live pulse color based on connection
+  const pulse = $('#livePulse');
+  if (state.transfer?.active) pulse.style.color = state.transfer.direction === 'up' ? '#6C3BFF' : '#0FC9DE';
+};
+
+const handleUnauthorized = () => {
+  state.paired = false;
+  state.files = [];
+  state.transfer = null;
+  stopPolling();
+  showScreen('pair');
+  $('#topBar').hidden = true;
+  $('#tabBar').hidden = true;
+  $('#livePulse').hidden = true;
+  $('#deviceChip').hidden = true;
+  clearPinInputs();
+  showToast('Bağlantı kesildi. Tekrar deneyin.', 'error');
+};
+
+const renderDownloadList = () => {
+  const list = $('#downloadList');
+  const empty = $('#downloadEmpty');
+  if (!list) return;
+  if (state.files.length === 0) {
+    list.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  list.innerHTML = state.files.map(f => `
+    <div class="download-item" data-id="${f.id}" role="listitem">
+      <div class="download-icon" aria-hidden="true">${fileIcon(f.name)}</div>
+      <div class="download-info">
+        <div class="download-name">${escapeHtml(f.name)}</div>
+        <div class="download-size">${f.sizeText || fmtBytes(f.size)}</div>
+      </div>
+      <button class="download-btn" data-id="${f.id}" aria-label="${escapeHtml(f.name)} indir" title="İndir">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+    </div>
+  `).join('');
+  // Bind download buttons
+  $$('.download-btn', list).forEach(btn => {
+    btn.onclick = () => downloadFile(btn.dataset.id);
+  });
+};
+
+const fileIcon = (name) => {
+  const ext = name.split('.').pop()?.toLowerCase() || '';
+  const icons = {
+    // Images
+    jpg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><circle cx="8" cy="8" r="2"/><path d="M4 17l4-4 4 4 6-6"/></svg>',
+    png: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><circle cx="8" cy="8" r="2"/><path d="M4 17l4-4 4 4 6-6"/></svg>',
+    gif: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><circle cx="8" cy="8" r="2"/><path d="M4 17l4-4 4 4 6-6"/></svg>',
+    webp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><circle cx="8" cy="8" r="2"/><path d="M4 17l4-4 4 4 6-6"/></svg>',
+    heic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><circle cx="8" cy="8" r="2"/><path d="M4 17l4-4 4 4 6-6"/></svg>',
+    // Videos
+    mp4: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18"/><polygon points="23 7 16 12 23 17 23 7"/></svg>',
+    mov: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18"/><polygon points="23 7 16 12 23 17 23 7"/></svg>',
+    mkv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18"/><polygon points="23 7 16 12 23 17 23 7"/></svg>',
+    webm: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18"/><polygon points="23 7 16 12 23 17 23 7"/></svg>',
+    // Documents
+    pdf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+    docx: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+    txt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+    // Archives
+    zip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+    rar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+    '7z': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+    // Code
+    js: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+    ts: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+    json: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+    py: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+    html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+    css: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+  };
+  return icons[ext] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+};
+
+const escapeHtml = (str) => String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const renderTransferStatus = () => {
+  const el = $('#statusTransfer');
+  const t = state.transfer;
+  if (!t || !t.active) {
+    el.hidden = true;
+    return;
+  }
+  el.hidden = false;
+  el.classList.add('active');
+  const isUp = t.direction === 'up';
+  $('#transferDir').className = `transfer-direction ${isUp ? 'up' : 'down'}`;
+  $('#transferDir').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="${isUp ? '18 15 12 9 6 15' : '6 9 12 15 18 9'}"/></svg> ${isUp ? 'Yükleniyor' : 'İndiriliyor'}`;
+  $('#transferSpeed').textContent = fmtSpeed(t.speedMBps || 0);
+  $('#transferFill').style.width = (t.percent || 0) + '%';
+  $('#transferName').textContent = t.name || '—';
+  $('#transferPercent').textContent = (t.percent || 0) + '%';
+};
+
+const clearPinInputs = () => {
+  $$('.pin-input').forEach((inp, i) => {
+    inp.value = '';
+    inp.classList.remove('filled', 'error');
+    if (i === 0) inp.focus();
+  });
+  $('#pinError').hidden = true;
+  $('#pinError').textContent = '';
+};
+
+// ============ EVENT HANDLERS ============
+const handlePinInput = (e) => {
+  const inp = e.target;
+  const idx = parseInt(inp.dataset.index);
+  const inputs = $$('.pin-input');
+  const val = inp.value.replace(/\D/g, '').slice(0, 1);
+  inp.value = val;
+  inp.classList.toggle('filled', val.length === 1);
+  inp.classList.remove('error');
+
+  if (val.length === 1 && idx < 5) {
+    inputs[idx + 1].focus();
+  }
+  if (e.type === 'keydown') {
+    if (e.key === 'Backspace' && !val && idx > 0) {
+      inputs[idx - 1].focus();
+    }
+  }
+};
+
+const handlePinPaste = (e) => {
+  e.preventDefault();
+  const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+  const inputs = $$('.pin-input');
+  text.split('').forEach((ch, i) => {
+    if (inputs[i]) {
+      inputs[i].value = ch;
+      inputs[i].classList.toggle('filled', true);
+    }
+  });
+  if (text.length < 6) inputs[text.length].focus();
+  else inputs[5].focus();
+};
+
+const handlePairSubmit = async (e) => {
+  e.preventDefault();
+  const inputs = $$('.pin-input');
+  const pin = inputs.map(i => i.value).join('');
+  if (pin.length !== 6) {
+    inputs.forEach(i => i.classList.add('error'));
+    haptic(50);
+    $('#pinError').textContent = '6 haneli kodu girin';
+    $('#pinError').hidden = false;
+    return;
+  }
+  $('#pairBtn').disabled = true;
+  $('#pinError').hidden = true;
+  try {
+    const deviceName = 'Telefonum';
+    await apiPost(API.login, { pin, name: deviceName });
+    showToast('Bağlantı kuruldu', 'success');
+    haptic(12);
+    // Reflect the new session immediately, then keep polling
+    apiGet(API.state).then(applyState).catch(() => {});
+    startPolling();
+  } catch (err) {
+    inputs.forEach(i => i.classList.add('error'));
+    haptic(50);
+    $('#pinError').textContent = err.message || 'PIN hatalı';
+    $('#pinError').hidden = false;
+  } finally {
+    $('#pairBtn').disabled = false;
+  }
+};
+
+const handleFileSelect = (files) => {
+  if (!files.length) return;
+  const validFiles = [...files].filter(f => {
+    if (f.size === 0) { showToast(`${f.name}: Boş dosya atlandı`, 'error'); return false; }
+    return true;
+  });
+  if (!validFiles.length) return;
+
+  validFiles.forEach(file => {
+    file._id = 'f_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+    state.uploadQueue.push(file);
+    renderFileCard(file);
+  });
+  if (!state.isUploading) processUploadQueue();
+};
+
+const renderFileCard = (file) => {
+  const queue = $('#fileQueue');
+  if (!queue) return;
+  const card = document.createElement('div');
+  card.className = 'file-card';
+  card.dataset.id = file._id;
+  card.role = 'listitem';
+  card.innerHTML = `
+    <div class="file-icon" aria-hidden="true">${fileIcon(file.name)}</div>
+    <div class="file-info">
+      <div class="file-name">${escapeHtml(file.name)}</div>
+      <div class="file-size">${fmtBytes(file.size)}</div>
+      <div class="file-progress-wrap" aria-hidden="true"><div class="file-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="${escapeHtml(file.name)} yükleme ilerlemesi"></div></div>
+      <div class="file-progress-text" aria-live="polite">0% / ${fmtBytes(file.size)}</div>
+    </div>
+    <div class="file-actions">
+      <button class="file-btn" data-action="cancel" aria-label="İptal" title="İptal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="file-check" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+  `;
+  queue.appendChild(card);
+  card.querySelector('[data-action="cancel"]').onclick = () => cancelUpload(file._id);
+};
+
+const cancelUpload = (id) => {
+  const idx = state.uploadQueue.findIndex(f => f._id === id);
+  if (idx !== -1) {
+    const file = state.uploadQueue[idx];
+    state.uploadQueue.splice(idx, 1);
+    const card = document.querySelector(`.file-card[data-id="${id}"]`);
+    if (card) card.remove();
+    if (state.isUploading && state.uploadQueue.length === 0) {
+      state.isUploading = false;
+      setOverallProgress(false);
+    }
+    showToast(`${file.name} iptal edildi`, 'info');
+  }
+};
+
+const processUploadQueue = async () => {
+  if (state.uploadQueue.length === 0) {
+    state.isUploading = false;
+    setOverallProgress(false);
+    return;
+  }
+  state.isUploading = true;
+  const file = state.uploadQueue[0];
+  setOverallProgress(true, 0, 0, null, 0, file.size);
+
+  let startTime = Date.now();
+  let lastLoaded = 0;
+  let lastTime = startTime;
+
+  const updateSpeed = (loaded) => {
+    const now = Date.now();
+    const elapsed = (now - lastTime) / 1000;
+    if (elapsed > 0.5) {
+      const speed = (loaded - lastLoaded) / elapsed / 1024 / 1024;
+      const remaining = file.size - loaded;
+      const etaSec = speed > 0 ? remaining / speed / 1024 / 1024 : 0;
+      let etaStr = '—';
+      if (etaSec > 0) {
+        if (etaSec < 60) etaStr = `${Math.ceil(etaSec)} sn`;
+        else if (etaSec < 3600) etaStr = `${Math.ceil(etaSec / 60)} dk`;
+        else etaStr = `${Math.ceil(etaSec / 3600)} sa`;
+      }
+      lastLoaded = loaded;
+      lastTime = now;
+      return { speed, eta: etaStr };
+    }
+    return null;
+  };
+
+  // Wrap XHR to track speed
+  const uploadWithSpeed = (file) => new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    const url = `${API.upload}?name=${encodeURIComponent(file.name)}`;
+    xhr.open('PUT', url, true);
+    xhr.withCredentials = true;
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        const percent = Math.round((e.loaded / e.total) * 100);
+        updateFileProgress(file._id, percent, e.loaded, e.total);
+        const sp = updateSpeed(e.loaded);
+        if (sp) {
+          const overallPercent = state.uploadQueue.length > 1
+            ? Math.round((state.uploadQueue.slice(0, state.uploadQueue.indexOf(file)).reduce((s, f) => s + f.size, 0) + e.loaded) / state.uploadQueue.reduce((s, f) => s + f.size, 0) * 100)
+            : percent;
+          setOverallProgress(true, overallPercent, sp.speed, sp.eta, e.loaded, e.total);
+        }
+      }
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try { resolve(JSON.parse(xhr.responseText)); } catch { resolve({ ok: true, saved: file.name }); }
+      } else {
+        try { reject(new Error(JSON.parse(xhr.responseText).error || `HTTP ${xhr.status}`)); } catch { reject(new Error(`HTTP ${xhr.status}`)); }
+      }
+    };
+    xhr.onerror = () => reject(new Error('Ağ hatası'));
+    xhr.send(file);
+  });
+
+  try {
+    await uploadWithSpeed(file);
+    markFileComplete(file._id, true);
+    addCounter('sent', 1);
+    state.uploadQueue.shift();
+    const card = document.querySelector(`.file-card[data-id="${file._id}"]`);
+    if (card) {
+      setTimeout(() => {
+        card.style.animation = 'card-in 200ms reverse';
+        setTimeout(() => card.remove(), 200);
+      }, 800);
+    }
+    showToast(`${file.name} gönderildi`, 'success');
+  } catch (err) {
+    markFileComplete(file._id, false, err.message);
+    showToast(`${file.name}: ${err.message}`, 'error');
+    state.uploadQueue.shift();
+  }
+  processUploadQueue();
+};
+
+const downloadFile = async (id) => {
+  const btn = document.querySelector(`.download-btn[data-id="${id}"]`);
+  if (btn) btn.disabled = true;
+  try {
+    const res = await fetch(API.download(id), { credentials: 'same-origin' });
+    if (!res.ok) throw new Error('İndirme başarısız');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const file = state.files.find(f => f.id === id);
+    if (file) a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    addCounter('received', 1);
+    showToast(file?.name || 'Dosya indirildi', 'success');
+    haptic(12);
+  } catch (err) {
+    showToast(err.message, 'error');
+    haptic(50);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+};
+
+const handleLogout = async () => {
+  try {
+    await apiPost(API.logout, {});
+    showToast('Bağlantı kesildi', 'info');
+  } catch { /* ignore */ }
+  handleUnauthorized();
+};
+
+const handleRefresh = async () => {
+  const btn = $('#refreshBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Yenileniyor...'; }
+  try {
+    const data = await apiGet(API.state);
+    applyState(data);
+    showToast('Liste yenilendi', 'success');
+  } catch (err) {
+    showToast('Yenileme başarısız: ' + err.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Yenile'; }
+  }
+};
+
+const handleThemeToggle = () => {
+  const themes = ['auto', 'dark', 'light'];
+  const idx = themes.indexOf(state.theme);
+  setTheme(themes[(idx + 1) % themes.length]);
+};
+
+const handleTabClick = (tab) => {
+  haptic(8);
+  showScreen(tab);
+};
+
+const handleVisibilityChange = () => {
+  state.hidden = document.hidden;
+  if (!state.hidden && state.paired) startPolling();
+};
+
+const handleDragOver = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  $('#uploadZone').classList.add('drag-active');
+};
+
+const handleDragLeave = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (!e.currentTarget.contains(e.relatedTarget)) {
+    $('#uploadZone').classList.remove('drag-active');
+  }
+};
+
+const handleDrop = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  $('#uploadZone').classList.remove('drag-active');
+  if (e.dataTransfer.files.length) handleFileSelect(e.dataTransfer.files);
+};
+
+const handleIOSHint = () => {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  const dismissed = localStorage.getItem('dzt_ios_hint_dismissed');
+  if (isIOS && !isStandalone && !dismissed) {
+    setTimeout(() => {
+      $('#iosHint').classList.remove('hidden');
+    }, 3000);
+  }
+  $('#iosHintDismiss').onclick = () => {
+    $('#iosHint').classList.add('removing');
+    setTimeout(() => $('#iosHint').classList.add('hidden'), 300);
+    localStorage.setItem('dzt_ios_hint_dismissed', '1');
+  };
+  $('#iosHintClose').onclick = () => {
+    $('#iosHint').classList.add('removing');
+    setTimeout(() => $('#iosHint').classList.add('hidden'), 300);
+  };
+};
+
+// ============ INIT ============
+const init = () => {
+  // Theme
+  const savedTheme = localStorage.getItem(STORAGE_KEYS.theme) || 'auto';
+  setTheme(savedTheme);
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (state.theme === 'auto') setTheme('auto');
+  });
+
+  // Load counters
+  loadCounters();
+
+  // Pair form
+  $('#pinForm').addEventListener('submit', handlePairSubmit);
+  $$('.pin-input').forEach(inp => {
+    inp.addEventListener('input', handlePinInput);
+    inp.addEventListener('keydown', handlePinInput);
+    inp.addEventListener('paste', handlePinPaste);
+  });
+
+  // File inputs
+  $('#fileInput').addEventListener('change', (e) => handleFileSelect(e.target.files));
+  $('#photoInput').addEventListener('change', (e) => handleFileSelect(e.target.files));
+  $('#uploadZone').addEventListener('click', () => $('#fileInput').click());
+  $('#pickPhotosBtn').addEventListener('click', () => $('#photoInput').click());
+
+  // Drag & drop
+  $('#uploadZone').addEventListener('dragover', handleDragOver);
+  $('#uploadZone').addEventListener('dragleave', handleDragLeave);
+  $('#uploadZone').addEventListener('drop', handleDrop);
+
+  // Tab bar
+  $$('.tab-btn').forEach(btn => btn.addEventListener('click', () => handleTabClick(btn.dataset.tab)));
+
+  // Actions
+  $('#logoutBtn').addEventListener('click', handleLogout);
+  $('#refreshBtn').addEventListener('click', handleRefresh);
+  $('#themeToggle').addEventListener('click', handleThemeToggle);
+
+  // Visibility
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+
+  // iOS hint
+  handleIOSHint();
+
+  // Initial state check
+  apiGet(API.state).then(applyState).catch(() => {
+    // If not paired, stay on pair screen
+    if (!state.paired) showScreen('pair');
+  });
+
+  // Keep state fresh (pairing, transfers, shared files)
+  startPolling();
+
+  // Focus first PIN input
+  setTimeout(() => $$('.pin-input')[0]?.focus(), 100);
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>

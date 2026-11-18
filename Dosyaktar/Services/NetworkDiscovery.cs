@@ -25,10 +25,10 @@ namespace Dosyaktar.Services
         public DateTime LastSeen  { get; set; }
 
         public string DisplayName =>
-            string.IsNullOrEmpty(Hostname) ? IP : $"{Hostname}  ({IP})";
+            string.IsNullOrEmpty(Hostname) ? IP : Hostname;
 
         public string StatusText =>
-            IsReceiving ? "📥 Almaya hazır" : "🟢 Çevrimiçi";
+            IsReceiving ? "Almaya hazır" : "Çevrimiçi";
     }
 
     // ─── Keşif Servisi ────────────────────────────────────────────────────────
@@ -60,6 +60,9 @@ namespace Dosyaktar.Services
         private bool _isReceiving;
         private int  _transferPort;
         private bool _disposed;
+
+        /// <summary>Yayında görünecek cihaz adı (ayarlardan değiştirilebilir).</summary>
+        public string DeviceName { get; set; } = Environment.MachineName;
 
         private void Log(string m) => LogMessage?.Invoke(this, m);
 
@@ -128,7 +131,7 @@ namespace Dosyaktar.Services
                                 {
                                     var payload = new
                                     {
-                                        hostname    = Environment.MachineName,
+                                        hostname    = DeviceName,
                                         ip          = addr.Address.ToString(),
                                         port        = _transferPort,
                                         version     = UpdateService.GetCurrentVersion().ToString(),

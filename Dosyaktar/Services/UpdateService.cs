@@ -99,7 +99,9 @@ namespace Dosyaktar.Services
                 }
                 if (!resp.IsSuccessStatusCode)
                 {
-                    OnStatus($"⚠ GitHub API hatası: HTTP {(int)resp.StatusCode}");
+                    OnStatus(resp.StatusCode == System.Net.HttpStatusCode.Forbidden
+                        ? "Güncelleme kontrolü şu an yapılamıyor — daha sonra tekrar deneyin."
+                        : "Güncelleme sunucusuna ulaşılamadı — daha sonra tekrar deneyin.");
                     return null;
                 }
 

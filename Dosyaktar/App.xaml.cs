@@ -1,8 +1,9 @@
 using System;
-using System.Windows;
-using System.Threading.Tasks;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
+using System.Windows;
+using System.Windows.Threading;
+using Dosyaktar.Services;
 
 namespace Dosyaktar
 {
@@ -10,75 +11,142 @@ namespace Dosyaktar
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            // Smart First-Run: Masaüstü Kısayolu Oluşturma
+            base.OnStartup(e);
+
+            RegisterCrashHandlers();
+            EnsureDesktopShortcut();
+
+            var settings = SettingsService.Load();
+
+            // Theme first — every window resolves DynamicResource against it.
+            ThemeManager.Apply(string.IsNullOrWhiteSpace(settings.Theme) ? "prism" : settings.Theme);
+
+            LoadLanguage(settings.Language);
+
+            var window = new MainWindow(settings);
+            MainWindow = window;
+            window.Show();
+        }
+
+        // ─── language ────────────────────────────────────────────────────────
+        private static void LoadLanguage(string? lang)
+        {
+            string code = string.IsNullOrWhiteSpace(lang) ? "tr" : lang.Trim();
+            if (code == "tr") return;
+
             try
             {
-                string exePath = Process.GetCurrentProcess().MainModule?.FileName;
-                string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                string shortcutPath = Path.Combine(desktop, "Dosyaktar.lnk");
-
-                if (exePath != null && !File.Exists(shortcutPath))
+                var dict = new ResourceDictionary
                 {
-                    Type shellType = Type.GetTypeFromProgID("WScript.Shell");
-                    if (shellType != null)
-                    {
-                        object shell = Activator.CreateInstance(shellType);
-                        object shortcut = shellType.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, shell, new object[] { shortcutPath });
-                        if (shortcut != null)
-                        {
-                            Type shortcutType = shortcut.GetType();
-                            shortcutType.InvokeMember("TargetPath", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { exePath });
-                            shortcutType.InvokeMember("WorkingDirectory", System.Reflection.BindingFlags.SetProperty, null, shortcut, new object[] { Path.GetDirectoryName(exePath) });
-                            shortcutType.InvokeMember("Save", System.Reflection.BindingFlags.InvokeMethod, null, shortcut, null);
-                        }
-                    }
-                }
+                    Source = new Uri($"pack://application:,,,/Resources/Strings.{code}.xaml", UriKind.Absolute)
+                };
+
+                var merged = Current.Resources.MergedDictionaries;
+                if (merged.Count > 1) merged[1] = dict;
+                else merged.Add(dict);
             }
-            catch { /* Sessizce devam et */ }
-            AppDomain.CurrentDomain.UnhandledException += (s, args) =>
+            catch
             {
-                var ex = args.ExceptionObject as Exception;
-                MessageBox.Show($"FATA Kilitlenmesi:\n\n{ex?.Message}\n\n{ex?.StackTrace}", "Kritik Hata (AppDomain)", MessageBoxButton.OK, MessageBoxImage.Error);
+                // Unknown language pack — stay on Turkish.
+            }
+        }
+
+        // ─── crash reporting ─────────────────────────────────────────────────
+        private void RegisterCrashHandlers()
+        {
+            AppDomain.CurrentDomain.UnhandledException += (_, args) =>
+            {
+                if (args.ExceptionObject is Exception ex) ShowFatal(ex, "AppDomain");
             };
 
-            TaskScheduler.UnobservedTaskException += (s, args) =>
-            {
-                var ex = args.Exception;
-                MessageBox.Show($"Asenkron Hata:\n\n{ex?.Message}", "Kritik Hata (Task)", MessageBoxButton.OK, MessageBoxImage.Error);
-                args.SetObserved();
-            };
+            TaskScheduler_Unobserved();
 
-            DispatcherUnhandledException += (s, ex) =>
+            DispatcherUnhandledException += (_, args) =>
             {
-                var inner = ex.Exception;
-                while (inner.InnerException != null)
-                    inner = inner.InnerException;
+                var inner = args.Exception;
+                while (inner.InnerException != null) inner = inner.InnerException;
 
                 MessageBox.Show(
-                    $"Arayüz Hatası: {inner.Message}\n\nTür: {inner.GetType().Name}\n\nKaynak: {inner.Source}\n\n{inner.StackTrace}",
-                    "Beklenmeyen Hata",
+                    $"Beklenmeyen bir arayüz hatası oluştu.\n\n{inner.Message}\n\nTür: {inner.GetType().Name}",
+                    "Dosyaktar",
                     MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                    MessageBoxImage.Warning);
 
-                ex.Handled = true;
+                args.Handled = true;
             };
+        }
 
-            // Kaydedilen temayı uygula (LightTheme.xaml zaten MergedDictionaries'de, dark ise değiştir)
-            var settings = Dosyaktar.Services.SettingsService.Load();
-            if (settings.DarkMode)
-                ThemeManager.Apply(dark: true);
+        private static void TaskScheduler_Unobserved()
+        {
+            System.Threading.Tasks.TaskScheduler.UnobservedTaskException += (_, args) =>
+            {
+                args.SetObserved();
+            };
+        }
 
-            // Uygulama dili yükleme
-            string lang = settings.Language ?? "tr";
-            var dict = new ResourceDictionary();
+        private static void ShowFatal(Exception ex, string source)
+        {
             try
             {
-                dict.Source = new Uri($"pack://application:,,,/Resources/Strings.{lang}.xaml", UriKind.Absolute);
-                Application.Current.Resources.MergedDictionaries[1] = dict;
+                string dir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "Dosyaktar");
+                Directory.CreateDirectory(dir);
+                File.AppendAllText(
+                    Path.Combine(dir, "crash.log"),
+                    $"[{DateTime.Now:O}] ({source}) {ex}{Environment.NewLine}{Environment.NewLine}");
             }
-            catch { /* Varsayılan kalır */ }
+            catch { }
 
-            base.OnStartup(e);
+            MessageBox.Show(
+                $"Dosyaktar beklenmedik bir hata nedeniyle kapanıyor.\n\n{ex.Message}\n\n" +
+                "Ayrıntılar %APPDATA%\\Dosyaktar\\crash.log dosyasına yazıldı.",
+                "Dosyaktar",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+
+        // ─── first-run desktop shortcut ──────────────────────────────────────
+        private static void EnsureDesktopShortcut()
+        {
+            try
+            {
+                string? exePath = Process.GetCurrentProcess().MainModule?.FileName;
+                if (string.IsNullOrEmpty(exePath)) return;
+
+                // Only for the packaged single-file build, not `dotnet run`.
+                if (exePath.EndsWith("dotnet.exe", StringComparison.OrdinalIgnoreCase)) return;
+
+                string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                string shortcutPath = Path.Combine(desktop, "Dosyaktar.lnk");
+                if (File.Exists(shortcutPath)) return;
+
+                Type? shellType = Type.GetTypeFromProgID("WScript.Shell");
+                if (shellType == null) return;
+
+                object? shell = Activator.CreateInstance(shellType);
+                if (shell == null) return;
+
+                object? shortcut = shellType.InvokeMember(
+                    "CreateShortcut", System.Reflection.BindingFlags.InvokeMethod,
+                    null, shell, new object[] { shortcutPath });
+
+                if (shortcut == null) return;
+
+                Type shortcutType = shortcut.GetType();
+                shortcutType.InvokeMember("TargetPath", System.Reflection.BindingFlags.SetProperty,
+                    null, shortcut, new object[] { exePath });
+                shortcutType.InvokeMember("WorkingDirectory", System.Reflection.BindingFlags.SetProperty,
+                    null, shortcut, new object[] { Path.GetDirectoryName(exePath) ?? string.Empty });
+                shortcutType.InvokeMember("IconLocation", System.Reflection.BindingFlags.SetProperty,
+                    null, shortcut, new object[] { exePath + ",0" });
+                shortcutType.InvokeMember("Save", System.Reflection.BindingFlags.InvokeMethod,
+                    null, shortcut, null);
+            }
+            catch
+            {
+                // A shortcut is a nicety — never block startup on it.
+            }
         }
     }
 }

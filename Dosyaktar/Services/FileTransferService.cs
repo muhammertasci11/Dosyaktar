@@ -134,6 +134,53 @@ namespace Dosyaktar.Services
             return await SendEntriesAsync(entries, TransferMode.Folder, receiverIP, port, totalBytes);
         }
 
+        // ══════════════════════════════════════════════════════════════════════
+        //  GÖNDERME — Paket (klasör + baştaki meta dosyaları)
+        // ══════════════════════════════════════════════════════════════════════
+
+        /// <summary>
+        /// Bir klasörü, kendi içeriğinden önce gönderilen ek dosyalarla birlikte yollar.
+        /// Oyun aktarımı, alıcı tarafın paketi tanıması için gereken manifesti
+        /// klasörün dışında tutmak amacıyla bunu kullanır.
+        /// </summary>
+        public async Task<TransferResult> SendPackageAsync(
+            string folderPath,
+            IReadOnlyList<(string path, string relName, long size)> extraEntries,
+            string receiverIP,
+            int port = DefaultPort)
+        {
+            if (!Directory.Exists(folderPath))
+                return new TransferResult(false, "Klasör bulunamadı.");
+
+            var entries = new List<(string path, string relName, long size)>(extraEntries);
+
+            string baseDir = Path.GetDirectoryName(
+                folderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
+                ?? folderPath;
+
+            foreach (var file in Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories))
+            {
+                try
+                {
+                    var fi = new FileInfo(file);
+                    if ((fi.Attributes & FileAttributes.ReparsePoint) != 0) continue;
+
+                    string rel = Path.GetRelativePath(baseDir, file);
+                    entries.Add((file, rel, fi.Length));
+                }
+                catch { /* erişilemeyen dosya → atla */ }
+            }
+
+            if (entries.Count == 0)
+                return new TransferResult(false, "Klasör boş.");
+
+            long totalBytes = 0;
+            foreach (var e in entries) totalBytes += e.size;
+
+            OnStatus($"{entries.Count} dosya · {FormatSize(totalBytes)} hazırlanıyor…");
+            return await SendEntriesAsync(entries, TransferMode.Folder, receiverIP, port, totalBytes);
+        }
+
         // ── Ortak gönderim çekirdeği ──────────────────────────────────────────
         private async Task<TransferResult> SendEntriesAsync(
             List<(string path, string relName, long size)> entries,

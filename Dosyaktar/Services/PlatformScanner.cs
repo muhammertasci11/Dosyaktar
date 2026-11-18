@@ -60,7 +60,7 @@ namespace Dosyaktar.Services
             return results;
         }
 
-        private static string? GetSteamPath()
+        public static string? GetSteamPath()
         {
             // Yöntem 1: CurrentUser
             try
@@ -68,7 +68,7 @@ namespace Dosyaktar.Services
                 using var key = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
                 var val = key?.GetValue("SteamPath") as string
                        ?? key?.GetValue("steampath") as string;
-                if (!string.IsNullOrEmpty(val)) return val;
+                if (!string.IsNullOrEmpty(val)) return CleanSteamPath(val);
             }
             catch { }
 
@@ -78,7 +78,7 @@ namespace Dosyaktar.Services
                 using var key = Registry.LocalMachine.OpenSubKey(
                     @"SOFTWARE\WOW6432Node\Valve\Steam");
                 var val = key?.GetValue("InstallPath") as string;
-                if (!string.IsNullOrEmpty(val)) return val;
+                if (!string.IsNullOrEmpty(val)) return CleanSteamPath(val);
             }
             catch { }
 
@@ -88,7 +88,7 @@ namespace Dosyaktar.Services
                 using var key = Registry.LocalMachine.OpenSubKey(
                     @"SOFTWARE\Valve\Steam");
                 var val = key?.GetValue("InstallPath") as string;
-                if (!string.IsNullOrEmpty(val)) return val;
+                if (!string.IsNullOrEmpty(val)) return CleanSteamPath(val);
             }
             catch { }
 
@@ -103,8 +103,12 @@ namespace Dosyaktar.Services
             return defaults.FirstOrDefault(Directory.Exists);
         }
 
+        /// <summary>Tüm Steam kütüphane köklerini (ana kurulum dahil) döndürür.</summary>
+        public static List<string> GetSteamLibraryPaths(string steamPath) => GetSteamLibraries(steamPath);
+
         private static List<string> GetSteamLibraries(string steamPath)
         {
+            steamPath = NormalizePath(steamPath);
             var libs = new List<string> { steamPath };
 
             string vdf = Path.Combine(steamPath, "steamapps", "libraryfolders.vdf");
@@ -115,7 +119,6 @@ namespace Dosyaktar.Services
                 string content = File.ReadAllText(vdf);
                 // Yeni format (2021+): "path"    "D:\\Games\\Steam"
                 // Eski format: "1"    "D:\\Games\\Steam"
-                bool inLibraryEntry = false; // format ayırt edici
 
                 foreach (var rawLine in content.Split('\n'))
                 {
@@ -194,6 +197,14 @@ namespace Dosyaktar.Services
 
             long size = DirectorySize(gamePath);
             return new InstalledGame(name, "Steam", gamePath, acfPath, size);
+        }
+
+        private static string CleanSteamPath(string path)
+        {
+            string value = path.Replace('/', '\\');
+            if (value.Length >= 2 && value[1] == ':' && char.IsLower(value[0]))
+                value = char.ToUpperInvariant(value[0]) + value[1..];
+            return value;
         }
 
         private static string NormalizePath(string path)

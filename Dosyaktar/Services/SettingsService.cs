@@ -11,13 +11,21 @@ namespace Dosyaktar.Services
         public int    Port          { get; set; } = FileTransferService.DefaultPort;
         public bool   CheckUpdates  { get; set; } = true;
         public bool   AutoUpdate    { get; set; } = true;  // Varsayılan: otomatik güncelle
-        public bool   AutoReceive   { get; set; } = false;
+        public bool   AutoReceive   { get; set; } = true;  // Oturum açıkken dinlemeye başla
         public bool   DarkMode      { get; set; } = false;
-        public string Theme         { get; set; } = "crimson";
+        public string Theme         { get; set; } = "prism";
+        public string Hostname      { get; set; } = Environment.MachineName;
         public string LastTargetIP  { get; set; } = string.Empty;
+        public string LastPage      { get; set; } = "send";
         public string Language      { get; set; } = "tr";
         public bool   UseFlashMode  { get; set; } = false;
-        public int    FlashConnections { get; set; } = 8;
+
+        private int _flashConnections = 8;
+        public int FlashConnections
+        {
+            get => _flashConnections;
+            set => _flashConnections = Math.Clamp(value, 2, 32);
+        }
 
         public static string DefaultSaveDir =>
             Path.Combine(

@@ -52,44 +52,55 @@ namespace Dosyaktar.Services
         /// </summary>
         public static string GetLocalIP()
         {
-            // Tüm ağ arayüzlerini tara: Önce Ethernet, sonra Wi-Fi. (İnterneti olmayan ama 1Gbps/10Gbps hızındaki lokal kablolu ağları tercih etmeli)
-            // VirtualBox, Hyper-V, vEthernet, WSL, Loopback, VPN tünelleri yoksayılır.
-            var interfaces = NetworkInterface.GetAllNetworkInterfaces()
-                .Where(n => n.OperationalStatus == OperationalStatus.Up && 
-                            n.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
-                            !n.Description.Contains("Virtual") &&
-                            !n.Description.Contains("Hyper-V") &&
-                            !n.Description.Contains("Tailscale") &&
-                            !n.Description.Contains("Radmin") &&
-                            !n.Description.Contains("TAP-Windows") &&
-                            !n.Description.Contains("Sanal") &&
-                            !n.Description.Contains("ZeroTier") &&
-                            !n.Name.Contains("vEthernet") &&
-                            !n.Name.Contains("WSL"))
-                .OrderByDescending(n => n.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
-                .ThenByDescending(n => n.Speed)
-                .ToList();
-
-            foreach (var nic in interfaces)
+            // Telefonun ulaşabileceği adresi seç: varsayılan ağ geçidi olan gerçek
+            // Ethernet/Wi-Fi kartı kazanır. Hyper-V, VirtualBox, WSL, WARP ve diğer
+            // sanal/tünel arayüzler puan kaybeder; erişilemez bir adres QR'a yazılmaz.
+            try
             {
-                foreach (var addr in nic.GetIPProperties().UnicastAddresses)
+                var candidates = new List<(int score, string ip)>();
+
+                foreach (var nic in NetworkInterface.GetAllNetworkInterfaces())
                 {
-                    if (addr.Address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(addr.Address))
+                    if (nic.OperationalStatus != OperationalStatus.Up) continue;
+                    if (nic.NetworkInterfaceType == NetworkInterfaceType.Loopback) continue;
+
+                    string label = (nic.Name + " " + nic.Description).ToLowerInvariant();
+                    bool virtualNic =
+                        label.Contains("virtual") || label.Contains("hyper-v") || label.Contains("vethernet") ||
+                        label.Contains("wsl") || label.Contains("vmware") || label.Contains("tailscale") ||
+                        label.Contains("zerotier") || label.Contains("radmin") || label.Contains("tap-windows") ||
+                        label.Contains("wintun") || label.Contains("tunnel") || label.Contains("warp") ||
+                        label.Contains("pdanet") || label.Contains("bluetooth") || label.Contains("sanal");
+
+                    var props = nic.GetIPProperties();
+                    bool hasGateway = props.GatewayAddresses.Any(g =>
+                        g.Address != null &&
+                        g.Address.AddressFamily == AddressFamily.InterNetwork &&
+                        !g.Address.Equals(IPAddress.Any));
+
+                    foreach (var addr in props.UnicastAddresses)
                     {
-                        // APIPA (169.254.x.x) adreslerini sadece başka çare yoksa kullanmak için sona atabiliriz ama şimdilik ilk bulduğumuzu dönüyoruz.
-                        if (addr.Address.ToString().StartsWith("169.254.")) continue;
-                        return addr.Address.ToString();
+                        if (addr.Address.AddressFamily != AddressFamily.InterNetwork) continue;
+                        if (IPAddress.IsLoopback(addr.Address)) continue;
+
+                        string ip = addr.Address.ToString();
+                        if (ip.StartsWith("169.254.", StringComparison.Ordinal)) continue;
+                        if (ip.StartsWith("192.168.56.", StringComparison.Ordinal)) continue;
+
+                        int score = nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet ? 3
+                                  : nic.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 ? 2
+                                  : 1;
+                        if (hasGateway) score += 10;
+                        if (virtualNic) score -= 20;
+
+                        candidates.Add((score, ip));
                     }
                 }
+
+                if (candidates.Count > 0)
+                    return candidates.OrderByDescending(c => c.score).First().ip;
             }
-            
-            // Eğer normal bir IP bulunamazsa (veya sadece APIPA varsa), APIPA'yı dön.
-            foreach (var nic in interfaces)
-            {
-                foreach (var addr in nic.GetIPProperties().UnicastAddresses)
-                    if (addr.Address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(addr.Address))
-                        return addr.Address.ToString();
-            }
+            catch { }
 
             return "127.0.0.1";
         }

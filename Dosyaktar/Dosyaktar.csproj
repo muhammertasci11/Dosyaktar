@@ -12,9 +12,9 @@
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
 
     <!-- Sürüm — her release'de artırın: 1.0.0 → 1.1.0 → 1.2.0 -->
-    <Version>1.9.2</Version>
-    <AssemblyVersion>1.9.2.0</AssemblyVersion>
-    <FileVersion>1.9.2.0</FileVersion>
+    <Version>2.1.0</Version>
+    <AssemblyVersion>2.1.0.0</AssemblyVersion>
+    <FileVersion>2.1.0.0</FileVersion>
     <Product>Dosyaktar</Product>
     <Company>muhammertasci11</Company>
 
@@ -33,5 +33,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="Assets\**\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="QRCoder" Version="1.4.3" />
   </ItemGroup>
 </Project>
