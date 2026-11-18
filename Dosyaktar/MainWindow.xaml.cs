@@ -132,7 +132,6 @@ namespace Dosyaktar
             try { _pairing.StartListening(); }
             catch (Exception ex) { AppendLog("Eşleşme servisi başlatılamadı: " + ex.Message, "err"); }
 
-            RbSend.IsChecked = true;
             RestoreLastPage();
         }
 
