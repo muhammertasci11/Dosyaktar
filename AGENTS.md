@@ -42,6 +42,8 @@ nvidia/nvidia/nemotron-3-ultra-550b-a55b
 - Landing: `docs\` (GitHub Pages, harici bağımlılık yok). Mobil arayüz: `Dosyaktar\Assets\mobile\`.
 - Başlangıç sayfası: yalnızca `RestoreLastPage()` belirler; `RbSend` varsayılanı XAML'dedir, kodda tekrar atanmaz.
 - GitHub API: PowerShell 5.1 `Invoke-WebRequest` 403 döndürebilir; doğrulamayı `curl.exe` ile yap.
+- Oyun kapakları: `Services/GameCoverService.cs` sağlayıcıdan bağımsız çalışır; Steam mağaza araması + herkese açık CDN, API anahtarı yok, önbellek `%LOCALAPPDATA%\Dosyaktar\covers`. Yeni AppID'lerde `header.jpg` 404 döner; aramadaki hash'li `tiny_image` kapsülü yedektir. `HttpClient` User-Agent değeri ASCII olmalı, aksi halde indirme sessizce düşer.
+- Kenar çubuğu simgeleri: `Controls/NavTabButton.cs` + `Themes/NavIcons.xaml` vektör geometrileri. Hover/aktif animasyonları `SystemParameters.ClientAreaAnimation` kapalıyken çalışmaz; yeni sekme eklerken `RadioButton` yerine `NavTabButton` kullanılır.
 
 ## Değişmezler
 
