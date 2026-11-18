@@ -16,6 +16,7 @@ namespace Dosyaktar
         public UpdateWindow(UpdateInfo info)
         {
             InitializeComponent();
+            Fx.WindowCorners.Apply(this);
             _info = info;
 
             string current = UpdateService.GetCurrentVersion().ToString();

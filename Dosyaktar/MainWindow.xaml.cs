@@ -101,6 +101,8 @@ namespace Dosyaktar
 
             InitializeComponent();
 
+            Fx.WindowCorners.Apply(this);
+
             PeerList.ItemsSource         = _peers;
             QueueList.ItemsSource        = _files;
             LogList.ItemsSource          = _logs;
@@ -125,6 +127,9 @@ namespace Dosyaktar
             StateChanged  += OnWindowStateChanged;
             Loaded        += OnLoaded;
             PreviewKeyDown += OnPreviewKeyDown;
+            PreviewMouseMove += OnWindowMouseMove;
+            MouseLeave       += OnWindowMouseLeave;
+            Deactivated      += (_, _) => FadeCursorGlow();
 
             AttachWindowDragHandlers();
 
@@ -141,8 +146,107 @@ namespace Dosyaktar
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
+            StartAmbientMotion();
             StartScanPulse();
             _ = CheckUpdatesOnStartAsync();
+        }
+
+        // ═════════════════════════════════════════════════════════════════════
+        //  ATMOSFER — sabit zemin hareketi ve imleç ışığı
+        // ═════════════════════════════════════════════════════════════════════
+
+        private Storyboard? _ambient;
+        private Point  _glowTarget;
+        private double _glowX, _glowY;
+        private bool   _glowLive;
+        private bool   _glowFrameHooked;
+
+        private void StartAmbientMotion()
+        {
+            if (!SystemParameters.ClientAreaAnimation) return;
+
+            // Hareket azaltma tercihine saygı: storyboard yalnızca burada başlar.
+            _ambient = FindResource("AmbientDrift") as Storyboard;
+            _ambient?.Begin(this, true);
+        }
+
+        private void OnWindowMouseMove(object sender, MouseEventArgs e)
+        {
+            if (!SystemParameters.ClientAreaAnimation) return;
+            if (CursorGlow == null) return;
+
+            var p = e.GetPosition(CursorGlowLayer);
+            _glowTarget = p;
+
+            if (_glowLive)
+            {
+                _glowX += (p.X - _glowX) * 0.35;   // ilk karede gecikme olmasın
+                _glowY += (p.Y - _glowY) * 0.35;
+                return;
+            }
+
+            _glowLive = true;
+            _glowX = p.X;
+            _glowY = p.Y;
+            ApplyGlowPosition();
+
+            CursorGlow.BeginAnimation(OpacityProperty,
+                new DoubleAnimation(CursorGlow.Opacity, 0.9, TimeSpan.FromMilliseconds(320))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                });
+
+            if (!_glowFrameHooked)
+            {
+                CompositionTarget.Rendering += OnGlowFrame;
+                _glowFrameHooked = true;
+            }
+        }
+
+        private void OnGlowFrame(object? sender, EventArgs e)
+        {
+            if (!_glowLive) return;
+
+            double dx = _glowTarget.X - _glowX;
+            double dy = _glowTarget.Y - _glowY;
+
+            if (Math.Abs(dx) < 0.3 && Math.Abs(dy) < 0.3)
+            {
+                _glowX = _glowTarget.X;
+                _glowY = _glowTarget.Y;
+            }
+            else
+            {
+                _glowX += dx * 0.14;
+                _glowY += dy * 0.14;
+            }
+
+            ApplyGlowPosition();
+        }
+
+        private void ApplyGlowPosition()
+        {
+            if (CursorGlow == null) return;
+            CursorGlowOffset.X = _glowX - CursorGlow.Width  / 2;
+            CursorGlowOffset.Y = _glowY - CursorGlow.Height / 2;
+        }
+
+        private void OnWindowMouseLeave(object sender, MouseEventArgs e) => FadeCursorGlow();
+
+        private void FadeCursorGlow()
+        {
+            if (!_glowLive && CursorGlow?.Opacity == 0) return;
+
+            _glowLive = false;
+            if (_glowFrameHooked)
+            {
+                CompositionTarget.Rendering -= OnGlowFrame;
+                _glowFrameHooked = false;
+            }
+
+            if (CursorGlow == null) return;
+            CursorGlow.BeginAnimation(OpacityProperty,
+                new DoubleAnimation(0, TimeSpan.FromMilliseconds(220)));
         }
 
         private void ApplySettingsToServices()
@@ -273,13 +377,35 @@ namespace Dosyaktar
                 _          => (FrameworkElement)PageSend
             };
 
-            page.BeginAnimation(OpacityProperty, new DoubleAnimation
+            page.BeginAnimation(OpacityProperty, null);
+
+            if (SystemParameters.ClientAreaAnimation)
             {
-                From = 0.0,
-                To   = 1.0,
-                Duration = TimeSpan.FromMilliseconds(180),
-                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
-            });
+                if (page.RenderTransform is not TranslateTransform rise || rise.IsFrozen)
+                {
+                    rise = new TranslateTransform();
+                    page.RenderTransform = rise;
+                }
+
+                rise.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(14, 0,
+                    TimeSpan.FromMilliseconds(260))
+                {
+                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+                });
+
+                page.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1,
+                    TimeSpan.FromMilliseconds(220))
+                {
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                });
+            }
+            else
+            {
+                if (page.RenderTransform is TranslateTransform rise)
+                    rise.BeginAnimation(TranslateTransform.YProperty, null);
+
+                page.Opacity = 1;
+            }
 
             if (key == "mobile")
             {
@@ -368,6 +494,13 @@ namespace Dosyaktar
 
             _isConnectedSession = false;
             _receiving = false;
+
+            if (_glowFrameHooked)
+            {
+                CompositionTarget.Rendering -= OnGlowFrame;
+                _glowFrameHooked = false;
+            }
+            try { _ambient?.Stop(this); } catch { }
 
             try { _settings.LastTargetIP = _connectedTargetIP; SettingsService.Save(_settings); } catch { }
             try { _sender.Cancel(); }   catch { }
@@ -818,6 +951,27 @@ namespace Dosyaktar
         {
             if (e.ChangedButton == MouseButton.Left && !_senderBusy)
                 BtnPickFiles_Click(sender, e);
+        }
+
+        // İmleç, bırakma alanının cam yüzeyinde gezen bir ışık bırakır.
+        private void DropZone_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!SystemParameters.ClientAreaAnimation) return;
+            if (DropZone.ActualWidth <= 0 || DropZone.ActualHeight <= 0) return;
+
+            var p = e.GetPosition(DropZone);
+            double nx = Math.Clamp(p.X / DropZone.ActualWidth,  0, 1);
+            double ny = Math.Clamp(p.Y / DropZone.ActualHeight, 0, 1);
+
+            DropSheenBrush.Center         = new Point(nx, ny);
+            DropSheenBrush.GradientOrigin = new Point(nx, ny);
+            DropSheen.Opacity             = ThemeManager.Current.IsDark ? 0.45 : 0.90;
+        }
+
+        private void DropZone_MouseLeave(object sender, MouseEventArgs e)
+        {
+            DropSheen.BeginAnimation(OpacityProperty, new DoubleAnimation(0,
+                TimeSpan.FromMilliseconds(200)));
         }
 
         private void BtnPickFiles_Click(object sender, RoutedEventArgs e)
@@ -1922,6 +2076,12 @@ namespace Dosyaktar
         private void StartScanPulse()
         {
             if (ScanRing == null) return;
+
+            if (!SystemParameters.ClientAreaAnimation)
+            {
+                ScanRing.Opacity = 0.45;
+                return;
+            }
 
             var anim = new DoubleAnimation
             {

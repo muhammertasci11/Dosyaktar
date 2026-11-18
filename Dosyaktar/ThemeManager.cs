@@ -574,9 +574,13 @@ namespace Dosyaktar
                 StartPoint = new Point(0, 0),
                 EndPoint   = new Point(1, 1)
             };
+            // Both ends stay inside the accent's own hue family: a filled
+            // button that drifts into the second accent reads muddy, and the
+            // label has to stay legible over every stop of the ramp.
+            Color primaryEnd = EnsureContrast(Mix(p.Accent, p.Accent2, 0.35), Colors.White, 4.6);
             primary.GradientStops.Add(new GradientStop(accentFill, 0.0));
-            primary.GradientStops.Add(new GradientStop(Mix(accentFill, accent2Fill, 0.55), 0.58));
-            primary.GradientStops.Add(new GradientStop(accent2Fill, 1.0));
+            primary.GradientStops.Add(new GradientStop(Mix(accentFill, primaryEnd, 0.55), 0.58));
+            primary.GradientStops.Add(new GradientStop(primaryEnd, 1.0));
             primary.Freeze();
             d["PrimaryGradientBrush"] = primary;
 
@@ -655,14 +659,77 @@ namespace Dosyaktar
             glow2.Freeze();
             d["Accent2GlowBrush"] = glow2;
 
+            // ── atmosphere: page wash, mesh grid, cursor light ────────────
+            var atmosphere = new LinearGradientBrush
+            {
+                StartPoint = new Point(0.1, 0),
+                EndPoint   = new Point(0.9, 1)
+            };
+            atmosphere.GradientStops.Add(new GradientStop(Mix(p.Background, Colors.White, dark ? 0.05 : 0.6), 0.0));
+            atmosphere.GradientStops.Add(new GradientStop(p.Background, 0.48));
+            atmosphere.GradientStops.Add(new GradientStop(Mix(p.Background, p.Accent2, dark ? 0.16 : 0.11), 1.0));
+            atmosphere.Freeze();
+            d["AtmosphereBrush"] = atmosphere;
+
+            // Tiled hairline grid, faded by an opacity mask in the window.
+            var meshPen = new Pen(Brush(WithAlpha(p.BorderStrong, dark ? (byte)0x16 : (byte)0x0F)), 1);
+            meshPen.Freeze();
+            var meshTile = new GeometryDrawing(null, meshPen, new RectangleGeometry(new Rect(0, 0, 72, 72)));
+            meshTile.Freeze();
+            var mesh = new DrawingBrush(meshTile)
+            {
+                TileMode       = TileMode.Tile,
+                Viewport       = new Rect(0, 0, 72, 72),
+                ViewportUnits  = BrushMappingMode.Absolute,
+                Stretch        = Stretch.None
+            };
+            mesh.Freeze();
+            d["MeshBrush"] = mesh;
+
+            var cursorGlow = new RadialGradientBrush
+            {
+                GradientOrigin = new Point(0.5, 0.5),
+                Center         = new Point(0.5, 0.5),
+                RadiusX        = 0.5,
+                RadiusY        = 0.5
+            };
+            cursorGlow.GradientStops.Add(new GradientStop(WithAlpha(p.Accent, dark ? (byte)0x3A : (byte)0x2A), 0.0));
+            cursorGlow.GradientStops.Add(new GradientStop(WithAlpha(p.Accent, dark ? (byte)0x18 : (byte)0x12), 0.55));
+            cursorGlow.GradientStops.Add(new GradientStop(WithAlpha(p.Accent, 0x00), 1.0));
+            cursorGlow.Freeze();
+            d["CursorGlowBrush"] = cursorGlow;
+
+            // ── material: card face gradient + active nav pill ───────────
+            var cardFace = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint   = new Point(1, 1)
+            };
+            cardFace.GradientStops.Add(new GradientStop(
+                WithAlpha(Mix(p.Surface, Colors.White, dark ? 0.08 : 0.75), dark ? (byte)0xE8 : (byte)0xF6), 0.0));
+            cardFace.GradientStops.Add(new GradientStop(
+                WithAlpha(Mix(p.Surface, p.Accent2, dark ? 0.09 : 0.065), dark ? (byte)0xD4 : (byte)0xEB), 1.0));
+            cardFace.Freeze();
+            d["CardFaceBrush"] = cardFace;
+
+            var navActive = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint   = new Point(1, 1)
+            };
+            navActive.GradientStops.Add(new GradientStop(WithAlpha(accentFill, 0xF2), 0.0));
+            navActive.GradientStops.Add(new GradientStop(WithAlpha(accent2Fill, 0xF2), 1.0));
+            navActive.Freeze();
+            d["NavActiveBrush"] = navActive;
+
             // ── effects ────────────────────────────────────────────────────
             var cardShadow = new DropShadowEffect
             {
                 Color       = dark ? Colors.Black : Hex("#2A1A6E"),
-                BlurRadius  = 34,
-                ShadowDepth = 10,
+                BlurRadius  = 46,
+                ShadowDepth = 14,
                 Direction   = 270,
-                Opacity     = dark ? 0.42 : 0.16
+                Opacity     = dark ? 0.50 : 0.22
             };
             cardShadow.Freeze();
             d["CardShadow"] = cardShadow;

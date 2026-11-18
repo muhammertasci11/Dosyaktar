@@ -64,9 +64,12 @@
                 <Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>
             </Style>
 
+            <!-- Text colour is inherited from the containing window or
+                 control, so text inside a filled button takes the button's
+                 own Foreground instead of fighting it. Only the face and
+                 rendering options live here. -->
             <Style TargetType="TextBlock">
                 <Setter Property="FontFamily" Value="{StaticResource UiFont}"/>
-                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
                 <Setter Property="FontSize" Value="13"/>
                 <Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>
                 <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
@@ -75,14 +78,9 @@
             <!-- ════════════════════════════════════════════════════════════
                  SHELL
                  ════════════════════════════════════════════════════════════ -->
-            <Style TargetType="Window">
-                <Setter Property="FontFamily" Value="{StaticResource UiFont}"/>
-                <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
-                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
-                <Setter Property="UseLayoutRounding" Value="True"/>
-                <Setter Property="SnapsToDevicePixels" Value="True"/>
-                <Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>
-            </Style>
+            <!-- Every window sets its own type face, ink and rendering options:
+                 an implicit Style for Window does not reach Window subclasses,
+                 so a style here would silently do nothing for MainWindow. -->
 
             <Style TargetType="ToolTip">
                 <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
@@ -124,20 +122,21 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
                             <Grid>
-                                <Border x:Name="focusRing" CornerRadius="17" Margin="-3"
+                                <Border x:Name="focusRing" CornerRadius="18" Margin="-3"
                                         BorderThickness="1.5"
                                         BorderBrush="{DynamicResource AccentInkBrush}"
                                         Visibility="Collapsed" IsHitTestVisible="False"/>
-                                <Border x:Name="glow" CornerRadius="14"
+                                <Border x:Name="glow" CornerRadius="15"
                                         Background="{DynamicResource PrimaryGradientBrush}"
-                                        Opacity="0" Margin="2,4,2,0"
+                                        Opacity="0" Margin="3,6,3,0"
                                         Effect="{DynamicResource AccentShadow}"/>
-                                <Border x:Name="face" CornerRadius="14"
+                                <Border x:Name="face" CornerRadius="15"
                                         Background="{DynamicResource PrimaryGradientBrush}"
                                         RenderTransformOrigin="0.5,0.5">
                                     <Grid>
-                                        <Border CornerRadius="13" Background="{DynamicResource SheenBrush}" Margin="1"/>
+                                        <Border CornerRadius="14" Background="{DynamicResource SheenBrush}" Margin="1"/>
                                         <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                          TextElement.Foreground="{TemplateBinding Foreground}"
                                                           HorizontalAlignment="Center"
                                                           VerticalAlignment="Center"
                                                           RecognizesAccessKey="True"/>
@@ -148,10 +147,10 @@
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="face" Property="RenderTransform">
                                         <Setter.Value>
-                                            <ScaleTransform ScaleX="1.025" ScaleY="1.025"/>
+                                            <ScaleTransform ScaleX="1.03" ScaleY="1.03"/>
                                         </Setter.Value>
                                     </Setter>
-                                    <Setter TargetName="glow" Property="Opacity" Value="0.55"/>
+                                    <Setter TargetName="glow" Property="Opacity" Value="0.75"/>
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
                                     <Setter TargetName="face" Property="RenderTransform">
@@ -190,24 +189,44 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
-                            <Border x:Name="face" CornerRadius="12"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                    RenderTransformOrigin="0.5,0.5"
-                                    Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center"
-                                                  RecognizesAccessKey="True"/>
-                            </Border>
+                            <Grid x:Name="holder" RenderTransformOrigin="0.5,0.5">
+                                <Border x:Name="face" CornerRadius="13"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Padding="{TemplateBinding Padding}">
+                                    <Grid>
+                                        <Border CornerRadius="12" Margin="1"
+                                                Background="{DynamicResource SheenBrush}"
+                                                Opacity="0.7" IsHitTestVisible="False"/>
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center"
+                                                          TextElement.Foreground="{TemplateBinding Foreground}"
+                                                          RecognizesAccessKey="True"/>
+                                    </Grid>
+                                </Border>
+                            </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="face" Property="Background" Value="{DynamicResource Surface2Brush}"/>
+                                    <Setter TargetName="face" Property="Background" Value="{DynamicResource SurfaceBrush}"/>
                                     <Setter TargetName="face" Property="BorderBrush" Value="{DynamicResource AccentBorderBrush}"/>
-                                    <Setter TargetName="face" Property="RenderTransform"><Setter.Value><ScaleTransform ScaleX="1.02" ScaleY="1.02"/></Setter.Value></Setter>
+                                    <Setter TargetName="holder" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
+                                                <TranslateTransform Y="-1"/>
+                                            </TransformGroup>
+                                        </Setter.Value>
+                                    </Setter>
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
-                                    <Setter TargetName="face" Property="RenderTransform"><Setter.Value><ScaleTransform ScaleX="0.98" ScaleY="0.98"/></Setter.Value></Setter>
+                                    <Setter TargetName="holder" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleX="0.985" ScaleY="0.985"/>
+                                            </TransformGroup>
+                                        </Setter.Value>
+                                    </Setter>
                                 </Trigger>
                                 <Trigger Property="IsKeyboardFocused" Value="True">
                                     <Setter TargetName="face" Property="BorderBrush" Value="{DynamicResource AccentInkBrush}"/>
@@ -237,7 +256,8 @@
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                  TextElement.Foreground="{TemplateBinding Foreground}"/>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
@@ -274,7 +294,8 @@
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                  TextElement.Foreground="{TemplateBinding Foreground}"/>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
@@ -348,24 +369,26 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="RadioButton">
                             <Grid>
-                                <Border x:Name="pill" CornerRadius="14"
+                                <Border x:Name="glow" CornerRadius="15" Margin="3,6,3,0"
+                                        Background="{DynamicResource PrimaryGradientBrush}"
+                                        Opacity="0" Effect="{DynamicResource AccentShadow}"/>
+                                <Border x:Name="pill" CornerRadius="15"
                                         Background="Transparent"
-                                        Padding="6,9"
+                                        Padding="6,10"
                                         RenderTransformOrigin="0.5,0.5">
                                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <TextBlock x:Name="icon"
                                                    Text="{TemplateBinding Tag}"
                                                    FontFamily="{StaticResource IconFont}"
-                                                   FontSize="19"
+                                                   FontSize="20"
                                                    HorizontalAlignment="Center"
                                                    Foreground="{TemplateBinding Foreground}"/>
-                                        <ContentPresenter HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                        <ContentPresenter HorizontalAlignment="Center" Margin="0,5,0,0"
+                                                          TextElement.Foreground="{TemplateBinding Foreground}"/>
                                     </StackPanel>
                                 </Border>
-                                <Border x:Name="marker" Width="3" Height="18" CornerRadius="2"
-                                        HorizontalAlignment="Left" VerticalAlignment="Center"
-                                        Background="Transparent"/>
-                                <Border x:Name="focusRing" CornerRadius="14" Margin="-1.5"
+
+                                <Border x:Name="focusRing" CornerRadius="15" Margin="-1.5"
                                         BorderThickness="1.5"
                                         BorderBrush="{DynamicResource AccentInkBrush}"
                                         Visibility="Collapsed" IsHitTestVisible="False"/>
@@ -377,12 +400,13 @@
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="pill" Property="Background" Value="{DynamicResource AccentGhostBrush}"/>
                                     <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+                                    <Setter TargetName="pill" Property="RenderTransform"><Setter.Value><ScaleTransform ScaleX="1.02" ScaleY="1.02"/></Setter.Value></Setter>
                                 </Trigger>
                                 <Trigger Property="IsChecked" Value="True">
-                                    <Setter TargetName="pill" Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
-                                    <Setter TargetName="marker" Property="Background" Value="{DynamicResource AccentInkBrush}"/>
-                                    <Setter Property="Foreground" Value="{DynamicResource AccentInkBrush}"/>
-                                    <Setter TargetName="pill" Property="RenderTransform"><Setter.Value><ScaleTransform ScaleX="1.02" ScaleY="1.02"/></Setter.Value></Setter>
+                                    <Setter TargetName="pill" Property="Background" Value="{DynamicResource NavActiveBrush}"/>
+                                    <Setter TargetName="glow" Property="Opacity" Value="0.55"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}"/>
+                                    <Setter TargetName="pill" Property="RenderTransform"><Setter.Value><ScaleTransform ScaleX="1.04" ScaleY="1.04"/></Setter.Value></Setter>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -403,7 +427,8 @@
                             <Grid>
                                 <Border x:Name="face" CornerRadius="10" Background="Transparent"
                                         Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                  TextElement.Foreground="{TemplateBinding Foreground}"/>
                                 </Border>
                                 <Border x:Name="focusRing" CornerRadius="10" Margin="-1.5"
                                         BorderThickness="1.5"
@@ -440,8 +465,8 @@
                                         BorderBrush="{DynamicResource AccentInkBrush}"
                                         Margin="-3" Visibility="Collapsed"
                                         IsHitTestVisible="False"/>
-                            <Border x:Name="face" Width="128" CornerRadius="16"
-                                    Background="{DynamicResource GlassStrongBrush}"
+                            <Border x:Name="face" Width="128" CornerRadius="18"
+                                    Background="{DynamicResource CardFaceBrush}"
                                     BorderBrush="{DynamicResource GlassBorderBrush}"
                                     BorderThickness="1.5"
                                     Padding="10"
@@ -481,19 +506,19 @@
                  SURFACES
                  ════════════════════════════════════════════════════════════ -->
             <Style x:Key="GlassPanelBorder" TargetType="Border">
-                <Setter Property="Background" Value="{DynamicResource GlassBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource CardFaceBrush}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource GlassBorderBrush}"/>
                 <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="CornerRadius" Value="16"/>
+                <Setter Property="CornerRadius" Value="18"/>
             </Style>
 
             <Style x:Key="GlassCard" TargetType="Border">
-                <Setter Property="Background" Value="{DynamicResource GlassStrongBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource CardFaceBrush}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource GlassBorderBrush}"/>
                 <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="CornerRadius" Value="20"/>
-                <Setter Property="Padding" Value="22"/>
-                <Setter Property="Effect" Value="{DynamicResource SoftShadow}"/>
+                <Setter Property="CornerRadius" Value="22"/>
+                <Setter Property="Padding" Value="24"/>
+                <Setter Property="Effect" Value="{DynamicResource CardShadow}"/>
             </Style>
 
             <Style x:Key="GlassPanelButton" TargetType="Button" BasedOn="{StaticResource SecondaryButton}"/>
@@ -792,7 +817,7 @@
                                     <Setter TargetName="face" Property="Background" Value="{DynamicResource AccentGhostBrush}"/>
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter TargetName="face" Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+                                    <Setter TargetName="face" Property="Background" Value="{DynamicResource NavActiveBrush}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>

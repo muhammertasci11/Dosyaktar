@@ -3,13 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         xmlns:views="clr-namespace:Dosyaktar.Views"
+        xmlns:fx="clr-namespace:Dosyaktar.Fx"
         Title="Dosyaktar"
         Width="1320" Height="860"
         MinWidth="1020" MinHeight="660"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         ResizeMode="CanResize"
-        Background="{DynamicResource BackgroundBrush}"
+        Background="{DynamicResource AtmosphereBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}"
+        FontFamily="{StaticResource UiFont}"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True"
         TextOptions.TextFormattingMode="Ideal"
@@ -25,11 +28,40 @@
 
     <Window.Resources>
 
+        <!-- ══════════════ ambient drift (started in code, reduced-motion aware) -->
+        <Storyboard x:Key="AmbientDrift">
+            <DoubleAnimation Storyboard.TargetName="BlobAOffset" Storyboard.TargetProperty="X"
+                             From="0" To="64" Duration="0:0:24" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="BlobAOffset" Storyboard.TargetProperty="Y"
+                             From="0" To="46" Duration="0:0:29" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="BlobBOffset" Storyboard.TargetProperty="X"
+                             From="0" To="-58" Duration="0:0:31" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="BlobBOffset" Storyboard.TargetProperty="Y"
+                             From="0" To="38" Duration="0:0:26" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="BlobCOffset" Storyboard.TargetProperty="X"
+                             From="0" To="52" Duration="0:0:27" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="BlobCOffset" Storyboard.TargetProperty="Y"
+                             From="0" To="-44" Duration="0:0:33" AutoReverse="True" RepeatBehavior="Forever">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
         <!-- ── peer card ─────────────────────────────────────────────── -->
         <DataTemplate x:Key="PeerCardTemplate">
             <Border Style="{StaticResource GlassCard}"
                     Width="286" Margin="0,0,14,14" Padding="16"
                     Cursor="Hand"
+                    fx:Tilt.IsEnabled="True" fx:Tilt.Strength="6"
                     ToolTip="Cihaza bağlanmak için tıklayın">
                 <StackPanel>
                     <Grid>
@@ -274,7 +306,6 @@
         <Style x:Key="SettingCard" TargetType="Border" BasedOn="{StaticResource GlassCard}">
             <Setter Property="Padding" Value="22"/>
             <Setter Property="Margin" Value="0,0,0,16"/>
-            <Setter Property="Effect" Value="{x:Null}"/>
         </Style>
 
         <Style x:Key="SettingLabel" TargetType="TextBlock" BasedOn="{StaticResource SectionText}">
@@ -285,12 +316,51 @@
 
     <Grid>
         <!-- ══════════════ ambient light field ══════════════ -->
-        <Grid IsHitTestVisible="False" ClipToBounds="True">
-            <Ellipse Width="760" Height="760" HorizontalAlignment="Left" VerticalAlignment="Top"
-                     Margin="-320,-400,0,0" Fill="{DynamicResource AccentGlowBrush}"/>
-            <Ellipse Width="680" Height="680" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                     Margin="0,0,-260,-330" Fill="{DynamicResource Accent2GlowBrush}"/>
+        <Grid x:Name="AmbientField" IsHitTestVisible="False" ClipToBounds="True">
+            <!-- hairline mesh, faded towards the edges -->
+            <Rectangle Fill="{DynamicResource MeshBrush}" Opacity="0.9">
+                <Rectangle.OpacityMask>
+                    <RadialGradientBrush GradientOrigin="0.5,0.16" Center="0.5,0.16"
+                                         RadiusX="0.92" RadiusY="0.78">
+                        <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                        <GradientStop Color="#B8FFFFFF" Offset="0.45"/>
+                        <GradientStop Color="#00FFFFFF" Offset="0.86"/>
+                    </RadialGradientBrush>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+
+            <!-- slow-drifting colour blobs -->
+            <Ellipse Width="980" Height="980" HorizontalAlignment="Left" VerticalAlignment="Top"
+                     Margin="-380,-440,0,0" Fill="{DynamicResource AccentGlowBrush}">
+                <Ellipse.RenderTransform>
+                    <TranslateTransform x:Name="BlobAOffset"/>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+
+            <Ellipse Width="820" Height="820" HorizontalAlignment="Right" VerticalAlignment="Top"
+                     Margin="0,-320,-240,0" Fill="{DynamicResource Accent2GlowBrush}">
+                <Ellipse.RenderTransform>
+                    <TranslateTransform x:Name="BlobBOffset"/>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+
+            <Ellipse Width="900" Height="900" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                     Margin="0,0,0,-430" Fill="{DynamicResource Accent2GlowBrush}" Opacity="0.8">
+                <Ellipse.RenderTransform>
+                    <TranslateTransform x:Name="BlobCOffset"/>
+                </Ellipse.RenderTransform>
+            </Ellipse>
         </Grid>
+
+        <!-- ══════════════ pointer light ══════════════ -->
+        <Canvas x:Name="CursorGlowLayer" IsHitTestVisible="False" ClipToBounds="True">
+            <Ellipse x:Name="CursorGlow" Width="620" Height="620" Opacity="0"
+                     Fill="{DynamicResource CursorGlowBrush}">
+                <Ellipse.RenderTransform>
+                    <TranslateTransform x:Name="CursorGlowOffset"/>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+        </Canvas>
 
         <Grid>
             <Grid.RowDefinitions>
@@ -300,12 +370,15 @@
             </Grid.RowDefinitions>
 
             <!-- ══════════════════════ TITLE BAR ══════════════════════ -->
-            <Grid Grid.Row="0" x:Name="TitleBar" Background="Transparent">
+            <Grid Grid.Row="0" x:Name="TitleBar" Background="{DynamicResource ChromeBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
+                <Border Grid.ColumnSpan="3" Height="1" VerticalAlignment="Bottom"
+                        Background="{DynamicResource DividerBrush}" Opacity="0.7"
+                        IsHitTestVisible="False"/>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
                     <!-- faceted prism logo -->
@@ -378,9 +451,10 @@
 
                 <!-- ─────────── icon rail ─────────── -->
                 <Border Grid.Column="0" Margin="10,0,0,10"
-                        Background="{DynamicResource GlassBrush}"
+                        Background="{DynamicResource CardFaceBrush}"
                         BorderBrush="{DynamicResource GlassBorderBrush}"
-                        BorderThickness="1" CornerRadius="22">
+                        BorderThickness="1" CornerRadius="24"
+                        Effect="{DynamicResource CardShadow}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -453,7 +527,9 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Yakındaki cihazlar" Style="{StaticResource DisplayText}" FontSize="25"/>
+                                <TextBlock Text="AKTARIM" Style="{StaticResource EyebrowText}"
+                                           Foreground="{DynamicResource AccentInkBrush}" Margin="0,0,0,7"/>
+                                <TextBlock Text="Yakındaki cihazlar" Style="{StaticResource DisplayText}" FontSize="26"/>
                                 <TextBlock x:Name="TxtPeerSubtitle" Text="Aynı ağdaki cihazlar aranıyor…"
                                            Style="{StaticResource MutedText}" Margin="0,3,0,0"/>
                             </StackPanel>
@@ -480,7 +556,7 @@
                                 </ScrollViewer>
 
                                 <Border x:Name="EmptyPeers" CornerRadius="20" Padding="26"
-                                        Background="{DynamicResource GlassBrush}"
+                                        Background="{DynamicResource CardFaceBrush}"
                                         BorderBrush="{DynamicResource GlassBorderBrush}"
                                         BorderThickness="1">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -506,23 +582,36 @@
                         <!-- drop zone -->
                         <Border Grid.Row="2" x:Name="DropZone" CornerRadius="24" Margin="0,0,0,2"
                                 AllowDrop="True"
-                                Background="{DynamicResource GlassBrush}"
-                                BorderThickness="1.5" Padding="30"
+                                Background="{DynamicResource CardFaceBrush}"
+                                BorderBrush="{DynamicResource AccentBorderBrush}"
+                                BorderThickness="1" Padding="0"
+                                Effect="{DynamicResource CardShadow}"
                                 DragEnter="DropZone_DragEnter"
                                 DragLeave="DropZone_DragLeave"
                                 Drop="DropZone_Drop"
                                 MouseDown="DropZone_MouseDown"
+                                MouseMove="DropZone_MouseMove"
+                                MouseLeave="DropZone_MouseLeave"
                                 Cursor="Hand">
-                            <Border.BorderBrush>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                    <GradientStop Color="{DynamicResource BorderStrongColor}" Offset="0"/>
-                                    <GradientStop Color="{DynamicResource AccentColor}" Offset="0.5"/>
-                                    <GradientStop Color="{DynamicResource BorderStrongColor}" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Border.BorderBrush>
-
                             <Grid>
-                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Border CornerRadius="24" Background="{DynamicResource HeroBandBrush}"
+                                        Opacity="0.55" IsHitTestVisible="False"/>
+                                <!-- pointer glare, moved in code behind -->
+                                <Border x:Name="DropSheen" CornerRadius="24" IsHitTestVisible="False"
+                                        Opacity="0" Margin="1">
+                                    <Border.Background>
+                                        <RadialGradientBrush x:Name="DropSheenBrush"
+                                                             GradientOrigin="0.5,0.45"
+                                                             Center="0.5,0.45"
+                                                             RadiusX="0.42" RadiusY="0.42">
+                                            <GradientStop Color="#6EFFFFFF" Offset="0"/>
+                                            <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Border.Background>
+                                </Border>
+
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                                            Margin="30">
                                     <Border Width="66" Height="66" CornerRadius="20"
                                             Background="{DynamicResource PrimaryGradientBrush}"
                                             HorizontalAlignment="Center"
@@ -577,7 +666,9 @@
                     <Grid x:Name="PageSession" Visibility="Collapsed">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel Margin="6,6,6,0">
-                                <TextBlock Text="Aktif oturum" Style="{StaticResource DisplayText}" FontSize="25"/>
+                                <TextBlock Text="OTURUM" Style="{StaticResource EyebrowText}"
+                                           Foreground="{DynamicResource AccentInkBrush}" Margin="0,0,0,7"/>
+                                <TextBlock Text="Aktif oturum" Style="{StaticResource DisplayText}" FontSize="26"/>
                                 <TextBlock Text="Eşleşen cihazla canlı bağlantı."
                                            Style="{StaticResource MutedText}" Margin="0,3,0,20"/>
 
@@ -710,7 +801,9 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel>
-                                        <TextBlock Text="Mobil köprü" Style="{StaticResource DisplayText}" FontSize="25"/>
+                                        <TextBlock Text="TELEFON KÖPRÜSÜ" Style="{StaticResource EyebrowText}"
+                                                   Foreground="{DynamicResource AccentInkBrush}" Margin="0,0,0,7"/>
+                                        <TextBlock Text="Mobil köprü" Style="{StaticResource DisplayText}" FontSize="26"/>
                                         <TextBlock Text="Telefonun tarayıcısından gönder ve al — uygulama kurmadan."
                                                    Style="{StaticResource MutedText}" Margin="0,3,0,0"/>
                                     </StackPanel>
@@ -838,7 +931,9 @@
                             <StackPanel Margin="6,6,6,0">
                                 <Grid Margin="0,0,0,16">
                                     <StackPanel>
-                                        <TextBlock Text="Transfer geçmişi" Style="{StaticResource DisplayText}" FontSize="25"/>
+                                        <TextBlock Text="KAYITLAR" Style="{StaticResource EyebrowText}"
+                                                   Foreground="{DynamicResource AccentInkBrush}" Margin="0,0,0,7"/>
+                                        <TextBlock Text="Transfer geçmişi" Style="{StaticResource DisplayText}" FontSize="26"/>
                                         <TextBlock Text="Son 250 aktarım, cihazında saklanır."
                                                    Style="{StaticResource MutedText}" Margin="0,3,0,0"/>
                                     </StackPanel>
@@ -875,7 +970,9 @@
                     <Grid x:Name="PageSettings" Visibility="Collapsed">
                         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
                             <StackPanel Margin="6,6,6,0">
-                                <TextBlock Text="Ayarlar" Style="{StaticResource DisplayText}" FontSize="25"/>
+                                <TextBlock Text="TERCİHLER" Style="{StaticResource EyebrowText}"
+                                           Foreground="{DynamicResource AccentInkBrush}" Margin="0,0,0,7"/>
+                                <TextBlock Text="Ayarlar" Style="{StaticResource DisplayText}" FontSize="26"/>
                                 <TextBlock Text="Görünüm, ağ ve aktarım davranışı."
                                            Style="{StaticResource MutedText}" Margin="0,3,0,16"/>
 
@@ -1020,9 +1117,9 @@
 
                 <!-- ─────────── right panel ─────────── -->
                 <Grid x:Name="RailRight" Grid.Column="2" Margin="0,0,10,10">
-                    <Border Background="{DynamicResource GlassBrush}"
+                    <Border Background="{DynamicResource CardFaceBrush}"
                             BorderBrush="{DynamicResource GlassBorderBrush}"
-                            BorderThickness="1" CornerRadius="22" Padding="16">
+                            BorderThickness="1" CornerRadius="24" Padding="16">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>

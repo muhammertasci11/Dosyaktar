@@ -4,6 +4,8 @@
         Title="Güncelleme Mevcut" Height="340" Width="480"
         WindowStartupLocation="CenterOwner"
         Background="{DynamicResource BackgroundBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}"
+        FontFamily="{StaticResource UiFont}"
         ResizeMode="NoResize"
         ShowInTaskbar="False">
 
