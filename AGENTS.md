@@ -36,7 +36,7 @@ nvidia/nvidia/nemotron-3-ultra-550b-a55b
 - Derleme: `cd Dosyaktar; dotnet build -c Debug --nologo -v q` → `0 Hata` beklenir.
 - Derlemeden önce uygulamayı kapat: `Get-Process Dosyaktar -EA SilentlyContinue | Stop-Process -Force`.
 - Çıktı: `Dosyaktar\bin\Debug\net8.0-windows\win-x64\Dosyaktar.exe`.
-- Mobil destek: WPF içindeki gömülü HTTP sunucusu (`Services/MobileServer.cs`, varsayılan 5050) + `Assets/mobile/` telefon arayüzü. MAUI yok.
+- Mobil destek: WPF içindeki gömülü HTTP sunucusu (`Services/MobileServer.cs`, varsayılan 5050) + `Assets/mobile/` telefon arayüzü. MAUI yok. Telefonun "Al" sekmesi dosyayı tarayıcı indirmesine devretmez: `fetch` akışıyla sayfa içinde alır, hız/kalan/iptal gösterir, bitince blob "Dosyayı kaydet" bağlantısı verir (256 MB üstü veya akış desteklenmiyorsa tarayıcıya devreder).
 - Tema: `ThemeManager.cs` 8 palet üretir ve `MergedDictionaries[0]`'a yazar. Metin/ikon renkleri için `*InkBrush` / `*FillBrush` rolleri kullanılır; ham `AccentBrush` yalnızca dekoratif dolgularda kalır. Kontrast `tokencheck.ps1` ile ölçülür (hedef ≥ 4.5).
 - Ayarlar: `%APPDATA%\Dosyaktar\settings.json`, tek yüzey `MainWindow.xaml` içindeki Ayarlar sayfası.
 - Landing: `docs\` (GitHub Pages, harici bağımlılık yok). Mobil arayüz: `Dosyaktar\Assets\mobile\`.
