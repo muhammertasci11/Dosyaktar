@@ -12,6 +12,7 @@ namespace Dosyaktar.Services
     {
         public string          Title     { get; set; } = "";
         public string          Detail    { get; set; } = "";
+        public string          Path      { get; set; } = "";
         public HistoryDirection Direction { get; set; } = HistoryDirection.Sent;
         public DateTime        When      { get; set; } = DateTime.Now;
         public bool            Success   { get; set; } = true;

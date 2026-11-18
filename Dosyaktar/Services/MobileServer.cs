@@ -414,6 +414,14 @@ namespace Dosyaktar.Services
                 return;
             }
 
+            if (method == "GET" && path == "/icon.png")
+            {
+                var body = ReadAppAsset("icon.png");
+                if (body == null) { await WriteNotFoundAsync(stream, ct).ConfigureAwait(false); return; }
+                await WriteBytesAsync(stream, 200, "image/png", body, ct, "max-age=86400").ConfigureAwait(false);
+                return;
+            }
+
             if (method == "GET" && path == "/favicon.svg")
             {
                 var body = Encoding.UTF8.GetBytes(PrismSvg);
@@ -484,7 +492,7 @@ namespace Dosyaktar.Services
                         .ConfigureAwait(false);
                     return;
                 }
-                await StreamDownloadAsync(stream, file, ct).ConfigureAwait(false);
+                await StreamDownloadAsync(stream, file, headers, ct).ConfigureAwait(false);
                 return;
             }
 
@@ -641,7 +649,11 @@ namespace Dosyaktar.Services
         }
 
         // ─── download ────────────────────────────────────────────────────────
-        private async Task StreamDownloadAsync(Stream stream, SharedFile file, CancellationToken ct)
+        private async Task StreamDownloadAsync(
+            Stream stream,
+            SharedFile file,
+            Dictionary<string, string> headers,
+            CancellationToken ct)
         {
             FileStream fs;
             try
@@ -658,24 +670,48 @@ namespace Dosyaktar.Services
             await using (fs)
             {
                 long total = fs.Length;
+                var (start, length, partial) = ResolveRange(headers, total);
+
+                if (partial == RangeResult.Invalid)
+                {
+                    string bad =
+                        "HTTP/1.1 416 Range Not Satisfiable\r\n" +
+                        "Content-Range: bytes */" + total.ToString(CultureInfo.InvariantCulture) + "\r\n" +
+                        "Content-Length: 0\r\n" +
+                        "Connection: close\r\n\r\n";
+                    await stream.WriteAsync(Encoding.UTF8.GetBytes(bad), ct).ConfigureAwait(false);
+                    return;
+                }
+
                 string encoded = Uri.EscapeDataString(file.Name);
                 string head =
-                    "HTTP/1.1 200 OK\r\n" +
+                    (partial == RangeResult.Partial ? "HTTP/1.1 206 Partial Content\r\n" : "HTTP/1.1 200 OK\r\n") +
                     "Content-Type: application/octet-stream\r\n" +
-                    "Content-Length: " + total.ToString(CultureInfo.InvariantCulture) + "\r\n" +
+                    "Content-Length: " + length.ToString(CultureInfo.InvariantCulture) + "\r\n" +
+                    (partial == RangeResult.Partial
+                        ? "Content-Range: bytes " + start.ToString(CultureInfo.InvariantCulture) + "-" +
+                          (start + length - 1).ToString(CultureInfo.InvariantCulture) + "/" +
+                          total.ToString(CultureInfo.InvariantCulture) + "\r\n"
+                        : "") +
+                    "Accept-Ranges: bytes\r\n" +
                     $"Content-Disposition: attachment; filename=\"{AsciiFallback(file.Name)}\"; filename*=UTF-8''{encoded}\r\n" +
                     "Cache-Control: no-store\r\n" +
                     "Connection: close\r\n\r\n";
 
                 await stream.WriteAsync(Encoding.UTF8.GetBytes(head), ct).ConfigureAwait(false);
 
-                BeginTransfer("down", file.Name, total);
+                if (start > 0) fs.Seek(start, SeekOrigin.Begin);
+
+                BeginTransfer("down", file.Name, length);
 
                 var buffer = new byte[128 * 1024];
                 long sent = 0;
-                int read;
-                while ((read = await fs.ReadAsync(buffer, ct).ConfigureAwait(false)) > 0)
+                while (sent < length)
                 {
+                    int toRead = (int)Math.Min(buffer.Length, length - sent);
+                    int read = await fs.ReadAsync(buffer.AsMemory(0, toRead), ct).ConfigureAwait(false);
+                    if (read <= 0) break;
+
                     await stream.WriteAsync(buffer.AsMemory(0, read), ct).ConfigureAwait(false);
                     sent += read;
                     AdvanceTransfer(read);
@@ -684,6 +720,54 @@ namespace Dosyaktar.Services
                 EndTransfer();
                 Trace($"Telefona gönderildi: {file.Name} ({FileTransferService.FormatSize(sent)})");
             }
+        }
+
+        private enum RangeResult { Full, Partial, Invalid }
+
+        /// <summary>
+        /// "Range: bytes=start-end" başlığını çözer. Aralık yoksa tüm dosya döner.
+        /// </summary>
+        private static (long Start, long Length, RangeResult Kind) ResolveRange(
+            Dictionary<string, string> headers, long total)
+        {
+            if (total <= 0) return (0, 0, RangeResult.Full);
+
+            if (!headers.TryGetValue("Range", out var raw) || string.IsNullOrWhiteSpace(raw))
+                return (0, total, RangeResult.Full);
+
+            string value = raw.Trim();
+            if (!value.StartsWith("bytes=", StringComparison.OrdinalIgnoreCase))
+                return (0, total, RangeResult.Full);
+
+            string spec = value[6..].Split(',')[0].Trim();
+            int dash = spec.IndexOf('-');
+            if (dash < 0) return (0, total, RangeResult.Invalid);
+
+            string startText = spec[..dash].Trim();
+            string endText   = spec[(dash + 1)..].Trim();
+
+            // "bytes=-500" → son 500 bayt
+            if (startText.Length == 0)
+            {
+                if (!long.TryParse(endText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var suffix) ||
+                    suffix <= 0)
+                    return (0, total, RangeResult.Invalid);
+
+                if (suffix > total) suffix = total;
+                return (total - suffix, suffix, RangeResult.Partial);
+            }
+
+            if (!long.TryParse(startText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var start) ||
+                start < 0 || start >= total)
+                return (0, total, RangeResult.Invalid);
+
+            long end = total - 1;
+            if (endText.Length > 0 &&
+                (!long.TryParse(endText, NumberStyles.Integer, CultureInfo.InvariantCulture, out end) || end < start))
+                return (0, total, RangeResult.Invalid);
+
+            if (end >= total) end = total - 1;
+            return (start, end - start + 1, RangeResult.Partial);
         }
 
         // ═══════════════════════════════════════════════════════════════════
@@ -965,11 +1049,11 @@ namespace Dosyaktar.Services
         };
 
         // ─── pack-URI assets ─────────────────────────────────────────────────
-        private static byte[]? ReadAsset(string name)
+        private static byte[]? ReadAppAsset(string relative)
         {
             try
             {
-                var uri = new Uri($"pack://application:,,,/Assets/mobile/{name}", UriKind.Absolute);
+                var uri = new Uri($"pack://application:,,,/Assets/{relative}", UriKind.Absolute);
                 var info = Application.GetResourceStream(uri);
                 if (info == null) return null;
 
@@ -980,6 +1064,8 @@ namespace Dosyaktar.Services
             }
             catch { return null; }
         }
+
+        private static byte[]? ReadAsset(string name) => ReadAppAsset("mobile/" + name);
 
         private static string FallbackPage() => """
             <!DOCTYPE html><html lang="tr"><head><meta charset="utf-8">

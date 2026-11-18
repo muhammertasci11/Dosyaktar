@@ -1,0 +1,43 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Kenar çubuğu vektör simgeleri — 24×24 kutu, çizgi stili.
+        Geometriler Path.Stretch="Uniform" ile ölçeklenir; kalınlık şablonda verilir.
+    -->
+
+    <!-- Keşif: pusula -->
+    <PathGeometry x:Key="IconCompass"
+                  Figures="M 12 21 A 9 9 0 1 1 12 3 A 9 9 0 1 1 12 21 Z
+                           M 16.2 7.8 L 13.7 13.7 L 7.8 16.2 L 10.3 10.3 Z"/>
+
+    <!-- Oturum: bağlantı halkaları -->
+    <PathGeometry x:Key="IconLink"
+                  Figures="M 10 13 A 5 5 0 0 0 17.54 13.54 L 20.54 10.54 A 5 5 0 0 0 13.47 3.47 L 11.75 5.18
+                           M 14 11 A 5 5 0 0 0 6.46 10.46 L 3.46 13.46 A 5 5 0 0 0 10.53 20.53 L 12.24 18.82"/>
+
+    <!-- Oyunlar: kol -->
+    <PathGeometry x:Key="IconGamepad"
+                  Figures="M 8 8 H 16 A 4 4 0 0 1 19.8 11.2 L 21 17 A 3 3 0 0 1 15.8 19 L 14 17 H 10 L 8.2 19 A 3 3 0 0 1 3 17 L 4.2 11.2 A 4 4 0 0 1 8 8 Z
+                           M 6 12 H 10 M 8 10 V 14
+                           M 15 13 H 15.01 M 18 11 H 18.01"/>
+
+    <!-- Mobil: telefon -->
+    <PathGeometry x:Key="IconPhone"
+                  Figures="M 7 2 H 17 A 2 2 0 0 1 19 4 V 20 A 2 2 0 0 1 17 22 H 7 A 2 2 0 0 1 5 20 V 4 A 2 2 0 0 1 7 2 Z
+                           M 11 18 H 13 M 9.5 5 H 14.5"/>
+
+    <!-- Geçmiş: geri saat -->
+    <PathGeometry x:Key="IconHistory"
+                  Figures="M 3 12 A 9 9 0 1 0 12 3 A 9.75 9.75 0 0 0 5.26 5.74 L 3 8
+                           M 3 3 V 8 H 8
+                           M 12 7 V 12 L 16 14"/>
+
+    <!-- Ayarlar: denge çubukları -->
+    <PathGeometry x:Key="IconTune"
+                  Figures="M 4 7 H 20 M 4 12 H 20 M 4 17 H 20
+                           M 9 5 A 2 2 0 1 1 9 9 A 2 2 0 1 1 9 5 Z
+                           M 15 10 A 2 2 0 1 1 15 14 A 2 2 0 1 1 15 10 Z
+                           M 7 15 A 2 2 0 1 1 7 19 A 2 2 0 1 1 7 15 Z"/>
+
+</ResourceDictionary>

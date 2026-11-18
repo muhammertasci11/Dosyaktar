@@ -24,7 +24,11 @@ namespace Dosyaktar.Services
     }
 
     // ─── Transfer Sonuç DTO ───────────────────────────────────────────────────
-    public sealed record TransferResult(bool Success, string Message);
+    public sealed record TransferResult(bool Success, string Message)
+    {
+        /// <summary>Alıcı tarafta diske yazılan dosyaların tam yolları.</summary>
+        public List<string> SavedPaths { get; init; } = new();
+    }
 
     // ─── Protokol Modları ─────────────────────────────────────────────────────
     internal enum TransferMode { Files = 0, Folder = 1, Flash = 2 }
@@ -381,6 +385,7 @@ namespace Dosyaktar.Services
 
                 long totalBytes = 0; // Bilinmiyor — toplam sonradan hesaplanır
                 long totalRecv  = 0;
+                var savedPaths  = new List<string>();
                 var speedQueue = new Queue<(long bytes, DateTime time)>();
                 DateTime lastUiUpdate = DateTime.MinValue;
 
@@ -461,6 +466,8 @@ namespace Dosyaktar.Services
                             lastUiUpdate = now;
                         }
                     }
+
+                    savedPaths.Add(savePath);
                 }
 
                 OnStatus("Veriler alındı, onay (ACK) gönderiliyor...");
@@ -468,7 +475,10 @@ namespace Dosyaktar.Services
                 await stream.FlushAsync(token);
 
                 OnStatus($"✓ {fileCount} dosya alındı → {saveDirectory}");
-                return new TransferResult(true, $"{fileCount} dosya kaydedildi: {saveDirectory}");
+                return new TransferResult(true, $"{fileCount} dosya kaydedildi: {saveDirectory}")
+                {
+                    SavedPaths = savedPaths
+                };
             }
             catch (OperationCanceledException)
             {

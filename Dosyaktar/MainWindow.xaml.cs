@@ -796,7 +796,7 @@ namespace Dosyaktar
 
                     if (result.Success)
                     {
-                        AppendedReceived(dir);
+                        AppendedReceived(dir, result.SavedPaths);
                     }
                     else if (!_closing && _receiving)
                     {
@@ -816,7 +816,7 @@ namespace Dosyaktar
             }
         }
 
-        private void AppendedReceived(string dir)
+        private void AppendedReceived(string dir, IReadOnlyList<string>? saved = null)
         {
             _ = Task.Run(() =>
             {
@@ -833,6 +833,7 @@ namespace Dosyaktar
                         {
                             Title     = install.Registered ? "Oyun alındı" : "Gelen oyun",
                             Detail    = install.TargetPath ?? dir,
+                            Path      = install.TargetPath ?? dir,
                             Direction = HistoryDirection.Received,
                             Success   = install.Registered,
                             When      = DateTime.Now
@@ -848,6 +849,7 @@ namespace Dosyaktar
                     {
                         Title     = "Gelen dosyalar",
                         Detail    = dir,
+                        Path      = saved is { Count: 1 } ? saved[0] : dir,
                         Direction = HistoryDirection.Received,
                         Success   = true,
                         When      = DateTime.Now
@@ -1201,6 +1203,7 @@ namespace Dosyaktar
                 {
                     Title     = snapshot.Count == 1 ? Path.GetFileName(snapshot[0]) : $"{snapshot.Count} dosya",
                     Detail    = $"{_connectedTargetName} · {FileTransferService.FormatSize(total)}",
+                    Path      = snapshot.Count == 1 ? snapshot[0] : Path.GetDirectoryName(snapshot[0]) ?? "",
                     Direction = HistoryDirection.Sent,
                     Success   = true,
                     When      = DateTime.Now
@@ -1278,6 +1281,7 @@ namespace Dosyaktar
                 {
                     Title     = name,
                     Detail    = $"{_connectedTargetName} · klasör",
+                    Path      = folder,
                     Direction = HistoryDirection.Sent,
                     Success   = true,
                     When      = DateTime.Now
@@ -1421,6 +1425,7 @@ namespace Dosyaktar
                 {
                     Title     = game.Name,
                     Detail    = $"{_connectedTargetName} · {game.ProviderName}",
+                    Path      = game.InstallPath,
                     Direction = HistoryDirection.Sent,
                     Success   = true,
                     When      = DateTime.Now
@@ -1578,6 +1583,7 @@ namespace Dosyaktar
             {
                 Title     = file.Name,
                 Detail    = "Telefondan alındı · " + file.SizeText,
+                Path      = file.Path,
                 Direction = HistoryDirection.Received,
                 Success   = true,
                 When      = DateTime.Now
@@ -1669,6 +1675,85 @@ namespace Dosyaktar
             if (EmptyHistory == null) return;
             EmptyHistory.Visibility = _history.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             if (BtnClearHistory != null) BtnClearHistory.IsEnabled = _history.Count > 0;
+        }
+
+        // ── Geçmiş satırı: konumu aç ───────────────────────────────────────
+
+        private void HistoryRow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is not FrameworkElement { DataContext: HistoryEntry entry } row) return;
+
+            row.Focus();
+
+            if (e.ClickCount == 2) RevealHistoryEntry(entry);
+        }
+
+        private void HistoryRow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter && e.Key != Key.Space) return;
+            if (sender is FrameworkElement { DataContext: HistoryEntry entry })
+            {
+                e.Handled = true;
+                RevealHistoryEntry(entry);
+            }
+        }
+
+        /// <summary>
+        /// Kaydın dosyasını Explorer'da seçer. Dosya silinmişse klasörünü,
+        /// o da yoksa kaydın tuttuğu yolu açmayı dener.
+        /// </summary>
+        private void RevealHistoryEntry(HistoryEntry entry)
+        {
+            string path = LocationOf(entry);
+
+            if (path.Length == 0)
+            {
+                SetStatus("Bu kayıt için dosya konumu yok", "warn");
+                return;
+            }
+
+            try
+            {
+                if (File.Exists(path))
+                {
+                    Process.Start(new ProcessStartInfo("explorer.exe", "/select,\"" + path + "\"")
+                    {
+                        UseShellExecute = true
+                    });
+                    SetStatus("Konum açıldı: " + Path.GetFileName(path), "ok");
+                    return;
+                }
+
+                string? folder = Directory.Exists(path) ? path : Path.GetDirectoryName(path);
+
+                if (!string.IsNullOrEmpty(folder) && Directory.Exists(folder))
+                {
+                    Process.Start(new ProcessStartInfo("explorer.exe", "\"" + folder + "\"")
+                    {
+                        UseShellExecute = true
+                    });
+                    SetStatus("Klasör açıldı: " + folder, "ok");
+                    return;
+                }
+
+                SetStatus("Dosya artık yerinde değil", "warn");
+            }
+            catch (Exception ex)
+            {
+                SetStatus("Konum açılamadı: " + ex.Message, "err");
+            }
+        }
+
+        /// <summary>
+        /// Yeni kayıtlarda tam yol tutulur. Eski kayıtlarda yol yok; ayrıntı
+        /// alanı bir sürücü yoluyla başlıyorsa o kullanılır.
+        /// </summary>
+        private static string LocationOf(HistoryEntry entry)
+        {
+            if (!string.IsNullOrWhiteSpace(entry.Path)) return entry.Path;
+
+            string detail = entry.Detail ?? "";
+            return detail.Length > 2 && detail[1] == ':' ? detail : "";
         }
 
         private void BtnClearHistory_Click(object sender, RoutedEventArgs e)

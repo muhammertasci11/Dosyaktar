@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         xmlns:views="clr-namespace:Dosyaktar.Views"
+        xmlns:controls="clr-namespace:Dosyaktar.Controls"
         xmlns:fx="clr-namespace:Dosyaktar.Fx"
         Title="Dosyaktar"
         Width="1320" Height="860"
@@ -194,10 +195,14 @@
 
         <!-- ── history item ─────────────────────────────────────────── -->
         <DataTemplate x:Key="HistoryItemTemplate">
-            <Border CornerRadius="14" Padding="14,12" Margin="0,0,0,9"
+            <Border x:Name="HistoryRow" CornerRadius="14" Padding="14,12" Margin="0,0,0,9"
                     Background="{DynamicResource GlassBrush}"
                     BorderBrush="{DynamicResource GlassBorderBrush}"
-                    BorderThickness="1">
+                    BorderThickness="1"
+                    Focusable="True" Cursor="Hand"
+                    ToolTip="Dosya konumunu açar (çift tık veya Enter)"
+                    MouseLeftButtonDown="HistoryRow_MouseLeftButtonDown"
+                    KeyDown="HistoryRow_KeyDown">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -232,6 +237,9 @@
                 <DataTrigger Binding="{Binding Success}" Value="False">
                     <Setter TargetName="HIcon" Property="Foreground" Value="{DynamicResource DangerBrush}"/>
                 </DataTrigger>
+                <Trigger SourceName="HistoryRow" Property="IsKeyboardFocused" Value="True">
+                    <Setter TargetName="HistoryRow" Property="BorderBrush" Value="{DynamicResource AccentInkBrush}"/>
+                </Trigger>
             </DataTemplate.Triggers>
         </DataTemplate>
 
@@ -380,19 +388,17 @@
                         Background="{DynamicResource DividerBrush}" Opacity="0.7"
                         IsHitTestVisible="False"/>
 
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
-                    <!-- faceted prism logo -->
-                    <Grid Width="26" Height="26" Margin="0,0,11,0" RenderTransformOrigin="0.5,0.5">
-                        <Grid.RenderTransform>
-                            <RotateTransform Angle="-8"/>
-                        </Grid.RenderTransform>
-                        <Path Fill="{DynamicResource PrismFace2Brush}" Opacity="0.85"
-                              Data="M 13,2 L 24,8 L 24,18 L 13,24 L 2,18 L 2,8 Z"/>
-                        <Path Fill="{DynamicResource PrismFace1Brush}"
-                              Data="M 13,2 L 24,8 L 13,14 L 2,8 Z"/>
-                        <Path Fill="{DynamicResource PrismFace3Brush}" Opacity="0.9"
-                              Data="M 13,14 L 24,8 L 24,18 L 13,24 Z"/>
-                    </Grid>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+                    <!-- gerçek uygulama logosu -->
+                    <Image Source="/Assets/icon.png" Width="30" Height="30"
+                           Margin="0,0,10,0" VerticalAlignment="Center"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           SnapsToDevicePixels="True"
+                           ToolTip="Dosyaktar">
+                        <Image.Clip>
+                            <RectangleGeometry Rect="0,0,30,30" RadiusX="9" RadiusY="9"/>
+                        </Image.Clip>
+                    </Image>
 
                     <TextBlock Text="Dosyaktar" FontFamily="{StaticResource DisplayFont}"
                                FontSize="15" FontWeight="Bold" VerticalAlignment="Center"/>
@@ -468,28 +474,28 @@
                         </StackPanel>
 
                         <StackPanel Grid.Row="1" Margin="9,4" VerticalAlignment="Top">
-                            <RadioButton x:Name="RbSend" GroupName="nav" IsChecked="True"
-                                         Content="Keşif" Tag="&#xE721;"
+                            <controls:NavTabButton x:Name="RbSend" GroupName="nav" IsChecked="True"
+                                         Content="Keşif" IconData="{StaticResource IconCompass}"
                                          Style="{StaticResource SidebarTabButton}"
                                          Checked="Nav_Checked"/>
-                            <RadioButton x:Name="RbSession" GroupName="nav"
-                                         Content="Oturum" Tag="&#xE71B;"
+                            <controls:NavTabButton x:Name="RbSession" GroupName="nav"
+                                         Content="Oturum" IconData="{StaticResource IconLink}"
                                          Style="{StaticResource SidebarTabButton}"
                                          Checked="Nav_Checked"/>
-                            <RadioButton x:Name="RbGames" GroupName="nav"
-                                         Content="Oyunlar" Tag="&#xE7FC;"
+                            <controls:NavTabButton x:Name="RbGames" GroupName="nav"
+                                         Content="Oyunlar" IconData="{StaticResource IconGamepad}"
                                          Style="{StaticResource SidebarTabButton}"
                                          Checked="Nav_Checked"/>
-                            <RadioButton x:Name="RbMobile" GroupName="nav"
-                                         Content="Mobil" Tag="&#xE8EA;"
+                            <controls:NavTabButton x:Name="RbMobile" GroupName="nav"
+                                         Content="Mobil" IconData="{StaticResource IconPhone}"
                                          Style="{StaticResource SidebarTabButton}"
                                          Checked="Nav_Checked"/>
-                            <RadioButton x:Name="RbHistory" GroupName="nav"
-                                         Content="Geçmiş" Tag="&#xE81C;"
+                            <controls:NavTabButton x:Name="RbHistory" GroupName="nav"
+                                         Content="Geçmiş" IconData="{StaticResource IconHistory}"
                                          Style="{StaticResource SidebarTabButton}"
                                          Checked="Nav_Checked"/>
-                            <RadioButton x:Name="RbSettings" GroupName="nav"
-                                         Content="Ayarlar" Tag="&#xE713;"
+                            <controls:NavTabButton x:Name="RbSettings" GroupName="nav"
+                                         Content="Ayarlar" IconData="{StaticResource IconTune}"
                                          Style="{StaticResource SidebarTabButton}"
                                          Checked="Nav_Checked"/>
                         </StackPanel>

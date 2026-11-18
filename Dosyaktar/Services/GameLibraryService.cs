@@ -109,7 +109,7 @@ namespace Dosyaktar.Services
         public string? ManifestPath   { get; init; }
         public string? ExecutablePath { get; init; }
         public string? LaunchUri      { get; init; }
-        public string? CoverPath      { get; init; }
+        public string? CoverPath      { get; set; }
         public DateTime? LastPlayed   { get; init; }
         public bool   IsCustom        { get; init; }
         public bool   SizeFromManifest{ get; init; }
@@ -166,21 +166,33 @@ namespace Dosyaktar.Services
         public void LoadCover()
         {
             if (_cover != null || string.IsNullOrWhiteSpace(CoverPath)) return;
+
+            var image = DecodeCover(CoverPath);
+            if (image != null) Cover = image;
+        }
+
+        /// <summary>Kapak dosyasını UI dışında çözülebilecek biçimde dondurur.</summary>
+        public static ImageSource? DecodeCover(string? path)
+        {
+            if (string.IsNullOrWhiteSpace(path)) return null;
             try
             {
-                if (!File.Exists(CoverPath)) return;
+                if (!File.Exists(path)) return null;
 
                 var bmp = new BitmapImage();
                 bmp.BeginInit();
                 bmp.CacheOption = BitmapCacheOption.OnLoad;
                 bmp.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
                 bmp.DecodePixelWidth = 460;
-                bmp.UriSource = new Uri(CoverPath, UriKind.Absolute);
+                bmp.UriSource = new Uri(path, UriKind.Absolute);
                 bmp.EndInit();
                 bmp.Freeze();
-                Cover = bmp;
+                return bmp;
             }
-            catch { /* bozuk görsel → rozet görünür kalır */ }
+            catch
+            {
+                return null; // bozuk görsel → rozet görünür kalır
+            }
         }
 
         public GameEntry WithSize(long bytes)
@@ -535,8 +547,7 @@ namespace Dosyaktar.Services
                 foreach (var name in new[]
                          {
                              $"{appId}_header.jpg",
-                             $"{appId}_library_600x900.jpg",
-                             $"{appId}_logo.png"
+                             $"{appId}_library_600x900.jpg"
                          })
                 {
                     string p = Path.Combine(cache, name);

@@ -82,14 +82,14 @@
                                 HorizontalAlignment="Left"
                                 Margin="10,0,0,10"
                                 CornerRadius="12"
-                                Padding="6,3"
-                                Background="{DynamicResource AccentSoftBrush}"
-                                BorderBrush="{DynamicResource GlassBorderBrush}"
+                                Padding="7,3"
+                                Background="#CC0B0D12"
+                                BorderBrush="#33FFFFFF"
                                 BorderThickness="1">
                             <TextBlock Text="{Binding ProviderName}"
                                        FontSize="11"
                                        FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                       Foreground="White"/>
                         </Border>
 
                         <!-- Size chip top-right -->
@@ -97,24 +97,24 @@
                                 HorizontalAlignment="Right"
                                 Margin="0,8,8,0"
                                 CornerRadius="10"
-                                Padding="6,2"
-                                Background="{DynamicResource GlassBrush}"
-                                BorderBrush="{DynamicResource GlassBorderBrush}"
+                                Padding="7,2"
+                                Background="#CC0B0D12"
+                                BorderBrush="#33FFFFFF"
                                 BorderThickness="1">
                             <TextBlock Text="{Binding SizeText}"
                                        FontSize="10.5"
                                        FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                       Foreground="White"/>
                         </Border>
 
-                        <!-- Selection check glyph top-right -->
+                        <!-- Selection check glyph top-left -->
                         <Border x:Name="SelectionGlyph"
                                 Width="20" Height="20"
                                 CornerRadius="10"
                                 Background="{DynamicResource AccentFillBrush}"
-                                HorizontalAlignment="Right"
+                                HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
-                                Margin="0,8,8,0"
+                                Margin="8,8,0,0"
                                 Visibility="Collapsed">
                             <TextBlock Text="&#xE73E;"
                                        FontFamily="{StaticResource IconFont}"
@@ -529,8 +529,7 @@
                                     </Border>
                                     <Image x:Name="ImgDetailCover"
                                            Source="{Binding Cover}"
-                                           Stretch="UniformToFill"
-                                           Visibility="Collapsed"/>
+                                           Stretch="UniformToFill"/>
                                 </Grid>
                             </Border>
 

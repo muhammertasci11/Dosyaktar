@@ -85,16 +85,9 @@ namespace Dosyaktar.Views
                 _all.Clear();
                 _all.AddRange(games);
 
-                // Kapaklar UI dışında çözülür; bağlama PropertyChanged ile akar.
+                // Kapaklar: yerel dosyalar hemen, eksikler ağdan kademeli.
                 var snapshot = _all.ToList();
-                _ = Task.Run(() =>
-                {
-                    foreach (var g in snapshot)
-                    {
-                        if (ct.IsCancellationRequested) return;
-                        g.LoadCover();
-                    }
-                });
+                _ = HydrateCoversAsync(snapshot, ct);
 
                 ApplyFilter(keepSelection: false);
                 _ = MeasureMissingAsync(ct);
@@ -110,6 +103,50 @@ namespace Dosyaktar.Views
             {
                 BtnRefresh.IsEnabled = true;
                 UpdateViewState();
+            }
+        }
+
+        // ═════════════════════════════════════════════════════════════════
+        //  Kapaklar — sağlayıcıdan bağımsız, önbellekli
+        // ═════════════════════════════════════════════════════════════════
+
+        private async Task HydrateCoversAsync(IReadOnlyList<GameEntry> games, CancellationToken ct)
+        {
+            // 1) Yerelde hazır kapaklar (Steam librarycache, klasör ikonu).
+            await Task.Run(() =>
+            {
+                foreach (var game in games)
+                {
+                    if (ct.IsCancellationRequested) return;
+                    game.LoadCover();
+                }
+            }, ct).ConfigureAwait(true);
+
+            // 2) Eksikler için herkese açık vitrin görseli; kart başına akar.
+            foreach (var game in games)
+            {
+                if (ct.IsCancellationRequested) return;
+                if (game.Cover != null) continue;
+
+                try
+                {
+                    string? path = await GameCoverService.EnsureCoverAsync(game, ct);
+                    if (path == null) continue;
+
+                    var image = await Task.Run(() => GameEntry.DecodeCover(path), ct);
+                    if (image == null) continue;
+
+                    game.CoverPath = path;
+                    game.Cover = image;
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+                catch
+                {
+                    // Kapak süsüdür; eşleşmeyen oyun rozetle kalır.
+                }
             }
         }
 
@@ -301,10 +338,6 @@ namespace Dosyaktar.Views
 
             DetailCoverFallback.SetResourceReference(Border.BackgroundProperty, game.ProviderTintKey);
             TxtDetailInitial.Text = game.Initial;
-
-            bool hasCover = game.Cover != null;
-            ImgDetailCover.Visibility = hasCover ? Visibility.Visible : Visibility.Collapsed;
-            DetailCoverFallback.Visibility = hasCover ? Visibility.Collapsed : Visibility.Visible;
 
             TxtDetailProvider.Text = $"{game.ProviderName} · {game.FolderName}";
 
