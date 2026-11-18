@@ -268,6 +268,56 @@ body { font-family: var(--font-sans); background: var(--bg); color: var(--ink); 
 .download-btn:active { transform: scale(.95); }
 .download-btn svg { width: 20px; height: 20px; stroke-width: 2.2; }
 .download-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.download-btn.is-active { background: var(--cyan-soft); color: var(--cyan); }
+.download-btn.is-active svg { animation: rx-spin 900ms linear infinite; }
+.download-item.downloading { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan-soft), var(--shadow-card); }
+.download-item.received .download-size { color: var(--mint); }
+.download-item.received .download-icon svg { stroke: var(--mint); }
+@keyframes rx-spin { to { transform: rotate(360deg); } }
+
+/* Yerel ağdan alma kartı */
+.rx-card { position: relative; margin-bottom: 14px; padding: 16px; border-radius: var(--radius-l); background: var(--glass); border: 1px solid var(--glass-border); box-shadow: var(--shadow-card); overflow: hidden; animation: card-in 250ms cubic-bezier(.2,.8,.2,1); }
+.rx-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--violet-soft), transparent 46%); opacity: .6; pointer-events: none; }
+.rx-card > * { position: relative; z-index: 1; }
+.rx-top { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.rx-label { display: inline-flex; align-items: center; gap: 8px; font: 600 11px/1 var(--font-sans); letter-spacing: .4px; text-transform: uppercase; color: var(--ink-muted); }
+.rx-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); animation: rx-ping 1.7s ease-out infinite; flex: 0 0 auto; }
+@keyframes rx-ping { 0% { box-shadow: 0 0 0 0 var(--cyan-soft); } 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+.rx-card[data-phase="done"] .rx-dot { background: var(--mint); animation: none; box-shadow: 0 0 8px var(--mint-soft); }
+.rx-card[data-phase="error"] .rx-dot { background: var(--pink); animation: none; }
+.rx-card[data-phase="fallback"] .rx-dot { background: var(--ink-subtle); animation: none; }
+.rx-badge { margin-left: auto; padding: 4px 8px; border-radius: 100px; background: var(--input-bg); border: 1px solid var(--input-border); font: 600 10px/1 var(--font-mono); letter-spacing: .7px; color: var(--ink-subtle); }
+.rx-cancel { padding: 6px 10px; border-radius: 100px; border: none; background: transparent; color: var(--ink-subtle); font: 600 12px/1 var(--font-sans); cursor: pointer; transition: background var(--transition-fast), color var(--transition-fast); }
+.rx-cancel:hover, .rx-cancel:focus-visible { background: var(--danger-bg); color: var(--danger-ink); }
+.rx-file { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; }
+.rx-icon { width: 40px; height: 40px; border-radius: var(--radius-s); background: var(--input-bg); display: flex; align-items: center; justify-content: center; }
+.rx-icon svg { width: 20px; height: 20px; stroke: var(--violet); }
+.rx-card[data-phase="done"] .rx-icon svg { stroke: var(--mint); }
+.rx-meta { min-width: 0; }
+.rx-name { font: 600 14px/1.3 var(--font-sans); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rx-route { display: flex; align-items: center; gap: 5px; margin-top: 3px; font: 500 11px/1.2 var(--font-mono); color: var(--ink-subtle); }
+.rx-route svg { width: 11px; height: 11px; stroke: var(--cyan); flex: 0 0 auto; }
+.rx-pct { font: 700 18px/1 var(--font-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+.rx-bar { height: 6px; margin: 14px 0 10px; border-radius: 3px; background: var(--input-bg); overflow: hidden; }
+.rx-fill { position: relative; height: 100%; width: 0%; border-radius: 3px; background: linear-gradient(90deg, var(--violet), var(--cyan)); transition: width 180ms linear; overflow: hidden; }
+.rx-fill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent); transform: translateX(-100%); animation: rx-sheen 1.3s ease-in-out infinite; }
+@keyframes rx-sheen { to { transform: translateX(100%); } }
+.rx-card[data-phase="done"] .rx-fill { background: var(--mint); }
+.rx-card[data-phase="done"] .rx-fill::after { display: none; }
+.rx-card[data-phase="error"] .rx-fill { background: var(--pink); }
+.rx-card[data-phase="error"] .rx-fill::after { display: none; }
+.rx-stats { display: flex; align-items: center; justify-content: space-between; gap: 10px; font: 500 11px/1 var(--font-mono); color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.rx-speed { font-weight: 600; color: var(--ink); }
+.rx-note { margin-top: 12px; font: 500 11px/1.55 var(--font-sans); color: var(--ink-subtle); }
+.rx-error { margin-top: 12px; padding: 10px 12px; border-radius: var(--radius-s); background: var(--danger-bg); border: 1px solid var(--danger-border); color: var(--danger-ink); font: 500 12px/1.5 var(--font-sans); }
+.rx-actions { display: flex; gap: 8px; margin-top: 12px; }
+.rx-actions .btn { flex: 1; padding: 12px 16px; font-size: 14px; border-radius: var(--radius-m); }
+.rx-actions .btn-secondary { flex: 0 0 auto; padding-inline: 18px; }
+.rx-actions a.btn { text-decoration: none; }
+@media (prefers-reduced-motion: reduce) {
+  .rx-dot, .rx-fill::after, .download-btn.is-active svg { animation: none !important; }
+  .rx-fill { transition: none; }
+}
 .download-empty { text-align: center; padding: 60px 20px; color: var(--ink-muted); }
 .download-empty .icon { width: 80px; height: 80px; margin: 0 auto 16px; stroke: var(--ink-subtle); stroke-width: 1.5; }
 .download-empty-title { font: 600 17px/1.3 var(--font-sans); color: var(--ink); margin-bottom: 6px; }
@@ -465,6 +515,8 @@ body { font-family: var(--font-sans); background: var(--bg); color: var(--ink); 
 
   <!-- Al Screen -->
   <section class="screen" id="screenReceive" role="region" aria-label="Dosya al" hidden>
+    <div class="rx-card hidden" id="receiveTransfer" data-phase="active" aria-label="Yerel ağ aktarımı"></div>
+    <p class="sr-only" id="receiveAnnounce" role="status" aria-live="polite"></p>
     <div class="download-list" id="downloadList" role="list" aria-label="Bilgisayardan gelen dosyalar"></div>
     <div class="download-empty hidden" id="downloadEmpty">
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -573,6 +625,8 @@ const state = {
   receivedToday: 0,
   uploadQueue: [],
   isUploading: false,
+  receive: null,
+  receivedIds: new Set(),
   pollTimer: null,
   lastStateHash: '',
   hidden: false
@@ -944,6 +998,7 @@ const handleUnauthorized = () => {
   state.transfer = null;
   closeMenu();
   stopPolling();
+  cancelReceive(true);
   showScreen('pair');
   $('#topBar').hidden = true;
   $('#tabBar').hidden = true;
@@ -952,6 +1007,9 @@ const handleUnauthorized = () => {
   clearPinInputs();
   showToast('Bağlantı kesildi. Tekrar deneyin.', 'error');
 };
+
+const ICON_RECEIVE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
+const ICON_RECEIVE_SPIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.2-8.56"/></svg>';
 
 const renderDownloadList = () => {
   const list = $('#downloadList');
@@ -963,18 +1021,25 @@ const renderDownloadList = () => {
     return;
   }
   empty.classList.add('hidden');
-  list.innerHTML = state.files.map(f => `
-    <div class="download-item" data-id="${f.id}" role="listitem">
+  list.innerHTML = state.files.map(f => {
+    const active = state.receive?.phase === 'active' && state.receive.id === f.id;
+    const received = state.receivedIds.has(f.id);
+    const sizeText = f.sizeText || fmtBytes(f.size);
+    const sizeLine = active ? 'Aktarılıyor · ' + sizeText
+      : received ? 'Alındı · ' + sizeText
+      : sizeText;
+    return `
+    <div class="download-item${active ? ' downloading' : received ? ' received' : ''}" data-id="${f.id}" role="listitem">
       <div class="download-icon" aria-hidden="true">${fileIcon(f.name)}</div>
       <div class="download-info">
         <div class="download-name">${escapeHtml(f.name)}</div>
-        <div class="download-size">${f.sizeText || fmtBytes(f.size)}</div>
+        <div class="download-size">${sizeLine}</div>
       </div>
-      <button class="download-btn" data-id="${f.id}" aria-label="${escapeHtml(f.name)} indir" title="İndir">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <button class="download-btn${active ? ' is-active' : ''}" data-id="${f.id}" aria-label="${active ? 'Aktarımı iptal et' : escapeHtml(f.name) + ' al'}" title="${active ? 'İptal' : 'Al'}">
+        ${active ? ICON_RECEIVE_SPIN : ICON_RECEIVE}
       </button>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
   // Bind download buttons
   $$('.download-btn', list).forEach(btn => {
     btn.onclick = () => downloadFile(btn.dataset.id);
@@ -1250,27 +1315,350 @@ const processUploadQueue = async () => {
   processUploadQueue();
 };
 
-const downloadFile = (id) => {
-  const file = state.files.find(f => f.id === id);
-  const btn = document.querySelector(`.download-btn[data-id="${id}"]`);
-  if (btn) btn.disabled = true;
+/* ── Yerel ağdan alma ─────────────────────────────────────────────── */
 
-  // Doğrudan bağlantı: tarayıcı dosyayı kendi indirme yöneticisiyle akıtır.
-  // (Blob yaklaşımı büyük dosyalarda belleği tüketip iOS'ta indirmeyi engelliyor.)
+const RX_MEMORY_LIMIT = 256 * 1024 * 1024;
+const RX_IOS = /iP(hone|ad|od)/i.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+const fmtEta = (sec) => {
+  if (!isFinite(sec) || sec < 0) return 'Kalan: —';
+  if (sec < 1) return 'Kalan: 1 sn';
+  if (sec < 60) return `Kalan: ${Math.round(sec)} sn`;
+  const mins = Math.floor(sec / 60);
+  const rest = Math.round(sec % 60);
+  return `Kalan: ${mins} dk${rest ? ' ' + rest + ' sn' : ''}`;
+};
+
+const fmtDuration = (sec) => {
+  if (!isFinite(sec) || sec <= 0) return '—';
+  if (sec < 1) return `${Math.max(1, Math.round(sec * 1000))} ms`;
+  if (sec < 60) return `${sec.toFixed(1).replace('.', ',')} sn`;
+  return `${Math.floor(sec / 60)} dk ${Math.round(sec % 60)} sn`;
+};
+
+const announceReceive = (text) => {
+  const el = $('#receiveAnnounce');
+  if (el) el.textContent = text;
+};
+
+const ensureReceiveCard = () => {
+  const card = $('#receiveTransfer');
+  if (!card) return null;
+  if (!card.dataset.built) {
+    card.innerHTML = `
+      <div class="rx-top">
+        <span class="rx-label"><span class="rx-dot" aria-hidden="true"></span><span id="rxLabel">LAN üzerinden alınıyor</span></span>
+        <span class="rx-badge">LAN</span>
+        <button type="button" class="rx-cancel" id="rxCancel">İptal</button>
+      </div>
+      <div class="rx-file">
+        <div class="rx-icon" id="rxIcon" aria-hidden="true"></div>
+        <div class="rx-meta">
+          <div class="rx-name" id="rxName">—</div>
+          <div class="rx-route">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4.5 12.4a10.5 10.5 0 0 1 15 0"/><path d="M8.2 16a5.6 5.6 0 0 1 7.6 0"/><circle cx="12" cy="19.2" r="1.1" fill="currentColor" stroke="none"/></svg>
+            <span id="rxRoute">—</span>
+          </div>
+        </div>
+        <div class="rx-pct" id="rxPct">0%</div>
+      </div>
+      <div class="rx-bar" id="rxBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="rx-fill" id="rxFill"></div></div>
+      <div class="rx-stats"><span class="rx-speed" id="rxSpeed">— MB/s</span><span id="rxEta">Kalan: —</span><span id="rxSize">—</span></div>
+      <div id="rxExtra"></div>`;
+    card.dataset.built = '1';
+    $('#rxCancel', card).addEventListener('click', () => cancelReceive());
+  }
+  return card;
+};
+
+const renderReceiveExtra = (rx, card) => {
+  const extra = $('#rxExtra', card);
+  if (!extra) return;
+
+  if (rx.phase === 'done') {
+    const hint = RX_IOS
+      ? 'Dosya hazır. Kaydetmek için düğmeye dokunun, açılan ekranda <strong>Paylaş → Dosyalara Kaydet</strong> seçin.'
+      : 'Dosya yerel ağdan doğrudan bu cihaza aktarıldı; internet kullanılmadı.';
+    extra.innerHTML = `
+      <p class="rx-note">${hint}</p>
+      <div class="rx-actions">
+        <a class="btn btn-primary" id="rxSave" href="${rx.blobUrl}" download="${escapeHtml(rx.name)}">Dosyayı kaydet</a>
+        <button class="btn btn-secondary" id="rxClose" type="button">Kapat</button>
+      </div>`;
+    $('#rxSave', extra).addEventListener('click', () => haptic(10));
+    $('#rxClose', extra).addEventListener('click', () => dismissReceive());
+    return;
+  }
+
+  if (rx.phase === 'error') {
+    extra.innerHTML = `
+      <div class="rx-error">${escapeHtml(rx.error || 'Bağlantı kesildi.')}</div>
+      <div class="rx-actions">
+        <button class="btn btn-primary" id="rxRetry" type="button">Yeniden dene</button>
+        <button class="btn btn-secondary" id="rxClose" type="button">Kapat</button>
+      </div>`;
+    $('#rxRetry', extra).addEventListener('click', () => {
+      const id = rx.id;
+      dismissReceive();
+      startReceive(id);
+    });
+    $('#rxClose', extra).addEventListener('click', () => dismissReceive());
+    return;
+  }
+
+  if (rx.phase === 'fallback') {
+    extra.innerHTML = `
+      <p class="rx-note">${escapeHtml(rx.error || 'Bu dosya tarayıcı aktarımına devredildi.')}</p>
+      <div class="rx-actions"><button class="btn btn-secondary" id="rxClose" type="button">Kapat</button></div>`;
+    $('#rxClose', extra).addEventListener('click', () => dismissReceive());
+    return;
+  }
+
+  extra.innerHTML = '';
+};
+
+const paintReceive = () => {
+  const rx = state.receive;
+  const card = $('#receiveTransfer');
+  if (!rx || !card) return;
+
+  const active = rx.phase === 'active';
+  const done = rx.phase === 'done';
+  const failed = rx.phase === 'error';
+  const pct = done ? 100 : (rx.size > 0 ? Math.min(99, (rx.loaded / rx.size) * 100) : 0);
+
+  card.dataset.phase = rx.phase;
+  $('#rxLabel', card).textContent = done ? 'Alındı · yerel ağ'
+    : failed ? 'Aktarım kesildi'
+    : rx.phase === 'fallback' ? 'Büyük dosya'
+    : 'LAN üzerinden alınıyor';
+  $('#rxName', card).textContent = rx.name;
+  $('#rxRoute', card).textContent = `${state.deviceName || 'Bilgisayar'} → bu cihaz`;
+  $('#rxPct', card).textContent = done ? '100%' : (rx.size > 0 ? Math.floor(pct) + '%' : '—');
+  $('#rxFill', card).style.width = pct + '%';
+  $('#rxBar', card).setAttribute('aria-valuenow', String(Math.round(pct)));
+
+  if (active) {
+    const speed = rx.speed || 0;
+    const rest = rx.size > 0 ? Math.max(0, rx.size - rx.loaded) : 0;
+    $('#rxSpeed', card).textContent = speed > 0 ? `↓ ${fmtSpeed(speed / 1048576)}` : '↓ — MB/s';
+    $('#rxEta', card).textContent = rx.size > 0 && speed > 0 ? fmtEta(rest / speed) : 'Kalan: —';
+    $('#rxSize', card).textContent = rx.size > 0 ? `${fmtBytes(rx.loaded)} / ${fmtBytes(rx.size)}` : fmtBytes(rx.loaded);
+  } else if (done) {
+    $('#rxSpeed', card).textContent = `Ort. ${fmtSpeed((rx.avgSpeed || 0) / 1048576)}`;
+    $('#rxEta', card).textContent = fmtDuration(rx.duration);
+    $('#rxSize', card).textContent = fmtBytes(rx.loaded);
+  } else {
+    $('#rxSpeed', card).textContent = '↓ 0 MB/s';
+    $('#rxEta', card).textContent = 'Kalan: —';
+    $('#rxSize', card).textContent = rx.size > 0
+      ? (failed && rx.loaded > 0 ? `${fmtBytes(rx.loaded)} / ${fmtBytes(rx.size)}` : fmtBytes(rx.size))
+      : (rx.loaded > 0 ? fmtBytes(rx.loaded) : '—');
+  }
+
+  const cancel = $('#rxCancel', card);
+  if (cancel) cancel.hidden = !active;
+
+  if (rx.paintedPhase !== rx.phase) {
+    rx.paintedPhase = rx.phase;
+    renderReceiveExtra(rx, card);
+  }
+};
+
+const scheduleReceivePaint = () => {
+  const rx = state.receive;
+  if (!rx || rx.paintQueued) return;
+  rx.paintQueued = true;
+  requestAnimationFrame(() => {
+    rx.paintQueued = false;
+    if (state.receive === rx) paintReceive();
+  });
+};
+
+const dismissReceive = () => {
+  const rx = state.receive;
+  if (rx?.blobUrl) {
+    const url = rx.blobUrl;
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  }
+  state.receive = null;
+  const card = $('#receiveTransfer');
+  if (card) {
+    card.classList.add('hidden');
+    card.removeAttribute('data-phase');
+    delete card.dataset.built;
+    card.innerHTML = '';
+  }
+  renderDownloadList();
+};
+
+const cancelReceive = (silent = false) => {
+  const rx = state.receive;
+  if (!rx) return;
+  const wasActive = rx.phase === 'active';
+  if (wasActive) rx.controller?.abort();
+  dismissReceive();
+  if (!silent && wasActive) {
+    announceReceive('Aktarım iptal edildi');
+    showToast('Aktarım iptal edildi', 'info');
+    haptic(10);
+  }
+};
+
+const finishReceive = (rx, blob) => {
+  if (state.receive !== rx) return;
+  const seconds = Math.max(0.05, (performance.now() - rx.startedAt) / 1000);
+  rx.phase = 'done';
+  rx.loaded = blob.size || rx.loaded;
+  if (!rx.size) rx.size = rx.loaded;
+  rx.blob = blob;
+  rx.duration = seconds;
+  rx.avgSpeed = rx.loaded / seconds;
+  rx.blobUrl = URL.createObjectURL(blob);
+  state.receivedIds.add(rx.id);
+  paintReceive();
+  renderDownloadList();
+  addCounter('received', 1);
+  announceReceive(`${rx.name} alındı. ${fmtBytes(rx.size)}`);
+  showToast(`${rx.name} yerel ağdan alındı`, 'success');
+  haptic(18);
+};
+
+const failReceive = (rx, message) => {
+  if (state.receive !== rx) return;
+  rx.phase = 'error';
+  rx.error = message;
+  paintReceive();
+  renderDownloadList();
+  announceReceive(`Aktarım kesildi: ${message}`);
+  showToast('Aktarım kesildi', 'error');
+  haptic(14);
+};
+
+const triggerBrowserReceive = (rx) => {
+  state.receivedIds.add(rx.id);
+  addCounter('received', 1);
+  renderDownloadList();
   const a = document.createElement('a');
-  a.href = API.download(id);
-  a.download = file?.name || '';
+  a.href = API.download(rx.id);
+  a.download = rx.name;
   a.rel = 'noopener';
   a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
   a.remove();
+  showToast('Büyük dosya: tarayıcı aktarımı başlatıldı', 'info');
+  announceReceive('Büyük dosya tarayıcı aktarımına devredildi.');
+};
 
-  addCounter('received', 1);
-  showToast((file?.name || 'Dosya') + ' indiriliyor', 'info');
-  haptic(12);
+const startReceive = async (id) => {
+  const file = state.files.find(f => f.id === id);
+  if (!file) { showToast('Dosya listede yok', 'error'); return; }
+  if (state.receive?.phase === 'active') {
+    showToast('Önce süren aktarımı bitir', 'info');
+    return;
+  }
+  if (state.receive) dismissReceive();
 
-  if (btn) setTimeout(() => { btn.disabled = false; }, 1200);
+  const size = Number(file.size) || 0;
+  const now = performance.now();
+  const rx = {
+    id,
+    name: file.name,
+    size,
+    loaded: 0,
+    startedAt: now,
+    tickTime: now,
+    tickLoaded: 0,
+    speed: 0,
+    controller: new AbortController(),
+    phase: 'active',
+    error: null,
+    blob: null,
+    blobUrl: null,
+    paintedPhase: null,
+    paintQueued: false
+  };
+  state.receive = rx;
+
+  const card = ensureReceiveCard();
+  if (card) {
+    card.classList.remove('hidden');
+    card.querySelector('#rxIcon').innerHTML = fileIcon(rx.name);
+  }
+  paintReceive();
+  renderDownloadList();
+  announceReceive(`${rx.name} yerel ağdan alınıyor`);
+  haptic(8);
+
+  // Çok büyük dosyalarda blob bellekte tutulmaz: tarayıcı akışına devret.
+  if (size > RX_MEMORY_LIMIT) {
+    rx.phase = 'fallback';
+    rx.error = 'Bu dosya 256 MB üzerinde; bellek şişmemesi için tarayıcı aktarımı başlatıldı.';
+    paintReceive();
+    triggerBrowserReceive(rx);
+    return;
+  }
+
+  try {
+    const res = await fetch(API.download(id), {
+      signal: rx.controller.signal,
+      credentials: 'same-origin',
+      cache: 'no-store'
+    });
+    if (!res.ok) {
+      throw new Error(res.status === 404 ? 'Dosya artık paylaşılmıyor.' : `Aktarım başlatılamadı (HTTP ${res.status}).`);
+    }
+    const total = Number(res.headers.get('Content-Length')) || size;
+    if (!rx.size && total) rx.size = total;
+
+    if (!res.body || typeof res.body.getReader !== 'function') {
+      const blob = await res.blob();
+      finishReceive(rx, blob);
+      return;
+    }
+
+    const reader = res.body.getReader();
+    const chunks = [];
+    let milestone = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+      rx.loaded += value.byteLength;
+
+      const tick = performance.now();
+      const dt = (tick - rx.tickTime) / 1000;
+      if (dt >= 0.25) {
+        const inst = (rx.loaded - rx.tickLoaded) / dt;
+        rx.speed = rx.speed ? rx.speed * 0.62 + inst * 0.38 : inst;
+        rx.tickTime = tick;
+        rx.tickLoaded = rx.loaded;
+      }
+      if (state.receive === rx) scheduleReceivePaint();
+      if (rx.size > 0) {
+        const step = Math.floor((rx.loaded / rx.size) * 4);
+        if (step > milestone && step < 4) {
+          milestone = step;
+          announceReceive(`${rx.name}: yüzde ${step * 25}`);
+        }
+      }
+    }
+
+    const blob = new Blob(chunks, { type: res.headers.get('Content-Type') || 'application/octet-stream' });
+    finishReceive(rx, blob);
+  } catch (err) {
+    if (err.name === 'AbortError' || state.receive !== rx) return;
+    failReceive(rx, err.message || 'Aktarım kesildi.');
+  }
+};
+
+const downloadFile = (id) => {
+  const rx = state.receive;
+  if (rx?.phase === 'active' && rx.id === id) { cancelReceive(); return; }
+  if (rx?.phase === 'active') { showToast('Önce süren aktarımı bitir', 'info'); return; }
+  startReceive(id);
 };
 
 const handleLogout = async () => {

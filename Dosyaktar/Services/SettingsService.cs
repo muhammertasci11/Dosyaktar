@@ -15,6 +15,7 @@ namespace Dosyaktar.Services
         public bool   DarkMode      { get; set; } = false;
         public string Theme         { get; set; } = "prism";
         public string Hostname      { get; set; } = Environment.MachineName;
+        public string AvatarId      { get; set; } = "kedi";
         public string LastTargetIP  { get; set; } = string.Empty;
         public string LastPage      { get; set; } = "send";
         public string Language      { get; set; } = "tr";

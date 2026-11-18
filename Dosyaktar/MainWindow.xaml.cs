@@ -72,6 +72,11 @@ namespace Dosyaktar
         private bool _closing;
         private bool _senderBusy;
 
+        // profil / avatarlar
+        private readonly List<(AvatarSpec Spec, RadioButton Tile)> _avatarTiles = new();
+        private string _avatarFilter = "Tümü";
+        private bool   _syncingProfile;
+
         // oturum
         private bool     _isConnectedSession;
         private bool     _receiving;
@@ -114,6 +119,7 @@ namespace Dosyaktar
 
             ApplySettingsToServices();
             BuildThemeGallery();
+            BuildAvatarGallery();
             WireEvents();
             LoadSettingsToUI();
             UpdateIdentity();
@@ -323,25 +329,249 @@ namespace Dosyaktar
                 ? _settings.LastPage
                 : "send";
 
-            var tab = page switch
-            {
-                "session" => RbSession,
-                "games"   => RbGames,
-                "mobile"  => RbMobile,
-                "history" => RbHistory,
-                "settings"=> RbSettings,
-                _         => RbSend
-            };
-
+            var tab = NavTabFor(page);
             if (tab.IsChecked == true) ShowPage(page);
             else tab.IsChecked = true;   // Checked → Nav_Checked → ShowPage
+        }
+
+        private RadioButton NavTabFor(string page) => page switch
+        {
+            "session" => RbSession,
+            "games"   => RbGames,
+            "mobile"  => RbMobile,
+            "history" => RbHistory,
+            "settings"=> RbSettings,
+            _         => RbSend
+        };
+
+        private void ClearNavSelection()
+        {
+            RbSend.IsChecked     = false;
+            RbSession.IsChecked  = false;
+            RbGames.IsChecked    = false;
+            RbMobile.IsChecked   = false;
+            RbHistory.IsChecked  = false;
+            RbSettings.IsChecked = false;
+        }
+
+        // ═════════════════════════════════════════════════════════════════════
+        //  PROFİL & AVATARLAR
+        // ═════════════════════════════════════════════════════════════════════
+
+        private void BuildAvatarGallery()
+        {
+            if (AvatarGallery == null) return;
+
+            AvatarGallery.Children.Clear();
+            _avatarTiles.Clear();
+
+            var tileStyle = (Style)FindResource("AvatarPickTile");
+            var selected  = AvatarCatalog.Find(_settings.AvatarId);
+
+            foreach (var spec in AvatarCatalog.All)
+            {
+                var avatar = new Controls.AnimatedAvatar
+                {
+                    Width  = 56,
+                    Height = 56,
+                    AvatarId = spec.Id
+                };
+
+                var tile = new RadioButton
+                {
+                    Style     = tileStyle,
+                    GroupName = "avatarPick",
+                    Tag       = spec.Name,
+                    Content   = avatar,
+                    ToolTip   = spec.Name,
+                    IsChecked = string.Equals(spec.Id, selected.Id, StringComparison.Ordinal)
+                };
+
+                // Seçim olayı, başlangıç değeri atandıktan sonra bağlanır:
+                // açılışta gereksiz kayıt yazılmaz.
+                tile.Checked += (_, _) => SelectAvatar(spec.Id);
+                System.Windows.Automation.AutomationProperties.SetName(tile, spec.Name);
+                System.Windows.Automation.AutomationProperties.SetAutomationId(tile, "avatar_" + spec.Id);
+
+                AvatarGallery.Children.Add(tile);
+                _avatarTiles.Add((spec, tile));
+            }
+
+            ApplyAvatarFilter(_avatarFilter);
+        }
+
+        private void ApplyAvatarFilter(string category)
+        {
+            _avatarFilter = string.IsNullOrWhiteSpace(category) ? "Tümü" : category;
+
+            int visible = 0;
+            foreach (var (spec, tile) in _avatarTiles)
+            {
+                bool show = _avatarFilter == "Tümü"
+                            || string.Equals(spec.Category, _avatarFilter, StringComparison.Ordinal);
+
+                tile.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+                if (show) visible++;
+            }
+
+            if (TxtAvatarCount != null)
+                TxtAvatarCount.Text = visible.ToString();
+
+            if (EmptyAvatarFilter != null)
+                EmptyAvatarFilter.Visibility = visible == 0
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+        }
+
+        private void AvatarFilter_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton chip && chip.Tag is string category)
+                ApplyAvatarFilter(category);
+        }
+
+        private void SelectAvatar(string id)
+        {
+            if (_syncingProfile) return;
+
+            var spec = AvatarCatalog.Find(id);
+            if (!string.Equals(_settings.AvatarId, spec.Id, StringComparison.Ordinal))
+            {
+                _settings.AvatarId = spec.Id;
+                SettingsService.Save(_settings);
+                SetStatus("Avatar: " + spec.Name, "ok");
+            }
+
+            SyncProfileUi();
+        }
+
+        /// <summary>Alt köşedeki küçük avatar, profil önizlemesi ve galeri seçimini
+        /// tek bir kaynaktan (ayarlar) besler.</summary>
+        private void SyncProfileUi()
+        {
+            if (ProfilePreview == null || AvatarSmall == null) return;
+
+            var spec = AvatarCatalog.Find(_settings.AvatarId);
+            string name = string.IsNullOrWhiteSpace(_settings.Hostname)
+                ? "Dosyaktar"
+                : _settings.Hostname.Trim();
+
+            _syncingProfile = true;
+            try
+            {
+                ProfilePreview.AvatarId = spec.Id;
+                AvatarSmall.AvatarId    = spec.Id;
+
+                if (TxtProfileAvatarName != null) TxtProfileAvatarName.Text = spec.Name;
+                if (TxtProfilePreviewName != null) TxtProfilePreviewName.Text = name;
+
+                if (TxtProfileName != null && !TxtProfileName.IsKeyboardFocusWithin
+                    && !string.Equals(TxtProfileName.Text, _settings.Hostname, StringComparison.Ordinal))
+                {
+                    TxtProfileName.Text = _settings.Hostname;
+                }
+
+                if (AvatarTile != null)
+                    AvatarTile.ToolTip = "Profil ve avatarlar · " + spec.Name;
+
+                foreach (var (tileSpec, tile) in _avatarTiles)
+                {
+                    bool isCurrent = string.Equals(tileSpec.Id, spec.Id, StringComparison.Ordinal);
+                    if (tile.IsChecked != isCurrent) tile.IsChecked = isCurrent;
+                }
+            }
+            finally
+            {
+                _syncingProfile = false;
+            }
+        }
+
+        private void AvatarTile_Click(object sender, RoutedEventArgs e)
+        {
+            ShowPage("profile");
+            Dispatcher.BeginInvoke(new Action(() => TxtProfileName?.Focus()),
+                System.Windows.Threading.DispatcherPriority.Input);
+        }
+
+        private void BtnProfileBack_Click(object sender, RoutedEventArgs e) => ReturnFromProfile();
+
+        private void ReturnFromProfile()
+        {
+            SaveProfileName();
+
+            string page = _settings.LastPage is "session" or "games" or "mobile" or "history" or "settings"
+                ? _settings.LastPage
+                : "send";
+
+            var tab = NavTabFor(page);
+            if (tab.IsChecked == true) ShowPage(page);
+            else tab.IsChecked = true;   // Checked → Nav_Checked → ShowPage
+            tab.Focus();
+        }
+
+        private void TxtProfileName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_syncingProfile || TxtProfilePreviewName == null) return;
+
+            string typed = (TxtProfileName.Text ?? "").Trim();
+            TxtProfilePreviewName.Text = typed.Length == 0 ? "Dosyaktar" : typed;
+        }
+
+        private void TxtProfileName_LostFocus(object sender, RoutedEventArgs e) => SaveProfileName();
+
+        private void TxtProfileName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter) return;
+
+            SaveProfileName();
+            Keyboard.ClearFocus();
+            e.Handled = true;
+        }
+
+        private void SaveProfileName()
+        {
+            if (TxtProfileName == null) return;
+
+            string name = (TxtProfileName.Text ?? "").Trim();
+            if (name.Length == 0) name = _settings.Hostname;
+            if (name.Length > 32) name = name.Substring(0, 32);
+
+            bool changed = !string.Equals(name, _settings.Hostname, StringComparison.Ordinal);
+            if (changed)
+            {
+                _settings.Hostname    = name;
+                _discovery.DeviceName = name;
+                _mobile.DeviceName    = name;
+
+                SettingsService.Save(_settings);
+
+                _suppressSettings = true;
+                try { if (TxtHostname != null) TxtHostname.Text = name; }
+                finally { _suppressSettings = false; }
+
+                StartDiscovery();
+                SetStatus("Profil adı güncellendi", "ok");
+            }
+
+            _syncingProfile = true;
+            try
+            {
+                if (!string.Equals(TxtProfileName.Text, name, StringComparison.Ordinal))
+                    TxtProfileName.Text = name;
+            }
+            finally
+            {
+                _syncingProfile = false;
+            }
+
+            SyncProfileUi();
         }
 
         private void ShowPage(string key)
         {
             if (PageSend == null) return;
 
-            if (_settings.LastPage != key)
+            // Profil, sekmelerin dışında bir yüzey: son sayfa korunur, geri dönüş oraya olur.
+            if (key != "profile" && _settings.LastPage != key)
             {
                 _settings.LastPage = key;
                 SettingsService.Save(_settings);
@@ -353,9 +583,16 @@ namespace Dosyaktar
             PageMobile.Visibility   = key == "mobile"   ? Visibility.Visible : Visibility.Collapsed;
             PageHistory.Visibility  = key == "history"  ? Visibility.Visible : Visibility.Collapsed;
             PageSettings.Visibility = key == "settings" ? Visibility.Visible : Visibility.Collapsed;
+            PageProfile.Visibility  = key == "profile"  ? Visibility.Visible : Visibility.Collapsed;
 
-            // Oyunlar sayfası tam genişlik kullanır; sağ aktarım paneli gizlenir.
-            RailRight.Visibility = key == "games" ? Visibility.Collapsed : Visibility.Visible;
+            // Oyunlar ve profil tam genişlik kullanır; sağ aktarım paneli gizlenir.
+            RailRight.Visibility = key is "games" or "profile" ? Visibility.Collapsed : Visibility.Visible;
+
+            if (key == "profile")
+            {
+                ClearNavSelection();
+                SyncProfileUi();
+            }
 
             TxtPageTitle.Text = key switch
             {
@@ -364,6 +601,7 @@ namespace Dosyaktar
                 "mobile"   => "Mobil köprü",
                 "history"  => "Geçmiş",
                 "settings" => "Ayarlar",
+                "profile"  => "Profil",
                 _          => "Keşif"
             };
 
@@ -374,6 +612,7 @@ namespace Dosyaktar
                 "mobile"   => PageMobile,
                 "history"  => PageHistory,
                 "settings" => PageSettings,
+                "profile"  => (FrameworkElement)PageProfile,
                 _          => (FrameworkElement)PageSend
             };
 
@@ -455,6 +694,22 @@ namespace Dosyaktar
                 if (PairingOverlay.Visibility == Visibility.Visible)
                 {
                     BtnPairingCancel_Click(this, new RoutedEventArgs());
+                    e.Handled = true;
+                }
+                else if (PageProfile != null && PageProfile.Visibility == Visibility.Visible)
+                {
+                    if (TxtProfileName.IsKeyboardFocusWithin)
+                    {
+                        // Düzenlemeden çık: yazılanı geri al, odağı bırak.
+                        TxtProfileName.Text = _settings.Hostname;
+                        SyncProfileUi();
+                        Keyboard.ClearFocus();
+                    }
+                    else
+                    {
+                        ReturnFromProfile();
+                    }
+
                     e.Handled = true;
                 }
             }
@@ -1595,16 +1850,36 @@ namespace Dosyaktar
 
         private void OnMobileTransfer(MobileTransfer t)
         {
+            // Bitiş her zaman işlenir; 600 ms kısıtı son "tamamlandı" olayını yutarsa
+            // durum çubuğu %0'da asılı kalıyordu.
+            if (!t.Active)
+            {
+                if (string.IsNullOrEmpty(t.Name)) return;
+
+                bool complete = t.Total <= 0 || t.Bytes >= t.Total;
+
+                if (t.Direction == "down")
+                {
+                    if (complete)
+                        SetStatus($"Telefona gönderildi: {t.Name} · {FileTransferService.FormatSize(t.Bytes)}", "ok");
+                    else
+                        SetStatus($"Telefona gönderim durdu: {t.Name}", "warn");
+                }
+                else if (!complete)
+                {
+                    // Tamamlanan alımların durum metnini OnMobileFileReceived yazar.
+                    SetStatus($"Telefondan alım durdu: {t.Name}", "warn");
+                }
+                return;
+            }
+
             // Köprü her parçada haber verir — arayüzü saniyede bir tazele.
             var now = DateTime.UtcNow;
             if (now - _lastMobileUiTick < TimeSpan.FromMilliseconds(600)) return;
             _lastMobileUiTick = now;
 
-            if (t.Active)
-            {
-                string dir = t.Direction == "down" ? "Telefona gönderiliyor" : "Telefondan alınıyor";
-                SetStatus($"{dir}: {t.Name} · {t.Percent}%", "accent");
-            }
+            string dir = t.Direction == "down" ? "Telefona gönderiliyor" : "Telefondan alınıyor";
+            SetStatus($"{dir}: {t.Name} · {t.Percent}%", "accent");
         }
 
         private void BtnAddShared_Click(object sender, RoutedEventArgs e)
@@ -1899,8 +2174,15 @@ namespace Dosyaktar
 
         private void UpdateIdentity()
         {
-            string name = _settings.Hostname;
-            TxtAvatar.Text = string.IsNullOrEmpty(name) ? "D" : name.Substring(0, 1).ToUpperInvariant();
+            if (AvatarSmall == null) return;
+
+            var spec = AvatarCatalog.Find(_settings.AvatarId);
+            AvatarSmall.AvatarId = spec.Id;
+
+            if (AvatarTile != null)
+                AvatarTile.ToolTip = "Profil ve avatarlar · " + spec.Name;
+
+            SyncProfileUi();
         }
 
         private void Setting_Changed(object sender, RoutedEventArgs e)
@@ -2164,20 +2446,68 @@ namespace Dosyaktar
 
             if (!SystemParameters.ClientAreaAnimation)
             {
+                // Hareket azaltma: sabit halka + nokta yeterli.
                 ScanRing.Opacity = 0.45;
+                ScanPingA.Opacity = 0;
+                ScanPingB.Opacity = 0;
+                ScanSweep.Opacity = 0;
+                ScanDotScale.ScaleX = 1;
+                ScanDotScale.ScaleY = 1;
                 return;
             }
 
-            var anim = new DoubleAnimation
+            // Dış halka nefes alır.
+            ScanRing.BeginAnimation(OpacityProperty, new DoubleAnimation(0.18, 0.55, TimeSpan.FromSeconds(2.4))
             {
-                From = 0.18,
-                To   = 0.75,
-                Duration = TimeSpan.FromMilliseconds(1500),
                 AutoReverse = true,
-                RepeatBehavior = RepeatBehavior.Forever
+                RepeatBehavior = RepeatBehavior.Forever,
+                EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut }
+            });
+
+            // Merkezden dışa doğru sürekli sonar pingleri.
+            StartScanPing(ScanPingA, ScanPingAScale, TimeSpan.Zero);
+            StartScanPing(ScanPingB, ScanPingBScale, TimeSpan.FromSeconds(0.95));
+
+            // Sabit hızda dönen tarama yayı: "arıyor" hissi.
+            ScanSweepRotate.BeginAnimation(
+                RotateTransform.AngleProperty,
+                new DoubleAnimation(0, 360, TimeSpan.FromSeconds(1.7))
+                {
+                    RepeatBehavior = RepeatBehavior.Forever
+                });
+
+            // Merkez nokta kalp atışı.
+            var beat = new DoubleAnimation(1.0, 1.38, TimeSpan.FromMilliseconds(820))
+            {
+                AutoReverse = true,
+                RepeatBehavior = RepeatBehavior.Forever,
+                EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut }
             };
 
-            ScanRing.BeginAnimation(OpacityProperty, anim);
+            ScanDotScale.BeginAnimation(ScaleTransform.ScaleXProperty, beat);
+            ScanDotScale.BeginAnimation(ScaleTransform.ScaleYProperty, beat);
+        }
+
+        private static void StartScanPing(UIElement ring, ScaleTransform scale, TimeSpan delay)
+        {
+            var grow = new DoubleAnimation(0.32, 1.0, TimeSpan.FromSeconds(1.9))
+            {
+                BeginTime = delay,
+                RepeatBehavior = RepeatBehavior.Forever,
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+
+            scale.BeginAnimation(ScaleTransform.ScaleXProperty, grow);
+            scale.BeginAnimation(ScaleTransform.ScaleYProperty, grow);
+
+            var fade = new DoubleAnimation(0.60, 0.0, TimeSpan.FromSeconds(1.9))
+            {
+                BeginTime = delay,
+                RepeatBehavior = RepeatBehavior.Forever,
+                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+            };
+
+            ring.BeginAnimation(OpacityProperty, fade);
         }
 
         private static BitmapImage? MakeQr(string text)

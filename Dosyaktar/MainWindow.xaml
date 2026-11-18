@@ -320,6 +320,158 @@
             <Setter Property="Margin" Value="0,0,0,3"/>
         </Style>
 
+        <!-- ── profil: alt köşedeki avatar düğmesi ─────────────────── -->
+        <Style x:Key="AvatarTileButton" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="root" Width="38" Height="38" RenderTransformOrigin="0.5,0.5">
+                            <Grid.RenderTransform>
+                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            </Grid.RenderTransform>
+                            <Border x:Name="focus" CornerRadius="14" BorderThickness="1.5"
+                                    BorderBrush="{DynamicResource AccentInkBrush}"
+                                    Margin="-3" Visibility="Collapsed" IsHitTestVisible="False"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border x:Name="hint" Width="15" Height="15" CornerRadius="7.5"
+                                    Background="{DynamicResource AccentFillBrush}"
+                                    HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                    Margin="0,0,-3,-3" Opacity="0">
+                                <TextBlock Text="&#xE70F;" FontFamily="{StaticResource IconFont}"
+                                           FontSize="7.5" Foreground="White"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="hint" Property="Opacity" Value="1"/>
+                                <Setter TargetName="root" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.08" ScaleY="1.08"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="focus" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="root" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.94" ScaleY="0.94"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ── profil: kategori filtresi ───────────────────────────── -->
+        <Style x:Key="FilterChip" TargetType="RadioButton">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,8,8"/>
+            <Setter Property="FontSize" Value="11.5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecBrush}"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid>
+                            <Border x:Name="ring" CornerRadius="16" BorderThickness="1.5"
+                                    BorderBrush="{DynamicResource AccentInkBrush}"
+                                    Margin="-2.5" Visibility="Collapsed" IsHitTestVisible="False"/>
+                            <Border x:Name="face" CornerRadius="14"
+                                    Background="{DynamicResource Surface2Brush}"
+                                    BorderBrush="{DynamicResource GlassBorderBrush}"
+                                    BorderThickness="1" Padding="13,6">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="face" Property="Background" Value="{DynamicResource AccentGhostBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="face" Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+                                <Setter TargetName="face" Property="BorderBrush" Value="{DynamicResource AccentBorderBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource AccentInkBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="ring" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ── profil: avatar seçim kutusu ─────────────────────────── -->
+        <Style x:Key="AvatarPickTile" TargetType="RadioButton">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,8,8"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid Width="78">
+                            <Border x:Name="ring" CornerRadius="24" BorderThickness="1.5"
+                                    BorderBrush="{DynamicResource AccentInkBrush}"
+                                    Margin="-3" Visibility="Collapsed" IsHitTestVisible="False"/>
+                            <Border x:Name="face" CornerRadius="21"
+                                    Background="{DynamicResource CardFaceBrush}"
+                                    BorderBrush="{DynamicResource GlassBorderBrush}"
+                                    BorderThickness="1" Padding="5,5,5,6"
+                                    RenderTransformOrigin="0.5,0.42">
+                                <Border.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Border.RenderTransform>
+                                <StackPanel>
+                                    <ContentPresenter HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="tName" Text="{TemplateBinding Tag}"
+                                               FontSize="10" FontWeight="SemiBold"
+                                               HorizontalAlignment="Center" Margin="0,4,0,0"
+                                               Foreground="{DynamicResource TextMutedBrush}"
+                                               TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </Border>
+                            <Border x:Name="check" Width="16" Height="16" CornerRadius="8"
+                                    Background="{DynamicResource AccentFillBrush}"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Margin="2,2,2,0" Visibility="Collapsed">
+                                <TextBlock Text="&#xE73E;" FontFamily="{StaticResource IconFont}"
+                                           FontSize="8" Foreground="White"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="face" Property="BorderBrush" Value="{DynamicResource BorderStrongBrush}"/>
+                                <Setter TargetName="face" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.04" ScaleY="1.04"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="face" Property="BorderBrush" Value="{DynamicResource AccentInkBrush}"/>
+                                <Setter TargetName="face" Property="BorderThickness" Value="1.5"/>
+                                <Setter TargetName="check" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="tName" Property="Foreground" Value="{DynamicResource AccentInkBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="ring" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
 
     <Grid>
@@ -455,6 +607,147 @@
                     <views:GameLibraryView x:Name="GamesView"/>
                 </Grid>
 
+                <!-- ════ PAGE: PROFİL / KİŞİSELLEŞTİRME ════ -->
+                <Grid x:Name="PageProfile"
+                      Grid.Column="1" Grid.ColumnSpan="2"
+                      Margin="14,0,10,10"
+                      Visibility="Collapsed">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
+                        <StackPanel Margin="6,6,6,10">
+
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="KİŞİSELLEŞTİRME" Style="{StaticResource EyebrowText}"
+                                               Foreground="{DynamicResource AccentInkBrush}" Margin="0,0,0,7"/>
+                                    <TextBlock Text="Profil ve avatarlar" Style="{StaticResource DisplayText}" FontSize="26"/>
+                                    <TextBlock Text="Adını yaz, animasyonlu avatarını seç. Ağda bu kimlikle görünürsün."
+                                               Style="{StaticResource MutedText}" Margin="0,3,0,0"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Style="{StaticResource SecondaryButton}"
+                                        VerticalAlignment="Bottom" Click="BtnProfileBack_Click"
+                                        ToolTip="Önceki sayfaya dön (Esc)"
+                                        AutomationProperties.Name="Geri dön">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE72B;" FontFamily="{StaticResource IconFont}"
+                                                   FontSize="11" VerticalAlignment="Center" Margin="0,0,7,0"/>
+                                        <TextBlock Text="Geri"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="306"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- canlı önizleme -->
+                                <Border Style="{StaticResource GlassCard}" VerticalAlignment="Top" Padding="22">
+                                    <StackPanel>
+                                        <Grid Height="204">
+                                            <Ellipse Width="182" Height="182"
+                                                     Fill="{DynamicResource AccentGlowBrush}"
+                                                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Ellipse Width="150" Height="150" Stroke="{DynamicResource AccentBorderBrush}"
+                                                     StrokeThickness="1" StrokeDashArray="2 4" Opacity="0.45"
+                                                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <controls:AnimatedAvatar x:Name="ProfilePreview"
+                                                                     Width="158" Height="158"
+                                                                     HorizontalAlignment="Center"
+                                                                     VerticalAlignment="Center"/>
+                                        </Grid>
+
+                                        <TextBlock x:Name="TxtProfilePreviewName" Text="Dosyaktar"
+                                                   FontFamily="{StaticResource DisplayFont}"
+                                                   FontSize="21" FontWeight="SemiBold"
+                                                   HorizontalAlignment="Center" Margin="0,6,0,0"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock x:Name="TxtProfileAvatarName" Text="Kedi"
+                                                   Style="{StaticResource MutedText}"
+                                                   HorizontalAlignment="Center" Margin="0,2,0,0"/>
+
+                                        <Border Style="{StaticResource DividerLine}" Margin="0,18,0,16"/>
+
+                                        <TextBlock Text="GÖRÜNEN AD" Style="{StaticResource EyebrowText}" Margin="0,0,0,7"/>
+                                        <TextBox x:Name="TxtProfileName" Style="{StaticResource ModernTextBox}"
+                                                 MaxLength="32" Tag="Cihaz adın"
+                                                 TextChanged="TxtProfileName_TextChanged"
+                                                 LostFocus="TxtProfileName_LostFocus"
+                                                 KeyDown="TxtProfileName_KeyDown"
+                                                 AutomationProperties.Name="Görünen ad"/>
+                                        <TextBlock Text="Aynı ağdaki cihazlar ve mobil köprü bu adı görür."
+                                                   Style="{StaticResource MutedText}" Margin="0,7,0,0"
+                                                   TextWrapping="Wrap"/>
+
+                                        <Border Style="{StaticResource ChipBadge}" HorizontalAlignment="Left"
+                                                Margin="0,14,0,0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="&#xE916;" FontFamily="{StaticResource IconFont}"
+                                                           FontSize="9" Foreground="{DynamicResource AccentInkBrush}"
+                                                           VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                <TextBlock Text="Canlı önizleme" FontSize="10.5" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource AccentInkBrush}"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- avatar galerisi -->
+                                <Border Grid.Column="1" Style="{StaticResource GlassCard}"
+                                        Margin="18,0,0,0" Padding="22" VerticalAlignment="Top">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,6">
+                                            <StackPanel>
+                                                <TextBlock Text="Avatar galerisi" Style="{StaticResource SectionText}" FontSize="16"/>
+                                                <TextBlock Text="32 avatar · her biri kendi ritminde hareket eder"
+                                                           Style="{StaticResource MutedText}" Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                            <Border Style="{StaticResource ChipBadge}" HorizontalAlignment="Right"
+                                                    VerticalAlignment="Center">
+                                                <TextBlock x:Name="TxtAvatarCount" Text="32"
+                                                           FontSize="10.5" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource AccentInkBrush}"
+                                                           MinWidth="14" TextAlignment="Center"/>
+                                            </Border>
+                                        </Grid>
+
+                                        <WrapPanel x:Name="AvatarCategoryBar" Margin="0,10,0,2">
+                                            <RadioButton Content="Tümü" Tag="Tümü" GroupName="avatarFilter"
+                                                         Style="{StaticResource FilterChip}" IsChecked="True"
+                                                         Checked="AvatarFilter_Checked"/>
+                                            <RadioButton Content="Hayvanlar" Tag="Hayvanlar" GroupName="avatarFilter"
+                                                         Style="{StaticResource FilterChip}"
+                                                         Checked="AvatarFilter_Checked"/>
+                                            <RadioButton Content="Uzay" Tag="Uzay" GroupName="avatarFilter"
+                                                         Style="{StaticResource FilterChip}"
+                                                         Checked="AvatarFilter_Checked"/>
+                                            <RadioButton Content="Doğa" Tag="Doğa" GroupName="avatarFilter"
+                                                         Style="{StaticResource FilterChip}"
+                                                         Checked="AvatarFilter_Checked"/>
+                                            <RadioButton Content="Karakterler" Tag="Karakterler" GroupName="avatarFilter"
+                                                         Style="{StaticResource FilterChip}"
+                                                         Checked="AvatarFilter_Checked"/>
+                                        </WrapPanel>
+
+                                        <WrapPanel x:Name="AvatarGallery" Margin="0,10,0,0"/>
+
+                                        <TextBlock x:Name="EmptyAvatarFilter" Text="Bu kategoride avatar yok."
+                                                   Style="{StaticResource MutedText}" Visibility="Collapsed"/>
+
+                                        <Border Style="{StaticResource DividerLine}" Margin="0,8,0,12"/>
+                                        <TextBlock Text="Bir avatara tıkla — seçim anında kaydedilir. Hareket azaltma açıksa avatarlar sabit görünür."
+                                                   Style="{StaticResource MutedText}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
                 <!-- ─────────── icon rail ─────────── -->
                 <Border Grid.Column="0" Margin="10,0,0,10"
                         Background="{DynamicResource CardFaceBrush}"
@@ -505,13 +798,13 @@
                                     Width="Auto" Height="34" FontSize="16"
                                     Click="BtnThemeCycle_Click" ToolTip="Temayı değiştir"/>
                             <Border Height="1" Background="{DynamicResource DividerBrush}" Margin="8,8"/>
-                            <Border Width="34" Height="34" CornerRadius="11"
-                                    Background="{DynamicResource PrimaryGradientBrush}"
-                                    HorizontalAlignment="Center">
-                                <TextBlock x:Name="TxtAvatar" Text="D"
-                                           Foreground="White" FontSize="14" FontWeight="Bold"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
+                            <Button x:Name="AvatarTile" Style="{StaticResource AvatarTileButton}"
+                                    HorizontalAlignment="Center"
+                                    Click="AvatarTile_Click"
+                                    ToolTip="Profil ve avatarlar"
+                                    AutomationProperties.Name="Profil ve avatarlar">
+                                <controls:AnimatedAvatar x:Name="AvatarSmall" Width="30" Height="30"/>
+                            </Button>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -566,14 +859,52 @@
                                         BorderBrush="{DynamicResource GlassBorderBrush}"
                                         BorderThickness="1">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Grid Width="44" Height="44" Margin="0,0,16,0">
+                                        <Grid Width="48" Height="48" Margin="0,0,16,0">
+                                            <!-- Sabit dış çerçeve -->
                                             <Ellipse x:Name="ScanRing" Width="44" Height="44"
-                                                     Stroke="{DynamicResource AccentBrush}" StrokeThickness="1.6"
-                                                     Opacity="0.35"/>
+                                                     Stroke="{DynamicResource AccentBrush}" StrokeThickness="1.4"
+                                                     Opacity="0.30"/>
+
+                                            <!-- Sürekli genişleyen sonar halkaları -->
+                                            <Ellipse x:Name="ScanPingA" Width="44" Height="44"
+                                                     Stroke="{DynamicResource AccentBrush}" StrokeThickness="1.3"
+                                                     Opacity="0" RenderTransformOrigin="0.5,0.5">
+                                                <Ellipse.RenderTransform>
+                                                    <ScaleTransform x:Name="ScanPingAScale" ScaleX="0.32" ScaleY="0.32"/>
+                                                </Ellipse.RenderTransform>
+                                            </Ellipse>
+                                            <Ellipse x:Name="ScanPingB" Width="44" Height="44"
+                                                     Stroke="{DynamicResource AccentBrush}" StrokeThickness="1.1"
+                                                     Opacity="0" RenderTransformOrigin="0.5,0.5">
+                                                <Ellipse.RenderTransform>
+                                                    <ScaleTransform x:Name="ScanPingBScale" ScaleX="0.32" ScaleY="0.32"/>
+                                                </Ellipse.RenderTransform>
+                                            </Ellipse>
+
+                                            <!-- Dönen tarama yayı -->
+                                            <Path x:Name="ScanSweep"
+                                                  Data="M 24,4 A 20,20 0 0 1 41.3,14"
+                                                  Width="48" Height="48" Stretch="None"
+                                                  HorizontalAlignment="Left" VerticalAlignment="Top"
+                                                  Stroke="{DynamicResource AccentBrush}" StrokeThickness="2.2"
+                                                  StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                                  Opacity="0.75">
+                                                <Path.RenderTransform>
+                                                    <RotateTransform x:Name="ScanSweepRotate"
+                                                                     CenterX="24" CenterY="24" Angle="0"/>
+                                                </Path.RenderTransform>
+                                            </Path>
+
+                                            <!-- Yumuşak çekirdek ve nabız atan merkez -->
                                             <Ellipse Width="26" Height="26"
                                                      Fill="{DynamicResource AccentSoftBrush}"/>
-                                            <Ellipse Width="8" Height="8"
-                                                     Fill="{DynamicResource AccentBrush}"/>
+                                            <Ellipse x:Name="ScanDot" Width="8" Height="8"
+                                                     Fill="{DynamicResource AccentBrush}"
+                                                     RenderTransformOrigin="0.5,0.5">
+                                                <Ellipse.RenderTransform>
+                                                    <ScaleTransform x:Name="ScanDotScale" ScaleX="1" ScaleY="1"/>
+                                                </Ellipse.RenderTransform>
+                                            </Ellipse>
                                         </Grid>
                                         <StackPanel VerticalAlignment="Center">
                                             <TextBlock Text="Cihaz aranıyor" Style="{StaticResource SectionText}"/>
