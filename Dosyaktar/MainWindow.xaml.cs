@@ -82,12 +82,14 @@ namespace Dosyaktar
         private bool     _receiving;
         private string   _connectedTargetIP   = "";
         private string   _connectedTargetName = "";
+        private int      _connectedTargetPort;
         private DateTime _sessionStarted      = DateTime.Now;
 
         // eşleşme
         private string _pendingPairIp   = "";
         private string _pendingPairName = "";
         private string _pendingPairPin  = "";
+        private int    _pendingPairPort;
         private bool   _pairOutgoing;
 
         // mobil köprü
@@ -155,6 +157,21 @@ namespace Dosyaktar
             StartAmbientMotion();
             StartScanPulse();
             _ = CheckUpdatesOnStartAsync();
+            EnsureFirewallPermission();
+        }
+
+        /// <summary>
+        /// Uygulama yönetici olarak açıldığı için gelen bağlantı iznini sessizce
+        /// bırakır. İndirilen yeni EXE'nin yolu eski kurala uymadığında karşı
+        /// cihaz "Almaya hazır" görünse bile TCP bağlantısı sessizce düşüyordu.
+        /// </summary>
+        private void EnsureFirewallPermission()
+        {
+            _ = Task.Run(() =>
+            {
+                bool ok = NetworkManager.EnsureFirewallRule(out string message);
+                Dispatcher.InvokeAsync(() => AppendLog("[Ağ] " + message, ok ? "info" : "warn"));
+            });
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -277,7 +294,7 @@ namespace Dosyaktar
             _net.Error      += (_, m) => AppendLog("[Ağ] " + m, "err");
 
             // gönderim
-            _sender.StatusChanged += (_, m) => AppendLog(m);
+            _sender.StatusChanged += (_, m) => OnSenderStatus(m);
             _sender.Error         += (_, m) => AppendLog(m, "err");
             _sender.ProgressChanged += (_, p) => Dispatcher.InvokeAsync(() => ShowProgress(p, true));
             _sender.FlashProgressChanged += (_, p) => Dispatcher.InvokeAsync(() => ShowFlash(p));
@@ -305,6 +322,23 @@ namespace Dosyaktar
 
             // oyun kütüphanesi
             GamesView.SendRequested += async (_, game) => await SendGameAsync(game);
+        }
+
+        /// <summary>
+        /// Gönderim sırasında servis adımlarını durum çubuğuna taşır:
+        /// "dosyalar taranıyor", "bağlanılıyor", "onay bekleniyor"…
+        /// Böylece kart 0%'da dururken ekran ölü görünmez.
+        /// </summary>
+        private void OnSenderStatus(string message)
+        {
+            AppendLog(message);
+
+            if (!_senderBusy) return;
+
+            Dispatcher.InvokeAsync(() =>
+            {
+                if (_senderBusy && !_closing) SetStatus(message, "accent");
+            });
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -773,6 +807,10 @@ namespace Dosyaktar
         private int EffectivePort =>
             _settings.Port is > 0 and < 65536 ? _settings.Port : FileTransferService.DefaultPort;
 
+        /// <summary>Gönderimde kullanılan port: karşı cihazın ilan ettiği port.</summary>
+        private int TargetPort =>
+            _connectedTargetPort is > 0 and < 65536 ? _connectedTargetPort : EffectivePort;
+
         private string EffectiveDownloadDir =>
             string.IsNullOrWhiteSpace(_settings.SaveDirectory)
                 ? AppSettings.DefaultSaveDir
@@ -856,6 +894,7 @@ namespace Dosyaktar
         {
             _pendingPairIp   = peer.IP;
             _pendingPairName = string.IsNullOrEmpty(peer.Hostname) ? peer.IP : peer.Hostname;
+            _pendingPairPort = peer.Port;
             _pendingPairPin  = Random.Shared.Next(100000, 1000000).ToString();
             _pairOutgoing    = true;
 
@@ -877,15 +916,12 @@ namespace Dosyaktar
 
                 if (answer == MessageBoxResult.Yes)
                 {
-                    try
-                    {
-                        NetworkManager.AddFirewallRule();
-                        SetStatus("Güvenlik duvarı kuralı eklendi — yeniden deneyin", "ok");
-                    }
-                    catch (Exception ex)
-                    {
-                        AppendLog("Kural eklenemedi: " + ex.Message, "err");
-                    }
+                    bool ok = NetworkManager.EnsureFirewallRule(out string fwMessage);
+                    AppendLog(fwMessage, ok ? "info" : "err");
+                    SetStatus(ok
+                        ? "Güvenlik duvarı kuralı eklendi — yeniden deneyin"
+                        : "Kural eklenemedi — " + fwMessage,
+                        ok ? "ok" : "err");
                 }
             }
         }
@@ -912,6 +948,7 @@ namespace Dosyaktar
         {
             PairingOverlay.Visibility = Visibility.Collapsed;
             _pendingPairIp = _pendingPairName = _pendingPairPin = "";
+            _pendingPairPort = 0;
         }
 
         private void Pairing_Requested(object? sender, (string IP, string Hostname, string Pin) e)
@@ -944,7 +981,9 @@ namespace Dosyaktar
                 if (e.Accepted)
                 {
                     AppendLog("Eşleşme kabul edildi.");
-                    StartSession(e.IP, string.IsNullOrEmpty(_pendingPairName) ? e.IP : _pendingPairName);
+                    StartSession(e.IP,
+                        string.IsNullOrEmpty(_pendingPairName) ? e.IP : _pendingPairName,
+                        _pendingPairPort);
                 }
                 else
                 {
@@ -985,22 +1024,27 @@ namespace Dosyaktar
         //  OTURUM
         // ═════════════════════════════════════════════════════════════════════
 
-        private void StartSession(string ip, string name)
+        private void StartSession(string ip, string name, int peerPort = 0)
         {
             _isConnectedSession  = true;
             _connectedTargetIP   = ip;
             _connectedTargetName = string.IsNullOrEmpty(name) ? ip : name;
             _sessionStarted      = DateTime.Now;
 
+            // Gönderim, karşı cihazın ilan ettiği portu kullanır; iki bilgisayarda
+            // farklı port ayarı varsa bağlantı boşa düşmez.
+            if (peerPort is <= 0 or >= 65536)
+                peerPort = _peers.FirstOrDefault(p => p.IP == ip)?.Port ?? 0;
+
+            _connectedTargetPort = peerPort is > 0 and < 65536 ? peerPort : EffectivePort;
+
             _settings.LastTargetIP = ip;
             SettingsService.Save(_settings);
-
-            _discovery.SetReceivingMode(true);
 
             TxtSessName.Text  = _connectedTargetName;
             TxtSessIp.Text    = ip;
             TxtSessSince.Text = _sessionStarted.ToString("HH:mm");
-            TxtSessPort.Text  = EffectivePort.ToString();
+            TxtSessPort.Text  = TargetPort.ToString();
             TxtSessMode.Text  = _settings.UseFlashMode
                 ? $"Flash · {_settings.FlashConnections} kanal"
                 : "Standart";
@@ -1013,8 +1057,15 @@ namespace Dosyaktar
             GamesView.SetSendAvailable(true);
             AppendLog($"Oturum açıldı: {_connectedTargetName} ({ip})");
 
-            if (_settings.AutoReceive) StartReceiving();
-            else TxtSessionPercent.Text = "Alma kapalı — 'Almaya başla'ya bas";
+            if (_settings.AutoReceive)
+            {
+                StartReceiving();
+            }
+            else
+            {
+                // "Almaya hazır" yalnızca gerçekten dinlenirken ilan edilir.
+                _discovery.SetReceivingMode(false);
+            }
 
             if (_files.Count > 0) _ = SendQueueAsync();
         }
@@ -1024,6 +1075,7 @@ namespace Dosyaktar
             if (!_isConnectedSession || _receiving) return;
 
             _receiving = true;
+            _discovery.SetReceivingMode(true);
             UpdateSessionUi();
             AppendLog($"Dinleme başladı · port {EffectivePort}");
             _ = Task.Run(ReceiveLoopAsync);
@@ -1034,6 +1086,7 @@ namespace Dosyaktar
             if (!_receiving) return;
 
             _receiving = false;
+            _discovery.SetReceivingMode(false);
             try { _receiver.Cancel(); } catch { }
             UpdateSessionUi();
             AppendLog("Dinleme durduruldu.");
@@ -1124,8 +1177,24 @@ namespace Dosyaktar
 
             BtnReceiveToggle.Content = _receiving ? "Almayı durdur" : "Almaya başla";
 
-            if (_isConnectedSession && !_receiving)
-                TxtSessionPercent.Text = "Alma kapalı — dinleme başlatılmadı";
+            if (!_isConnectedSession) return;
+
+            if (_receiving)
+            {
+                // Dinleme açıkken "Alma kapalı" yazısı ekranda kalmasın.
+                if (PbSession.Value <= 0 && string.IsNullOrEmpty(TxtSessionSpeed.Text))
+                {
+                    TxtSessionPercent.Text = "Dinleniyor";
+                    TxtSessionSpeed.Text   = "port " + EffectivePort;
+                    TxtSessionEta.Text     = "gönderim bekleniyor";
+                }
+            }
+            else
+            {
+                TxtSessionPercent.Text = "Alma kapalı — 'Almaya başla'ya bas";
+                TxtSessionSpeed.Text   = "";
+                TxtSessionEta.Text     = "";
+            }
         }
 
         private void BtnReceiveToggle_Click(object sender, RoutedEventArgs e)
@@ -1144,8 +1213,10 @@ namespace Dosyaktar
             _isConnectedSession  = false;
             _connectedTargetIP   = "";
             _connectedTargetName = "";
+            _connectedTargetPort = 0;
             _senderBusy          = false;
 
+            GamesView.SetSending(false);
             _discovery.SetReceivingMode(false);
             ActiveTransferCard.Visibility = Visibility.Collapsed;
             PbSession.Value = 0;
@@ -1438,7 +1509,7 @@ namespace Dosyaktar
             TransferResult result;
             try
             {
-                result = await _sender.SendFilesAsync(snapshot, _connectedTargetIP, EffectivePort);
+                result = await _sender.SendFilesAsync(snapshot, _connectedTargetIP, TargetPort);
             }
             catch (Exception ex)
             {
@@ -1519,7 +1590,7 @@ namespace Dosyaktar
             TransferResult result;
             try
             {
-                result = await _sender.SendFolderAsync(folder, _connectedTargetIP, EffectivePort);
+                result = await _sender.SendFolderAsync(folder, _connectedTargetIP, TargetPort);
             }
             catch (Exception ex)
             {
@@ -1561,10 +1632,13 @@ namespace Dosyaktar
             ActiveTransferCard.Visibility = Visibility.Visible;
             TxtActiveName.Text  = title;
             TxtActiveDetail.Text = detail;
+            // Tarama/bağlanma sırasında yüzde bilinmiyor: çubuk hareket eder,
+            // ekran "0%'da takıldı" gibi görünmez.
+            PbActive.IsIndeterminate = true;
             PbActive.Value = 0;
-            TxtActivePercent.Text = "0%";
+            TxtActivePercent.Text = "…";
             TxtActiveSpeed.SetResourceReference(TextBlock.ForegroundProperty, "SuccessBrush");
-            TxtActiveSpeed.Text = "—";
+            TxtActiveSpeed.Text = "Hazırlanıyor";
         }
 
         private void ShowProgress(TransferProgress p, bool outgoing)
@@ -1580,6 +1654,7 @@ namespace Dosyaktar
                 ? $"{p.CurrentFileIndex}/{p.TotalFiles} · {FileTransferService.FormatSize(p.BytesSent)} / {FileTransferService.FormatSize(p.TotalBytes)}"
                 : FileTransferService.FormatSize(p.TotalBytes);
 
+            PbActive.IsIndeterminate = false;
             PbActive.Value = Math.Max(0, Math.Min(100, p.Percentage));
             TxtActivePercent.Text = $"{p.Percentage:0}%";
             TxtActiveSpeed.SetResourceReference(TextBlock.ForegroundProperty, "SuccessBrush");
@@ -1592,10 +1667,11 @@ namespace Dosyaktar
             TxtActiveDetail.Text = $"Flash · {p.ActiveConnections} kanal";
         }
 
-        private void CompleteTransferCard(bool ok, string message)
+        private void CompleteTransferCard(bool ok, string message, int holdMs = 3200)
         {
             int token = ++_cardToken;
 
+            PbActive.IsIndeterminate = false;
             TxtActivePercent.Text = ok ? "100%" : "—";
             if (ok) PbActive.Value = 100;
 
@@ -1603,15 +1679,16 @@ namespace Dosyaktar
             TxtActiveSpeed.Text = ok ? "Tamamlandı" : message;
             TxtActiveDetail.Text = message;
 
-            _ = HideCardLaterAsync(token);
+            _ = HideCardLaterAsync(token, holdMs);
         }
 
-        private async Task HideCardLaterAsync(int token)
+        private async Task HideCardLaterAsync(int token, int holdMs)
         {
-            await Task.Delay(3200);
+            await Task.Delay(holdMs);
             if (token != _cardToken || _closing) return;
 
             ActiveTransferCard.Visibility = Visibility.Collapsed;
+            PbActive.IsIndeterminate = false;
             PbActive.Value = 0;
         }
 
@@ -1648,12 +1725,13 @@ namespace Dosyaktar
 
             if (_senderBusy)
             {
-                AppendLog("Zaten bir aktarım sürüyor.", "warn");
+                SetStatus("Zaten bir aktarım sürüyor — bitmesini bekle", "warn");
                 return;
             }
 
             _senderBusy = true;
             BtnCancelTransfer.IsEnabled = true;
+            GamesView.SetSending(true);
 
             BeginTransferCard(game.Name, _connectedTargetName + " · oyun");
             SetStatus("Oyun hazırlanıyor…", "accent");
@@ -1663,15 +1741,18 @@ namespace Dosyaktar
             try
             {
                 result = await GameTransferService.SendAsync(
-                    _sender, game, _connectedTargetIP, EffectivePort, game.SizeBytes);
+                    _sender, game, _connectedTargetIP, TargetPort, game.SizeBytes);
             }
             catch (Exception ex)
             {
                 result = new TransferResult(false, ex.Message);
             }
-
-            _senderBusy = false;
-            BtnCancelTransfer.IsEnabled = false;
+            finally
+            {
+                _senderBusy = false;
+                BtnCancelTransfer.IsEnabled = false;
+                GamesView.SetSending(false);
+            }
 
             if (result.Success)
             {
@@ -1686,18 +1767,62 @@ namespace Dosyaktar
                     When      = DateTime.Now
                 });
                 SetStatus("Oyun gönderildi", "ok");
+                return;
             }
-            else if (result.Message.Contains("iptal", StringComparison.OrdinalIgnoreCase))
+
+            if (result.Message.Contains("iptal", StringComparison.OrdinalIgnoreCase))
             {
                 CompleteTransferCard(false, "İptal edildi");
                 SetStatus("Oyun gönderimi iptal edildi", "warn");
+                return;
             }
-            else
+
+            bool connectionFailure = IsConnectionFailure(result.Message);
+
+            // Hata kartı kaybolmadan kalır; kullanıcı ne olduğunu ve ne yapacağını görür.
+            CompleteTransferCard(false, connectionFailure ? "Bağlantı kurulamadı" : "Gönderilemedi", 9000);
+
+            AddHistory(new HistoryEntry
             {
-                CompleteTransferCard(false, "Başarısız");
-                SetStatus("Oyun gönderilemedi", "err");
-                AppendLog(result.Message, "err");
-            }
+                Title     = game.Name,
+                Detail    = result.Message,
+                Path      = game.InstallPath,
+                Direction = HistoryDirection.Sent,
+                Success   = false,
+                When      = DateTime.Now
+            });
+
+            SetStatus("Oyun gönderilemedi: " + result.Message, "err");
+            AppendLog(result.Message, "err");
+
+            if (connectionFailure)
+                ShowConnectionGuidance(result.Message);
+        }
+
+        private static bool IsConnectionFailure(string message) =>
+            message.Contains("yanıt vermedi", StringComparison.OrdinalIgnoreCase) ||
+            message.Contains("reddedildi", StringComparison.OrdinalIgnoreCase) ||
+            message.Contains("ulaşılamadı", StringComparison.OrdinalIgnoreCase) ||
+            message.Contains("bağlantı kurulamadı", StringComparison.OrdinalIgnoreCase) ||
+            message.Contains("Ağ hatası", StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Bağlantı kurulamadığında "öylece kaldı" hissini bitirir: hangi adresin
+        /// yanıt vermediğini ve karşı bilgisayarda sırayla ne yapılacağını söyler.
+        /// </summary>
+        private void ShowConnectionGuidance(string detail)
+        {
+            string text =
+                "Bağlantı kurulamadı.\n\n" +
+                $"{_connectedTargetName} ({_connectedTargetIP}:{TargetPort}) yanıt vermiyor.\n\n" +
+                "Karşı bilgisayarda:\n" +
+                "1. Dosyaktar'ı yönetici olarak aç.\n" +
+                "2. Oturum sekmesinde \"Almaya başla\"ya bas.\n" +
+                "3. Güvenlik duvarı sorduysa \"İzin ver\"i seç.\n\n" +
+                "Ayrıntı: " + detail;
+
+            MessageBox.Show(this, text, "Oyun gönderilemedi",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         // ═════════════════════════════════════════════════════════════════════

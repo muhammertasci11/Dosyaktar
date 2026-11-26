@@ -24,6 +24,7 @@ namespace Dosyaktar.Views
         private CancellationTokenSource? _scanCts;
         private bool _ready;
         private bool _canSend;
+        private bool _sending;
         private int _filteredCount;
 
         /// <summary>Gönder butonuna basıldığında seçili oyunu taşır.</summary>
@@ -54,6 +55,19 @@ namespace Dosyaktar.Views
             _canSend = canSend;
             UpdateSendEnabled();
         }
+
+        /// <summary>
+        /// Aktarım sürerken Gönder düğmesini kilitler ve ne olduğunu yazar;
+        /// basıldığında sessiz kalan bir düğme bırakmaz.
+        /// </summary>
+        public void SetSending(bool sending)
+        {
+            _sending = sending;
+            UpdateSendEnabled();
+        }
+
+        /// <summary>Gönderim hatasını oyun sayfasındaki uyarı şeridinde gösterir.</summary>
+        public void ShowSendFailure(string message) => ShowWarn(message);
 
         /// <summary>Arama kutusuna odaklanır (Ctrl+F).</summary>
         public void FocusSearch()
@@ -358,7 +372,8 @@ namespace Dosyaktar.Views
 
         private void UpdateSendEnabled()
         {
-            BtnSendGame.IsEnabled = _ready && _canSend && GameList.SelectedItem is GameEntry;
+            BtnSendGame.IsEnabled = _ready && _canSend && !_sending && GameList.SelectedItem is GameEntry;
+            BtnSendGame.Content = _sending ? "Gönderiliyor…" : "Gönder";
         }
 
         private void ShowWarn(string message)

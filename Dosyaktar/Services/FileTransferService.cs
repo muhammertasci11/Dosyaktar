@@ -117,16 +117,10 @@ namespace Dosyaktar.Services
 
             OnStatus($"Klasör taranıyor: {Path.GetFileName(folderPath)}...");
 
-            var entries = new List<(string path, string relName, long size)>();
             // Klasörün kendisini kök olarak baz alarak içeriğin dağılmasını engelle (Steam common/OyunAdı vb.)
             string baseDir = Path.GetDirectoryName(folderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)) ?? folderPath;
 
-            foreach (var file in Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories))
-            {
-                var fi = new FileInfo(file);
-                string rel = Path.GetRelativePath(baseDir, file);
-                entries.Add((file, rel, fi.Length));
-            }
+            var entries = await Task.Run(() => EnumerateFolder(folderPath, baseDir));
 
             if (entries.Count == 0)
                 return new TransferResult(false, "Klasör boş.");
@@ -162,18 +156,10 @@ namespace Dosyaktar.Services
                 folderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
                 ?? folderPath;
 
-            foreach (var file in Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories))
-            {
-                try
-                {
-                    var fi = new FileInfo(file);
-                    if ((fi.Attributes & FileAttributes.ReparsePoint) != 0) continue;
-
-                    string rel = Path.GetRelativePath(baseDir, file);
-                    entries.Add((file, rel, fi.Length));
-                }
-                catch { /* erişilemeyen dosya → atla */ }
-            }
+            // Enumeration runs off the UI thread: an 80 GB game can hold hundreds of
+            // thousands of files, and freezing the window made a send look "stuck".
+            var folderEntries = await Task.Run(() => EnumerateFolder(folderPath, baseDir, skipReparse: true));
+            entries.AddRange(folderEntries);
 
             if (entries.Count == 0)
                 return new TransferResult(false, "Klasör boş.");
@@ -185,6 +171,37 @@ namespace Dosyaktar.Services
             return await SendEntriesAsync(entries, TransferMode.Folder, receiverIP, port, totalBytes);
         }
 
+        /// <summary>
+        /// Klasörü arka planda tarar; büyük oyunlarda arayüz donmasın diye
+        /// belirli aralıklarla "kaç dosya tarandı" durumu yayınlar.
+        /// </summary>
+        private List<(string path, string relName, long size)> EnumerateFolder(
+            string folderPath, string baseDir, bool skipReparse = false)
+        {
+            var entries = new List<(string path, string relName, long size)>();
+            int scanned = 0;
+
+            foreach (var file in Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories))
+            {
+                scanned++;
+
+                if ((scanned & 2047) == 0)
+                    OnStatus($"{scanned:N0} dosya tarandı…");
+
+                try
+                {
+                    var fi = new FileInfo(file);
+                    if (skipReparse && (fi.Attributes & FileAttributes.ReparsePoint) != 0) continue;
+
+                    string rel = Path.GetRelativePath(baseDir, file);
+                    entries.Add((file, rel, fi.Length));
+                }
+                catch { /* erişilemeyen dosya → atla */ }
+            }
+
+            return entries;
+        }
+
         // ── Ortak gönderim çekirdeği ──────────────────────────────────────────
         private async Task<TransferResult> SendEntriesAsync(
             List<(string path, string relName, long size)> entries,
@@ -193,10 +210,15 @@ namespace Dosyaktar.Services
             int port,
             long totalBytes)
         {
+            _cts?.Dispose();
+            _cts = new CancellationTokenSource();
+            var token = _cts.Token;
+
             var settings = SettingsService.Load();
             if (settings.UseFlashMode)
             {
-                var flash = new FlashTransferService();
+                // Flash kendi bağlantılarını kurar; iptal düğmesi bu token'a bağlıdır.
+                var flash = new FlashTransferService(token);
                 flash.StatusChanged += (s, msg) => OnStatus(msg);
                 flash.Error += (s, msg) => OnError(msg);
                 flash.ProgressChanged += (s, p) => 
@@ -207,21 +229,15 @@ namespace Dosyaktar.Services
                     FlashProgressChanged?.Invoke(this, p);
                 };
                 
-                // Add event handler logic to MainWindow to handle the new UI later
-                // The actual ThreadProgress will be consumed if the UI supports it.
-                
                 return await flash.SendFlashAsync(entries, receiverIP, port, settings.FlashConnections);
             }
 
-            _cts = new CancellationTokenSource();
-            var token = _cts.Token;
-
-            OnStatus($"Bağlanılıyor: {receiverIP}:{port}...");
+            OnStatus($"Bağlanılıyor: {receiverIP}:{port}…");
             TcpClient? client = null;
             try
             {
                 client = new TcpClient { SendBufferSize = BufferSize * 4, NoDelay = true };
-                await client.ConnectAsync(IPAddress.Parse(receiverIP), port, token);
+                await NetworkManager.ConnectTcpAsync(client, receiverIP, port, token);
                 OnStatus("Bağlantı kuruldu, transfer başlıyor...");
 
                 await using var stream = client.GetStream();
@@ -297,7 +313,9 @@ namespace Dosyaktar.Services
                 
                 OnStatus("Alıcının onay (ACK) göndermesi bekleniyor...");
                 var ackBuf = new byte[1];
-                int ackRead = await stream.ReadAsync(ackBuf, token);
+                int ackRead = await NetworkManager.ReadWithTimeoutAsync(
+                    stream, ackBuf, token, 120_000,
+                    $"{receiverIP} aktarımı 120 sn içinde onaylamadı. Karşı cihaz yanıt vermiyor.");
                 if (ackRead == 0) throw new IOException("Alıcı aktarımı tamamlamadan bağlantıyı kesti.");
 
                 OnStatus($"✓ Transfer tamamlandı: {entries.Count} dosya, {FormatSize(totalBytes)}");
@@ -308,15 +326,21 @@ namespace Dosyaktar.Services
                 OnStatus("Transfer iptal edildi.");
                 return new TransferResult(false, "Kullanıcı tarafından iptal edildi.");
             }
+            catch (TimeoutException ex)
+            {
+                OnError(ex.Message);
+                return new TransferResult(false, ex.Message);
+            }
             catch (SocketException ex) when (ex.SocketErrorCode == SocketError.ConnectionRefused)
             {
-                OnError("Alıcı uygulama dinlemiyor. Alıcı tarafı başlatın.");
-                return new TransferResult(false, "Bağlantı reddedildi.");
+                OnError($"{receiverIP}:{port} bağlantıyı reddetti. Alıcıda Dosyaktar'ı açıp \"Almaya başla\"ya basın.");
+                return new TransferResult(false,
+                    $"Bağlantı reddedildi — {receiverIP} dinlemiyor. Alıcıda \"Almaya başla\"ya bas.");
             }
             catch (SocketException ex)
             {
-                OnError($"Ağ hatası: {ex.Message}");
-                return new TransferResult(false, ex.Message);
+                OnError($"Ağ hatası ({receiverIP}): {ex.Message}");
+                return new TransferResult(false, $"Ağ hatası: {ex.Message}");
             }
             catch (IOException ex)
             {
@@ -366,7 +390,7 @@ namespace Dosyaktar.Services
                 
                 if (mode == TransferMode.Flash)
                 {
-                    var flash = new FlashTransferService();
+                    var flash = new FlashTransferService(token);
                     flash.StatusChanged += (s, msg) => OnStatus(msg);
                     flash.Error += (s, msg) => OnError(msg);
                     flash.ProgressChanged += (s, p) => 

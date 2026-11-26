@@ -1487,7 +1487,8 @@
                                                    TextTrimming="CharacterEllipsis"/>
                                         <TextBlock x:Name="TxtActiveDetail" Text=""
                                                    Style="{StaticResource MutedText}"
-                                                   FontSize="10.5" Margin="0,2,0,9"/>
+                                                   FontSize="10.5" Margin="0,2,0,9"
+                                                   TextWrapping="Wrap"/>
                                         <ProgressBar x:Name="PbActive" Style="{StaticResource ModernProgress}" Height="8"/>
                                         <Grid Margin="0,7,0,0">
                                             <TextBlock x:Name="TxtActiveSpeed" Text=""

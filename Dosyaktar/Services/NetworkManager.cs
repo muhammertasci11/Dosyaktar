@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Dosyaktar.Services
@@ -26,20 +28,96 @@ namespace Dosyaktar.Services
         //  Güvenlik Duvarı İzni
         // ═════════════════════════════════════════════════════════════════════
 
-        public static void AddFirewallRule()
-        {
-            string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName ?? "";
-            if (string.IsNullOrEmpty(exePath)) return;
+        public static void AddFirewallRule() => EnsureFirewallRule(out _);
 
-            var psi = new System.Diagnostics.ProcessStartInfo
+        /// <summary>
+        /// Gelen bağlantılar için bu EXE'ye özel güvenlik duvarı kuralı bırakır.
+        /// Uygulama zaten yönetici olarak çalıştığı için netsh sessizce çağrılır;
+        /// kural varsa yeniden eklenmez. İndirilen her yeni EXE konumu kendi
+        /// kuralını alır, böylece "Almaya hazır" görünen cihaz gerçekten erişilebilir olur.
+        /// </summary>
+        public static bool EnsureFirewallRule(out string message)
+        {
+            message = "";
+
+            string exePath;
+            try { exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName ?? ""; }
+            catch { exePath = ""; }
+
+            if (string.IsNullOrEmpty(exePath))
             {
-                FileName = "netsh",
-                Arguments = $"advfirewall firewall add rule name=\"Dosyaktar (TCP/UDP)\" dir=in action=allow program=\"{exePath}\" enable=yes profile=any",
-                Verb = "runas",
-                UseShellExecute = true,
-                WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden
-            };
-            System.Diagnostics.Process.Start(psi)?.WaitForExit();
+                message = "Uygulama yolu okunamadı; güvenlik duvarı izni atlandı";
+                return false;
+            }
+
+            string ruleName = "Dosyaktar " + Fnv(exePath);
+
+            var (showCode, showOut) = RunNetsh($"advfirewall firewall show rule name=\"{ruleName}\" verbose");
+            if (showCode == 0 && showOut.Contains(exePath, StringComparison.OrdinalIgnoreCase))
+            {
+                message = "Güvenlik duvarı izni hazır";
+                return true;
+            }
+
+            if (showCode == 0)
+                RunNetsh($"advfirewall firewall delete rule name=\"{ruleName}\"");
+
+            var (addCode, addOut) = RunNetsh(
+                $"advfirewall firewall add rule name=\"{ruleName}\" dir=in action=allow " +
+                $"program=\"{exePath}\" enable=yes profile=any");
+
+            bool ok = addCode == 0;
+            message = ok
+                ? "Güvenlik duvarına gelen bağlantı izni eklendi"
+                : "Güvenlik duvarı izni eklenemedi: " + FirstLine(addOut);
+            return ok;
+        }
+
+        private static (int Code, string Output) RunNetsh(string arguments)
+        {
+            try
+            {
+                var psi = new System.Diagnostics.ProcessStartInfo("netsh", arguments)
+                {
+                    UseShellExecute        = false,
+                    CreateNoWindow         = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError  = true
+                };
+
+                using var p = System.Diagnostics.Process.Start(psi);
+                if (p == null) return (-1, "netsh başlatılamadı");
+
+                string output = p.StandardOutput.ReadToEnd() + p.StandardError.ReadToEnd();
+                if (!p.WaitForExit(8000))
+                {
+                    try { p.Kill(); } catch { }
+                    return (-1, output + " (zaman aşımı)");
+                }
+                return (p.ExitCode, output);
+            }
+            catch (Exception ex)
+            {
+                return (-1, ex.Message);
+            }
+        }
+
+        private static string Fnv(string text)
+        {
+            uint hash = 2166136261;
+            foreach (char c in text.ToLowerInvariant())
+            {
+                hash ^= c;
+                hash *= 16777619;
+            }
+            return hash.ToString("X8");
+        }
+
+        private static string FirstLine(string text)
+        {
+            string trimmed = text.Trim();
+            int cut = trimmed.IndexOfAny(new[] { '\r', '\n' });
+            return cut > 0 ? trimmed[..cut] : trimmed;
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -175,6 +253,58 @@ namespace Dosyaktar.Services
             {
                 Log($"TCP {host}:{port} → kapalı/erişilemiyor");
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// TCP bağlantısını sınırlı sürede kurar. Süre aşımında, ne yapılacağını
+        /// söyleyen Türkçe bir TimeoutException fırlatır; böylece arayüz 21 saniye
+        /// boyunca sessizce beklemez.
+        /// </summary>
+        public static async Task ConnectTcpAsync(
+            TcpClient client,
+            string host,
+            int port,
+            CancellationToken token,
+            int timeoutMs = 8000)
+        {
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(token);
+            timeout.CancelAfter(timeoutMs);
+
+            try
+            {
+                await client.ConnectAsync(host, port, timeout.Token);
+            }
+            catch (OperationCanceledException) when (!token.IsCancellationRequested)
+            {
+                throw new TimeoutException(
+                    $"{host}:{port} yanıt vermedi ({timeoutMs / 1000} sn). " +
+                    "Karşı bilgisayarda Dosyaktar açık ve \"Almaya başla\" seçili olmalı; " +
+                    "güvenlik duvarı iznini kontrol et.");
+            }
+        }
+
+        /// <summary>
+        /// Akıştan, verilen süre içinde okuyamazsa TimeoutException atar.
+        /// Onay (ACK) beklerken sonsuza kadar asılı kalmayı engeller.
+        /// </summary>
+        public static async Task<int> ReadWithTimeoutAsync(
+            Stream stream,
+            Memory<byte> buffer,
+            CancellationToken token,
+            int timeoutMs,
+            string timeoutMessage)
+        {
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(token);
+            timeout.CancelAfter(timeoutMs);
+
+            try
+            {
+                return await stream.ReadAsync(buffer, timeout.Token);
+            }
+            catch (OperationCanceledException) when (!token.IsCancellationRequested)
+            {
+                throw new TimeoutException(timeoutMessage);
             }
         }
 

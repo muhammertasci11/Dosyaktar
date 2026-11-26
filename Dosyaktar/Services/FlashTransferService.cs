@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Win32.SafeHandles;
 
 namespace Dosyaktar.Services
 {
@@ -43,7 +44,16 @@ namespace Dosyaktar.Services
         public event EventHandler<string>? Error;
         public event EventHandler<FlashProgressEventArgs>? ProgressChanged;
 
-        private CancellationTokenSource _cts = new();
+        // Gönderen ve alıcı aynı iptal kaynağını paylaşır: arayüzdeki
+        // "İptal" düğmesi Flash modunda da çalışır.
+        private readonly CancellationTokenSource _cts;
+
+        public FlashTransferService(CancellationToken linked = default)
+        {
+            _cts = linked.CanBeCanceled
+                ? CancellationTokenSource.CreateLinkedTokenSource(linked)
+                : new CancellationTokenSource();
+        }
 
         public void Cancel() => _cts.Cancel();
 
@@ -52,6 +62,11 @@ namespace Dosyaktar.Services
 
         // Maksimum parça boyutu (Örn: 8 MB)
         private const int ChunkSize = 8 * 1024 * 1024;
+
+        // Sessiz bekleme yerine sınırlı süre: 21 saniyelik TCP zaman aşımı
+        // kullanıcıya "takıldı" gibi görünüyordu.
+        private const int ConnectTimeoutMs = 8000;
+        private const int AckTimeoutMs = 120_000;
 
         // ═════════════════════════════════════════════════════════════════════
         //  GÖNDERİCİ (SENDER)
@@ -62,23 +77,21 @@ namespace Dosyaktar.Services
             int port,
             int maxConnections)
         {
-            _cts = new CancellationTokenSource();
             var token = _cts.Token;
 
-            OnStatus($"Flash Modu: Master bağlantı kuruluyor ({targetIP}:{port})...");
+            OnStatus($"Flash Modu: Master bağlantı kuruluyor ({targetIP}:{port})…");
             TcpClient? masterClient = null;
             try
             {
                 masterClient = new TcpClient();
-                await masterClient.ConnectAsync(targetIP, port, token);
+                await NetworkManager.ConnectTcpAsync(masterClient, targetIP, port, token, ConnectTimeoutMs);
 
                 using var stream = masterClient.GetStream();
                 using var writer = new BinaryWriter(stream, Encoding.UTF8, leaveOpen: true);
-                using var reader = new BinaryReader(stream, Encoding.UTF8, leaveOpen: true);
 
                 // 1. Master Protokol Başlığı
-                writer.Write(2); // TransferMode.Flash
-                
+                writer.Write((int)TransferMode.Flash);
+
                 var fileDict = new List<FlashFileDict>();
                 long totalBytes = 0;
                 for (int i = 0; i < entries.Count; i++)
@@ -88,20 +101,25 @@ namespace Dosyaktar.Services
                 }
 
                 string jsonDict = JsonSerializer.Serialize(fileDict);
-                
+
                 writer.Write(maxConnections);
                 writer.Write(totalBytes);
                 writer.Write(jsonDict);
                 await stream.FlushAsync(token);
 
                 // 2. Alıcıdan yeni port numarasını bekle (ephemeral port)
-                OnStatus("Alıcıdan çoklu bağlantı portu bekleniyor...");
-                int dataPort = reader.ReadInt32();
-                
-                if (dataPort == 0)
-                    throw new Exception("Alıcı Flash modunu desteklemiyor veya port reddedildi.");
+                OnStatus("Alıcıdan çoklu bağlantı portu bekleniyor…");
+                var portBuf = new byte[4];
+                int portRead = await NetworkManager.ReadWithTimeoutAsync(
+                    stream, portBuf, token, 10_000,
+                    "Alıcı veri portunu bildirmedi. Karşı bilgisayarda aynı Dosyaktar sürümü çalışmalı.");
+                if (portRead != 4)
+                    throw new IOException("Alıcı veri portunu eksik gönderdi.");
 
-                // Master TCP artık dataPort üzerinden bağlanan worker'ları yönetecek
+                int dataPort = BitConverter.ToInt32(portBuf, 0);
+                if (dataPort == 0)
+                    throw new IOException("Alıcı Flash modunu desteklemiyor veya port reddedildi.");
+
                 // 3. Dosyaları Chunk'lara böl
                 var chunkQueue = new ConcurrentQueue<FlashChunk>();
                 for (int i = 0; i < entries.Count; i++)
@@ -126,46 +144,54 @@ namespace Dosyaktar.Services
                 var tasks = new List<Task>();
                 int activeConns = 0;
                 long totalSent = 0;
+                int failedWorkers = 0;
+                string? firstWorkerError = null;
 
                 // UI Reporter
-                var uiTask = Task.Run(async () =>
+                _ = Task.Run(async () =>
                 {
-                    var lastTime = DateTime.UtcNow;
-                    long lastSent = 0;
-                    while (!token.IsCancellationRequested && Interlocked.Read(ref totalSent) < totalBytes)
+                    try
                     {
-                        await Task.Delay(500, token);
-                        var now = DateTime.UtcNow;
-                        var deltaSec = (now - lastTime).TotalSeconds;
-                        long currentSent = Interlocked.Read(ref totalSent);
-                        double mbps = deltaSec > 0 ? ((currentSent - lastSent) / deltaSec) / 1048576.0 : 0;
-                        
-                        lastTime = now;
-                        lastSent = currentSent;
+                        var lastTime = DateTime.UtcNow;
+                        long lastSent = 0;
+                        while (!token.IsCancellationRequested && Interlocked.Read(ref totalSent) < totalBytes)
+                        {
+                            await Task.Delay(500, token);
+                            var now = DateTime.UtcNow;
+                            var deltaSec = (now - lastTime).TotalSeconds;
+                            long currentSent = Interlocked.Read(ref totalSent);
+                            double mbps = deltaSec > 0 ? ((currentSent - lastSent) / deltaSec) / 1048576.0 : 0;
 
-                        double pct = totalBytes > 0 ? (currentSent * 100.0) / totalBytes : 100;
-                        var remTime = mbps > 0 ? TimeSpan.FromSeconds((totalBytes - currentSent) / (mbps * 1048576.0)) : TimeSpan.Zero;
-                        
-                        ProgressChanged?.Invoke(this, new FlashProgressEventArgs(pct, currentSent, totalBytes, mbps, remTime, activeConns, new Dictionary<int, double>()));
+                            lastTime = now;
+                            lastSent = currentSent;
+
+                            double pct = totalBytes > 0 ? (currentSent * 100.0) / totalBytes : 100;
+                            var remTime = mbps > 0 ? TimeSpan.FromSeconds((totalBytes - currentSent) / (mbps * 1048576.0)) : TimeSpan.Zero;
+
+                            ProgressChanged?.Invoke(this, new FlashProgressEventArgs(
+                                pct, currentSent, totalBytes, mbps, remTime, activeConns, new Dictionary<int, double>()));
+                        }
                     }
+                    catch (OperationCanceledException) { }
                 });
 
                 // Worker'ları başlat
                 for (int t = 0; t < maxConnections; t++)
                 {
-                    int threadId = t;
                     tasks.Add(Task.Run(async () =>
                     {
                         using var worker = new TcpClient();
+                        bool counted = false;
                         try
                         {
-                            await worker.ConnectAsync(targetIP, dataPort, token);
+                            await NetworkManager.ConnectTcpAsync(worker, targetIP, dataPort, token, ConnectTimeoutMs);
                             Interlocked.Increment(ref activeConns);
+                            counted = true;
 
                             using var wStream = worker.GetStream();
                             using var bWriter = new BinaryWriter(wStream, Encoding.UTF8, leaveOpen: true);
-                            
-                            // Worker kendini tanıtıyor (opsiyonel, 1 = hello)
+
+                            // Worker kendini tanıtıyor (1 = hello)
                             bWriter.Write((byte)1);
                             await wStream.FlushAsync(token);
 
@@ -173,10 +199,10 @@ namespace Dosyaktar.Services
 
                             while (chunkQueue.TryDequeue(out var chunk))
                             {
-                                if (token.IsCancellationRequested) break;
+                                token.ThrowIfCancellationRequested();
 
                                 string filePath = entries[chunk.FileId].path;
-                                
+
                                 bWriter.Write((byte)2); // 2 = Data chunk
                                 bWriter.Write(chunk.FileId);
                                 bWriter.Write(chunk.Offset);
@@ -188,7 +214,7 @@ namespace Dosyaktar.Services
                                     var mem = buffer.AsMemory(0, chunk.Length);
                                     int read = await RandomAccess.ReadAsync(handle, mem, chunk.Offset, token);
                                     if (read != chunk.Length) throw new IOException("Dosya okunurken boyutta tutarsızlık.");
-                                    
+
                                     await wStream.WriteAsync(mem, token);
                                 }
                                 Interlocked.Add(ref totalSent, chunk.Length);
@@ -198,25 +224,62 @@ namespace Dosyaktar.Services
                             bWriter.Write((byte)3);
                             await wStream.FlushAsync(token);
                         }
-                        catch { /* Worker koptu */ }
-                        finally { Interlocked.Decrement(ref activeConns); }
+                        catch (OperationCanceledException) when (token.IsCancellationRequested) { }
+                        catch (Exception ex)
+                        {
+                            // Kanal koptu: eksik parçalar aşağıda sayılır, sessizce yutulmaz.
+                            Interlocked.Increment(ref failedWorkers);
+                            Interlocked.CompareExchange(ref firstWorkerError, ex.Message, null);
+                        }
+                        finally
+                        {
+                            if (counted) Interlocked.Decrement(ref activeConns);
+                        }
                     }));
                 }
 
                 await Task.WhenAll(tasks);
-                
-                if (token.IsCancellationRequested) return new TransferResult(false, "İptal edildi.");
+
+                if (token.IsCancellationRequested)
+                {
+                    OnStatus("Flash aktarımı iptal edildi.");
+                    return new TransferResult(false, "Kullanıcı tarafından iptal edildi.");
+                }
+
+                long sentFinal = Interlocked.Read(ref totalSent);
+                if (sentFinal < totalBytes)
+                {
+                    string reason = Volatile.Read(ref firstWorkerError) ?? "veri kanalı kapandı";
+                    OnError($"Flash Gönderim Hatası: {FileTransferService.FormatSize(sentFinal)} / " +
+                            $"{FileTransferService.FormatSize(totalBytes)} gönderildi — {reason}");
+                    return new TransferResult(false,
+                        $"Eksik gönderim: {FileTransferService.FormatSize(sentFinal)} / " +
+                        $"{FileTransferService.FormatSize(totalBytes)}. {reason}");
+                }
+
+                int failed = Volatile.Read(ref failedWorkers);
+                if (failed > 0)
+                    OnStatus($"{failed} veri kanalı kapandı; kalan kanallar tüm dosyaları iletti.");
 
                 // Master üzerinden ACK bekle (Alıcı diske yazmayı bitirdi mi?)
-                OnStatus("Alıcının dosyaları birleştirmesi bekleniyor...");
+                OnStatus("Alıcının dosyaları birleştirmesi bekleniyor…");
                 writer.Write((byte)99); // Gönderim bitti sinyali
                 await stream.FlushAsync(token);
 
-                byte ack = reader.ReadByte();
-                if (ack != 1) throw new Exception("Alıcıdan geçersiz ACK.");
+                var ackBuf = new byte[1];
+                int ackRead = await NetworkManager.ReadWithTimeoutAsync(
+                    stream, ackBuf, token, AckTimeoutMs,
+                    "Alıcı 120 sn içinde birleştirmeyi onaylamadı. Karşı cihazın diski yavaş veya bağlantı koptu.");
+                if (ackRead == 0) throw new IOException("Alıcı onaylamadan bağlantıyı kesti.");
+                if (ackBuf[0] != 1) throw new IOException("Alıcıdan geçersiz ACK.");
 
                 OnStatus("✓ Flash Aktarım Başarılı.");
                 return new TransferResult(true, "Flash aktarım başarılı.");
+            }
+            catch (OperationCanceledException)
+            {
+                OnStatus("Flash aktarımı iptal edildi.");
+                return new TransferResult(false, "Kullanıcı tarafından iptal edildi.");
             }
             catch (Exception ex)
             {
@@ -238,10 +301,11 @@ namespace Dosyaktar.Services
             BinaryWriter masterWriter,
             string saveDirectory)
         {
-            _cts = new CancellationTokenSource();
             var token = _cts.Token;
 
             TcpListener? workerListener = null;
+            Dictionary<int, SafeFileHandle>? fileHandles = null;
+
             try
             {
                 int maxConns = masterReader.ReadInt32();
@@ -259,75 +323,94 @@ namespace Dosyaktar.Services
                 masterWriter.Write(dataPort);
                 await masterClient.GetStream().FlushAsync(token);
 
-                OnStatus($"Flash Modu: Ön tahsis yapılıyor ({fileDict.Count} dosya)...");
+                OnStatus($"Flash Modu: Ön tahsis yapılıyor ({fileDict.Count} dosya)…");
 
                 // Dosyaları önceden oluştur ve boyutlandır (Pre-allocation)
-                // Ayrıca file handle'ları açık tutacağız
-                var fileHandles = new Dictionary<int, Microsoft.Win32.SafeHandles.SafeFileHandle>();
+                string saveRoot = Path.GetFullPath(saveDirectory);
+                string saveRootWithSep = saveRoot.EndsWith(Path.DirectorySeparatorChar)
+                    ? saveRoot
+                    : saveRoot + Path.DirectorySeparatorChar;
+
+                fileHandles = new Dictionary<int, SafeFileHandle>();
 
                 foreach (var fd in fileDict)
                 {
-                    string safePath = Path.Combine(saveDirectory, fd.RelativePath);
+                    string safePath = Path.GetFullPath(Path.Combine(saveDirectory, fd.RelativePath));
+                    if (!safePath.StartsWith(saveRootWithSep, StringComparison.OrdinalIgnoreCase))
+                        throw new IOException("Geçersiz dosya yolu: " + fd.RelativePath);
+
                     Directory.CreateDirectory(Path.GetDirectoryName(safePath)!);
-                    
+
                     var handle = File.OpenHandle(safePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite, FileOptions.Asynchronous);
                     RandomAccess.SetLength(handle, fd.Size); // SSD fragmantasyonunu engeller
                     fileHandles[fd.Id] = handle;
                 }
 
-                OnStatus($"Flash Modu: Dinleniyor (Port {dataPort})...");
+                OnStatus($"Flash Modu: Dinleniyor (Port {dataPort})…");
 
                 long totalReceived = 0;
                 int activeConns = 0;
                 var threadProgressDict = new ConcurrentDictionary<int, double>();
 
                 // UI Reporter Task
-                var uiTask = Task.Run(async () =>
+                _ = Task.Run(async () =>
                 {
-                    var lastTime = DateTime.UtcNow;
-                    long lastRecv = 0;
-                    while (!token.IsCancellationRequested && Interlocked.Read(ref totalReceived) < totalBytes)
+                    try
                     {
-                        await Task.Delay(200, token); // Daha akıcı bir UI için 200ms
-                        var now = DateTime.UtcNow;
-                        var deltaSec = (now - lastTime).TotalSeconds;
-                        long currentRecv = Interlocked.Read(ref totalReceived);
-                        double mbps = deltaSec > 0 ? ((currentRecv - lastRecv) / deltaSec) / 1048576.0 : 0;
-                        
-                        lastTime = now;
-                        lastRecv = currentRecv;
+                        var lastTime = DateTime.UtcNow;
+                        long lastRecv = 0;
+                        while (!token.IsCancellationRequested && Interlocked.Read(ref totalReceived) < totalBytes)
+                        {
+                            await Task.Delay(200, token); // Daha akıcı bir UI için 200ms
+                            var now = DateTime.UtcNow;
+                            var deltaSec = (now - lastTime).TotalSeconds;
+                            long currentRecv = Interlocked.Read(ref totalReceived);
+                            double mbps = deltaSec > 0 ? ((currentRecv - lastRecv) / deltaSec) / 1048576.0 : 0;
 
-                        double pct = totalBytes > 0 ? (currentRecv * 100.0) / totalBytes : 100;
-                        var remTime = mbps > 0 ? TimeSpan.FromSeconds((totalBytes - currentRecv) / (mbps * 1048576.0)) : TimeSpan.Zero;
-                        
-                        var tp = new Dictionary<int, double>(threadProgressDict);
-                        ProgressChanged?.Invoke(this, new FlashProgressEventArgs(pct, currentRecv, totalBytes, mbps, remTime, activeConns, tp));
+                            lastTime = now;
+                            lastRecv = currentRecv;
+
+                            double pct = totalBytes > 0 ? (currentRecv * 100.0) / totalBytes : 100;
+                            var remTime = mbps > 0 ? TimeSpan.FromSeconds((totalBytes - currentRecv) / (mbps * 1048576.0)) : TimeSpan.Zero;
+
+                            var tp = new Dictionary<int, double>(threadProgressDict);
+                            ProgressChanged?.Invoke(this, new FlashProgressEventArgs(pct, currentRecv, totalBytes, mbps, remTime, activeConns, tp));
+                        }
                     }
+                    catch (OperationCanceledException) { }
                 });
 
                 var workerTasks = new List<Task>();
 
                 // Dinleme döngüsü (Bağlantılar geldikçe kabul et)
-                var acceptTask = Task.Run(async () =>
+                _ = Task.Run(async () =>
                 {
                     int accepted = 0;
                     while (accepted < maxConns && !token.IsCancellationRequested)
                     {
+                        TcpClient worker;
                         try
                         {
-                            var worker = await workerListener.AcceptTcpClientAsync(token);
-                            accepted++;
-                            Interlocked.Increment(ref activeConns);
-                            int threadId = accepted;
-                            threadProgressDict[threadId] = 0.0;
+                            worker = await workerListener.AcceptTcpClientAsync(token);
+                        }
+                        catch (OperationCanceledException) { break; }
+                        catch (ObjectDisposedException) { break; }
+                        catch (SocketException) { break; }
 
-                            workerTasks.Add(Task.Run(async () =>
+                        accepted++;
+                        Interlocked.Increment(ref activeConns);
+                        int threadId = accepted;
+                        threadProgressDict[threadId] = 0.0;
+
+                        workerTasks.Add(Task.Run(async () =>
+                        {
+                            try
                             {
                                 using (worker)
                                 {
                                     using var wStream = worker.GetStream();
                                     using var bReader = new BinaryReader(wStream, Encoding.UTF8, leaveOpen: true);
-                                    
+
                                     byte hello = bReader.ReadByte();
                                     if (hello != 1) return; // Yanlış protokol
 
@@ -353,7 +436,7 @@ namespace Dosyaktar.Services
                                                 int r = await wStream.ReadAsync(buffer.AsMemory(readTotal, length - readTotal), token);
                                                 if (r == 0) throw new IOException("Bağlantı koptu.");
                                                 readTotal += r;
-                                                
+
                                                 // UI Anlık ilerleme (ör. 8MB'ın yüzdesi)
                                                 threadProgressDict[threadId] = (readTotal * 100.0) / length;
                                             }
@@ -366,11 +449,11 @@ namespace Dosyaktar.Services
                                         Interlocked.Add(ref totalReceived, length);
                                     }
                                 }
-                                Interlocked.Decrement(ref activeConns);
                                 threadProgressDict[threadId] = 100.0; // Bittiğinde dolu kalsın
-                            }));
-                        }
-                        catch { /* İptal */ }
+                            }
+                            catch (Exception) { /* Kanal koptu; eksik veri aşağıda doğrulanır */ }
+                            finally { Interlocked.Decrement(ref activeConns); }
+                        }));
                     }
                 });
 
@@ -379,10 +462,17 @@ namespace Dosyaktar.Services
                 if (masterSig != 99) throw new IOException("Master bağlantı beklenmedik bir şekilde koptu.");
 
                 // Tüm worker görevleri bitti mi bekle
-                await Task.WhenAll(workerTasks);
+                await Task.WhenAll(workerTasks.ToArray());
 
-                // Dosyaları kapat
+                long received = Interlocked.Read(ref totalReceived);
+                if (received != totalBytes)
+                    throw new IOException(
+                        $"Eksik veri: {FileTransferService.FormatSize(received)} / " +
+                        $"{FileTransferService.FormatSize(totalBytes)}. Dosyalar eksik, yeniden gönderin.");
+
+                // Dosyaları kapat (ACK'ten önce: alıcı "hazır" dediğinde diskte tam olsun)
                 foreach (var h in fileHandles.Values) h.Dispose();
+                fileHandles.Clear();
 
                 // Master'a ACK dön
                 masterWriter.Write((byte)1);
@@ -402,6 +492,14 @@ namespace Dosyaktar.Services
             {
                 workerListener?.Stop();
                 masterClient?.Close();
+
+                if (fileHandles != null)
+                {
+                    foreach (var h in fileHandles.Values)
+                    {
+                        try { h.Dispose(); } catch { }
+                    }
+                }
             }
         }
     }
