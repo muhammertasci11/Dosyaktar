@@ -167,9 +167,23 @@ namespace Dosyaktar.Services
         {
             if (_cover != null || string.IsNullOrWhiteSpace(CoverPath)) return;
 
-            var image = DecodeCover(CoverPath);
+            ImageSource? image;
+            lock (CoverCacheGate)
+            {
+                if (!CoverCache.TryGetValue(CoverPath, out image))
+                {
+                    image = DecodeCover(CoverPath);
+                    CoverCache[CoverPath] = image;
+                }
+            }
+
             if (image != null) Cover = image;
         }
+
+        // Aynı kapak yeniden taramada yeniden çözülmesin: yol → donmuş görsel.
+        private static readonly Dictionary<string, ImageSource?> CoverCache =
+            new(StringComparer.OrdinalIgnoreCase);
+        private static readonly object CoverCacheGate = new();
 
         /// <summary>Kapak dosyasını UI dışında çözülebilecek biçimde dondurur.</summary>
         public static ImageSource? DecodeCover(string? path)

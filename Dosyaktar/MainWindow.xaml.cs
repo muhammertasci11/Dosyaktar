@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using Dosyaktar.Services;
 using Microsoft.Win32;
 using Path = System.IO.Path;
@@ -1821,8 +1822,24 @@ namespace Dosyaktar
                 "3. Güvenlik duvarı sorduysa \"İzin ver\"i seç.\n\n" +
                 "Ayrıntı: " + detail;
 
-            MessageBox.Show(this, text, "Oyun gönderilemedi",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
+            // Modal kapanırken fare bırakması alttaki oyun kartına "tıklama"
+            // olarak geçebiliyor: liste kapalıyken Tamam'a basılır, sonra seçim
+            // geri yüklenir. Kullanıcı hiçbir şey kaybetmez.
+            var selected = GamesView.SelectedGame;
+            GamesView.IsHitTestVisible = false;
+            try
+            {
+                MessageBox.Show(this, text, "Oyun gönderilemedi",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            finally
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    GamesView.IsHitTestVisible = true;
+                    if (selected != null) GamesView.SelectedGame = selected;
+                }), DispatcherPriority.Background);
+            }
         }
 
         // ═════════════════════════════════════════════════════════════════════

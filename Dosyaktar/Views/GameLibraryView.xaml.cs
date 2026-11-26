@@ -69,6 +69,21 @@ namespace Dosyaktar.Views
         /// <summary>Gönderim hatasını oyun sayfasındaki uyarı şeridinde gösterir.</summary>
         public void ShowSendFailure(string message) => ShowWarn(message);
 
+        /// <summary>
+        /// Seçili oyun. Modal kapanırken fare bırakması alttaki karta geçerse
+        /// seçim bununla geri yüklenir.
+        /// </summary>
+        public GameEntry? SelectedGame
+        {
+            get => GameList.SelectedItem as GameEntry;
+            set
+            {
+                if (value == null || ReferenceEquals(GameList.SelectedItem, value)) return;
+                GameList.SelectedItem = value;
+                GameList.ScrollIntoView(value);
+            }
+        }
+
         /// <summary>Arama kutusuna odaklanır (Ctrl+F).</summary>
         public void FocusSearch()
         {
@@ -99,11 +114,19 @@ namespace Dosyaktar.Views
                 _all.Clear();
                 _all.AddRange(games);
 
-                // Kapaklar: yerel dosyalar hemen, eksikler ağdan kademeli.
+                // Yerel kapaklar ilk boyamada hazır olsun; ağdan gelenler sonra akar.
                 var snapshot = _all.ToList();
-                _ = HydrateCoversAsync(snapshot, ct);
+                try
+                {
+                    await LoadLocalCoversAsync(snapshot, ct);
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
 
                 ApplyFilter(keepSelection: false);
+                _ = HydrateCoversAsync(snapshot, ct);
                 _ = MeasureMissingAsync(ct);
             }
             catch (OperationCanceledException)
@@ -124,19 +147,20 @@ namespace Dosyaktar.Views
         //  Kapaklar — sağlayıcıdan bağımsız, önbellekli
         // ═════════════════════════════════════════════════════════════════
 
-        private async Task HydrateCoversAsync(IReadOnlyList<GameEntry> games, CancellationToken ct)
-        {
-            // 1) Yerelde hazır kapaklar (Steam librarycache, klasör ikonu).
-            await Task.Run(() =>
+        /// <summary>Yerelde hazır kapakları (Steam önbelleği, klasör ikonu) çözer.</summary>
+        private static Task LoadLocalCoversAsync(IReadOnlyList<GameEntry> games, CancellationToken ct)
+            => Task.Run(() =>
             {
                 foreach (var game in games)
                 {
                     if (ct.IsCancellationRequested) return;
                     game.LoadCover();
                 }
-            }, ct).ConfigureAwait(true);
+            }, ct);
 
-            // 2) Eksikler için herkese açık vitrin görseli; kart başına akar.
+        /// <summary>Eksikler için herkese açık vitrin görselini kart başına akıtır.</summary>
+        private async Task HydrateCoversAsync(IReadOnlyList<GameEntry> games, CancellationToken ct)
+        {
             foreach (var game in games)
             {
                 if (ct.IsCancellationRequested) return;
