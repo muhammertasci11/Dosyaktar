@@ -60,7 +60,7 @@
                         <!-- Fallback tint + Initial (always present, shows through when Cover is null) -->
                         <Border x:Name="tint"
                                 Background="{DynamicResource AccentSoftBrush}"
-                                CornerRadius="14,14,0,0">
+                                CornerRadius="20,20,0,0">
                             <TextBlock x:Name="TxtInitial"
                                        Text="{Binding Initial}"
                                        FontFamily="{StaticResource DisplayFont}"
@@ -71,11 +71,13 @@
                                        VerticalAlignment="Center"/>
                         </Border>
 
-                        <!-- Cover image on top - transparent when Source is null, revealing tint underneath -->
-                        <Image x:Name="ImgCover"
-                               Source="{Binding Cover}"
-                               Stretch="UniformToFill"
-                               Margin="0"/>
+                        <!-- Cover image on top - transparent when Source is null, revealing tint underneath.
+                             ImageBrush, not Image: köşe yarıçapı görseli gerçekten kırpar. -->
+                        <Border CornerRadius="20,20,0,0">
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding Cover}" Stretch="UniformToFill"/>
+                            </Border.Background>
+                        </Border>
 
                         <!-- Provider badge bottom-left -->
                         <Border VerticalAlignment="Bottom"
@@ -511,12 +513,13 @@
                         <StackPanel x:Name="DetailFilled" Visibility="Collapsed">
                             <!-- Cover -->
                             <Border x:Name="DetailCover"
-                                    Width="264" Height="150"
+                                    Height="150"
                                     CornerRadius="16"
                                     ClipToBounds="True"
-                                    HorizontalAlignment="Center">
+                                    HorizontalAlignment="Stretch">
                                 <Grid>
                                     <Border x:Name="DetailCoverFallback"
+                                            CornerRadius="16"
                                             Background="{DynamicResource AccentSoftBrush}">
                                         <TextBlock x:Name="TxtDetailInitial"
                                                    Text="?"
@@ -527,9 +530,11 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <Image x:Name="ImgDetailCover"
-                                           Source="{Binding Cover}"
-                                           Stretch="UniformToFill"/>
+                                    <Border CornerRadius="16">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding Cover}" Stretch="UniformToFill"/>
+                                        </Border.Background>
+                                    </Border>
                                 </Grid>
                             </Border>
 

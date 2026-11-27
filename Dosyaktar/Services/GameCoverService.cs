@@ -100,6 +100,28 @@ namespace Dosyaktar.Services
             }
         }
 
+        /// <summary>Daha önce indirilmiş kapağı ağa çıkmadan döndürür.</summary>
+        public static string? TryGetCachedCover(GameEntry game)
+        {
+            if (!string.IsNullOrWhiteSpace(game.CoverPath) && File.Exists(game.CoverPath))
+                return game.CoverPath;
+
+            string key = $"{game.ProviderId}:{game.AppId ?? game.Name}";
+            if (Memo.TryGetValue(key, out string? remembered))
+                return remembered;
+
+            // Steam kimliği biliniyorsa başlık görselinin önbellek yolu sabittir.
+            if (game.Provider == GameProvider.Steam &&
+                int.TryParse(game.AppId, out int appId) && appId > 0)
+            {
+                string path = Path.Combine(CacheDir, $"steam-{appId}.jpg");
+                if (File.Exists(path) && new FileInfo(path).Length > 2048)
+                    return path;
+            }
+
+            return null;
+        }
+
         // ── ağ ────────────────────────────────────────────────────────────
 
         private static async Task<SteamMatch?> SearchSteamAsync(string name, CancellationToken ct)

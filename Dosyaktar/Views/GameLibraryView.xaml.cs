@@ -154,7 +154,19 @@ namespace Dosyaktar.Views
                 foreach (var game in games)
                 {
                     if (ct.IsCancellationRequested) return;
+
                     game.LoadCover();
+                    if (game.Cover != null) continue;
+
+                    // Daha önce indirilmiş kapak varsa ağa çıkmadan ilk boyamaya kat.
+                    string? cached = GameCoverService.TryGetCachedCover(game);
+                    if (cached == null) continue;
+
+                    var image = GameEntry.DecodeCover(cached);
+                    if (image == null) continue;
+
+                    game.CoverPath = cached;
+                    game.Cover = image;
                 }
             }, ct);
 
