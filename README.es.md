@@ -30,8 +30,8 @@ Los archivos se dividen en bloques de 8 MB y viajan por **32 canales TCP en para
 
 - **Archivo** — `Dosyaktar.exe`
 - **Versión** — 2.3.0
-- **Tamaño** — 77.3 MB (77,279,587 bytes)
-- **SHA-256** — `30C315EF71A36E540BFF7CA3EA4AC49D77BAD648B6B82613CEA172C3DD211361`
+- **Tamaño** — 77.3 MB (77,279,571 bytes)
+- **SHA-256** — `79D9FA2BEE994B7A562CE7FB986AB40DEF7A5BF9F8A1582B1F0707980272E1A9`
 - **Sistema** — Windows 10 / 11 (x64)
 
 **[Descargar Dosyaktar v2.3.0](https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.3.0/Dosyaktar.exe)**
@@ -101,3 +101,7 @@ La interfaz y esta documentación vienen en seis idiomas. Un texto que falte cae
 ## Autor
 
 **[Muhammer Taşçı](https://github.com/muhammertasci11)** — estudiante de Ingeniería Mecatrónica, desarrollador de software y automatización.
+
+## Licencia
+
+MIT — consulta [LICENSE](LICENSE).

@@ -30,8 +30,8 @@ Files are split into 8 MB chunks and carried over **32 parallel TCP channels**, 
 
 - **File** — `Dosyaktar.exe`
 - **Version** — 2.3.0
-- **Size** — 77.3 MB (77,279,587 bytes)
-- **SHA-256** — `30C315EF71A36E540BFF7CA3EA4AC49D77BAD648B6B82613CEA172C3DD211361`
+- **Size** — 77.3 MB (77,279,571 bytes)
+- **SHA-256** — `79D9FA2BEE994B7A562CE7FB986AB40DEF7A5BF9F8A1582B1F0707980272E1A9`
 - **System** — Windows 10 / 11 (x64)
 
 **[Download Dosyaktar v2.3.0](https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.3.0/Dosyaktar.exe)**
@@ -101,3 +101,7 @@ The interface and these docs ship in six languages. Missing strings fall back to
 ## Author
 
 **[Muhammer Taşçı](https://github.com/muhammertasci11)** — Mechatronics Engineering student, software and automation developer.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
