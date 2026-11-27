@@ -44,6 +44,9 @@ nvidia/nvidia/nemotron-3-ultra-550b-a55b
 - GitHub API: PowerShell 5.1 `Invoke-WebRequest` 403 döndürebilir; doğrulamayı `curl.exe` ile yap.
 - Oyun kapakları: `Services/GameCoverService.cs` sağlayıcıdan bağımsız çalışır; Steam mağaza araması + herkese açık CDN, API anahtarı yok, önbellek `%LOCALAPPDATA%\Dosyaktar\covers`. Yeni AppID'lerde `header.jpg` 404 döner; aramadaki hash'li `tiny_image` kapsülü yedektir. `HttpClient` User-Agent değeri ASCII olmalı, aksi halde indirme sessizce düşer.
 - Kenar çubuğu simgeleri: `Controls/NavTabButton.cs` + `Themes/NavIcons.xaml` vektör geometrileri. Hover/aktif animasyonları `SystemParameters.ClientAreaAnimation` kapalıyken çalışmaz; yeni sekme eklerken `RadioButton` yerine `NavTabButton` kullanılır.
+- Yerelleştirme: `Localization/Loc.cs` (`S`, `F`, `SetLanguage`, `LanguageChanged`) + `Localization/TExtension.cs`. **Anahtar, Türkçe kaynak metnin kendisidir** — ayrı bir anahtar uzayı yok. XAML'de `{loc:T 'Dosya gönder'}`, kodda `Loc.S("...")` / `Loc.F("... {0}", x)`. Eksik metin anahtara değil Türkçeye düşer. Metin eklerken önce `Resources/strings.json`'a altı dilde girin (EN/DE/FR/ES/JA zorunlu), sonra kullanın.
+- CLI (yalnızca ekran görüntüsü/QA): `--lang=xx`, `--page=games|send|settings`, `--offscreen`. `App.Ephemeral` açıkken `SettingsService.Save` hiç çalışmaz, yani `%APPDATA%` kirlenmez. Bu derlemeler `-p:ApplicationManifest=app.asinvoker.manifest` ile yapılır; yayın manifesti `app.manifest` (`requireAdministrator`) kalır.
+- Tanıtım sayfası `docs/index.html` **tek dosyadır**: harici CSS/JS yok, altı dil `I18N` sözlüğünde gömülü, dil `?lang=` → `localStorage` → `navigator.language` → EN sırasıyla seçilir ve ekran görüntüleri de dille değişir. Ekran görüntüleri `docs/shots/{tr,en,de,fr,es,ja}-{games,send,settings}.jpg` (1458×950 kaynaktan 1280 genişlik, JPEG q90). README seti aynı dosyaları kullanır: `README.md` (EN) + `.tr/.de/.fr/.es/.ja.md`.
 
 ## Değişmezler
 
