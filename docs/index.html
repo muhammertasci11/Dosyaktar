@@ -1,356 +1,741 @@
 <!DOCTYPE html>
-<html lang="tr" data-type="software" data-radius="soft" data-buttons="pill">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="description" content="Dosyaktar v2.2.1 — aynı ağda dosya, klasör ve oyun transferi. İnternetsiz, hesapsız, reklamsız." />
-<meta property="og:title" content="Dosyaktar — Yerel ağ transferi" />
+<title>Dosyaktar — Files, folders and games over your local network</title>
+<meta name="description" content="Dosyaktar v2.3.0 — transfer files, folders and installed games between Windows PCs on the same network. No internet, no account, no ads. One self-contained EXE in six languages." />
+<meta property="og:title" content="Dosyaktar — Local network transfer" />
+<meta property="og:description" content="Files, folders and installed games between Windows PCs on the same network. No internet, no account, no ads." />
+<meta property="og:image" content="https://muhammertasci11.github.io/Dosyaktar/shots/en-games.jpg" />
+<meta property="og:type" content="website" />
 <meta name="theme-color" content="#ffffff" />
-<title>Dosyaktar — Yerel ağda dosya, klasör ve oyun transferi</title>
-<link rel="stylesheet" href="css/index.css" />
-</head>
-<body>
-<header class="site-header" id="header">
-<div class="wrap">
-<div class="brand"><span class="mark"></span><strong>Dosyaktar</strong></div>
-<nav class="nav-list"><a href="#ozellikler">Özellikler</a><a href="#nasıl">Nasıl çalışır</a><a href="#indir">İndir</a></nav>
-<a class="btn btn-primary" href="#indir">İndir</a>
-<button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-label="Menüyü aç"></button>
-</div>
-</header>
-
-<section class="hero">
-<div class="hero-grid">
-<div class="hero-copy">
-<p class="kicker">Dosyaktar v2.2.1</p>
-<h1>Aynı ağda,<br/>ışık hızında<br/>dosya taşı.</h1>
-<p class="lede">İnternetsiz, hesapsız, reklamsız. Tek dosya çalıştırılabilir — kurulum yok.</p>
-<div class="hero-actions">
-<a class="btn btn-primary btn-large" href="#indir">Windows için ücretsiz indir</a>
-<a class="btn btn-outline btn-large" href="#nasıl">Nasıl çalışır</a>
-</div>
-<ul class="stats">
-<li><strong>32</strong> <span>paralel TCP kanal</span></li>
-<li><strong>0 KB</strong> <span>internet tüketimi</span></li>
-<li><strong>2 sn</strong> <span>cihaz keşfi</span></li>
-<li><strong>8</strong> <span>tema</span></li>
-</ul>
-</div>
-<div class="hero-visual">
-<img src="../landing-full-desktop.png" alt="Dosyaktar masaüstü arayüzü" class="hero-img" />
-<div class="phone">
-<img src="../landing-anchor-mobile.png" alt="Mobil arayüz" />
-</div>
-</div>
-</div>
-</section>
-
-<section class="features" id="ozellikler">
-<div class="wrap">
-<h2 class="section-title">Özellikler</h2>
-<div class="grid grid-3">
-<article class="card">
-<div class="icon">⚡</div>
-<h3>Flash Mode</h3>
-<p>Dosyalar 8 MB'lık parçalara bölünür, 32 paralel TCP kanalıyla eşzamanlı taşınır.</p>
-</article>
-<article class="card">
-<div class="icon">🔒</div>
-<h3>PIN eşleştirme</h3>
-<p>Hesap yok, e-posta yok. Ekranda beliren 6 haneli kod iki cihazı bağlar.</p>
-</article>
-<article class="card">
-<div class="icon">🎮</div>
-<h3>Oyun transferi</h3>
-<p>Steam, Epic, GOG, Battle.net, Ubisoft, EA, Riot kitaplıklarını tarar ve aktarır.</p>
-</article>
-<article class="card">
-<div class="icon">📱</div>
-<h3>Mobil köprü</h3>
-<p>Telefon tarayıcısından dosya gönder ve al. Uygulama kurmak gerekmez.</p>
-</article>
-<article class="card">
-<div class="icon">🖼️</div>
-<h3>8 tema</h3>
-<p>Prism, Midnight, Nordic, Aurora, Sunset, Cyber, Forest, Graphite.</p>
-</article>
-<article class="card">
-<div class="icon">📦</div>
-<h3>Tek dosya</h3>
-<p>win-x64 self-contained tek EXE. Kurulum gerekmez.</p>
-</article>
-</div>
-</div>
-</section>
-
-<section class="howitworks" id="nasıl">
-<div class="wrap">
-<h2 class="section-title">Nasıl çalışır</h2>
-<ol class="steps">
-<li>
-<span class="num">01</span>
-<h3>Başlat</h3>
-<p>İki bilgisayarda da Dosyaktar'ı açın; kurulum yoktur.</p>
-</li>
-<li>
-<span class="num">02</span>
-<h3>Eşleştir</h3>
-<p>Karşı cihaza tıklayın, 6 haneli PIN'i onaylayın.</p>
-</li>
-<li>
-<span class="num">03</span>
-<h3>Aktar</h3>
-<p>Dosya, klasör veya oyun bırakın; transfer anında başlar.</p>
-</li>
-</ol>
-</div>
-</section>
-
-<section class="screenshots" style="padding: clamp(70px,10vh,110px) 24px; background:#ffffff;">
-<div class="wrap">
-<h2 class="section-title" style="text-align:left;">Uygulama Görselleri</h2>
-<div class="shot-grid">
-<figure class="shot">
-<img src="../landing-full-desktop.png" alt="Dosyaktar ana ekran" />
-<figcaption>Ana ekran — oyun kitaplığı ve mobil köprü</figcaption>
-</figure>
-<figure class="shot">
-<img src="../landing-anchor-desktop.png" alt="Dosyaktar anchor" />
-<figcaption>Keşif ekranı — cihaz eşleştirme</figcaption>
-</figure>
-<figure class="shot">
-<img src="../landing-oyunlar-desktop.png" alt="Dosyaktar oyunlar" />
-<figcaption>Oyun kitaplığı — sağlayıcı filtreleme</figcaption>
-</figure>
-<figure class="shot">
-<img src="../landing-anchor-mobile.png" alt="Mobil anchor" />
-<figcaption>Mobil — telefon alışveriş paneli</figcaption>
-</figure>
-<figure class="shot">
-<img src="../landing-oyunlar-mobile.png" alt="Mobil oyunlar" />
-<figcaption>Mobil oyun kitaplığı</figcaption>
-</figure>
-</div>
-</div>
-</section>
-
-<section class="download" id="indir">
-<div class="wrap">
-<h2 class="section-title">İndirin</h2>
-<p class="lede">Windows 10 / 11 (x64) · ~77 MB · ücretsiz</p>
-<a class="btn btn-primary btn-large" href="https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.2.1/Dosyaktar.exe">
-Dosyaktar v2.2.1 indir
-</a>
-<p class="note">Her iki bilgisayarda da aynı sürümün çalışması gerekir.</p>
-</div>
-</section>
-
-<footer class="site-footer">
-<div class="wrap">
-<strong>Dosyaktar</strong> · Yerel ağ transferi<br/>
-<a href="https://github.com/muhammertasci11/Dosyaktar">GitHub</a> · <a href="#indir">Github Releases</a><br/>
-© 2026 Muhammer Taşçı · .NET 8 / WPF
-</div>
-</footer>
-
+<link rel="icon" href="icon.png" />
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  color: #0f172a; background: #ffffff; line-height: 1.55; font-size: 16px;
-  -webkit-font-smoothing: antialiased;
+:root{
+  --ink:#0b1220;
+  --ink-2:#47506a;
+  --ink-3:#6b7488;
+  --line:#e6e9f0;
+  --line-soft:#eef1f7;
+  --surface:#ffffff;
+  --surface-2:#f7f8fc;
+  --accent:#6a3bff;
+  --accent-2:#0bbfd6;
+  --accent-soft:#f2efff;
+  --radius:16px;
+  --wrap:1120px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+  --shadow-sm:0 1px 2px rgba(11,18,32,.04), 0 8px 24px -16px rgba(11,18,32,.18);
+  --shadow-lg:0 2px 4px rgba(11,18,32,.04), 0 32px 64px -32px rgba(11,18,32,.30);
+  --ease:cubic-bezier(.22,.61,.36,1);
 }
-img { max-width: 100%; display: block; }
-a { color: inherit; text-decoration: none; }
-.wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--surface); color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans JP",sans-serif;
+  font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+img{display:block; max-width:100%}
+a{color:inherit; text-decoration:none}
+h1,h2,h3,p,ul,ol,figure{margin:0}
+ul,ol{padding:0; list-style:none}
+.wrap{width:100%; max-width:var(--wrap); margin:0 auto; padding:0 24px}
+.skip{
+  position:absolute; left:-9999px; top:8px; z-index:100;
+  background:var(--ink); color:#fff; padding:10px 16px; border-radius:10px; font-size:14px; font-weight:600;
+}
+.skip:focus{left:16px}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:6px}
 
-/* Header */
-.site-header {
-  position: sticky; top: 0; z-index: 50;
-  background: rgba(255,255,255,0.9);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(15,23,42,0.06);
+/* ---------- header ---------- */
+.site-header{
+  position:sticky; top:0; z-index:50;
+  background:rgba(255,255,255,.86);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid var(--line-soft);
 }
-.site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; }
-.mark {
-  width: 30px; height: 30px; border-radius: 10px;
-  background: linear-gradient(135deg, #6c3bff, #0fc9de);
-  box-shadow: 0 8px 20px -8px rgba(108,59,255,0.5);
+.header-row{display:flex; align-items:center; gap:var(--s5); height:64px}
+.brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:-.03em; font-size:17px; flex:none}
+.brand img{width:30px; height:30px; border-radius:9px}
+.nav{display:flex; align-items:center; gap:28px; margin-left:auto}
+.nav a{font-size:14px; font-weight:500; color:var(--ink-2); transition:color .16s var(--ease)}
+.nav a:hover{color:var(--ink)}
+.lang-pick{
+  appearance:none; -webkit-appearance:none;
+  font:inherit; font-size:13px; font-weight:600; color:var(--ink);
+  background:var(--surface) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b7488' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+  border:1px solid var(--line); border-radius:999px;
+  padding:8px 30px 8px 14px; cursor:pointer; flex:none;
+  transition:border-color .16s var(--ease), box-shadow .16s var(--ease);
 }
-.nav-list { display: none; gap: 24px; align-items: center; }
-.nav-list a { font-size: 14px; font-weight: 500; color: #334155; }
-.nav-list a:hover { color: #6c3bff; }
-.btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 12px; font-weight: 600; cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+.lang-pick:hover{border-color:#c9cfe0}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:44px; padding:11px 20px; border-radius:12px;
+  font-size:14.5px; font-weight:650; letter-spacing:-.01em; cursor:pointer;
+  border:1px solid transparent; transition:transform .16s var(--ease), box-shadow .16s var(--ease), background-color .16s var(--ease), border-color .16s var(--ease);
 }
-.btn:active { transform: scale(0.985); }
-.btn-primary {
-  background: #6c3bff; color: #ffffff;
-  border: none; padding: 12px 24px; font-size: 15px;
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--accent); color:#fff; box-shadow:0 1px 2px rgba(106,59,255,.24)}
+.btn-primary:hover{background:#5a2cf0; box-shadow:0 12px 24px -12px rgba(106,59,255,.7)}
+.btn-ghost{background:var(--surface); color:var(--ink); border-color:var(--line)}
+.btn-ghost:hover{border-color:#c9cfe0; background:var(--surface-2)}
+.header-cta{flex:none}
+.menu-btn{
+  display:none; width:44px; height:44px; flex:none; padding:0;
+  align-items:center; justify-content:center; flex-direction:column; gap:5px;
+  background:var(--surface); border:1px solid var(--line); border-radius:12px; cursor:pointer;
 }
-.btn-primary:hover { box-shadow: 0 12px 28px -10px rgba(108,59,255,0.55); }
-.btn-outline {
-  background: transparent; color: #6c3bff;
-  border: 1px solid #c7c2fe; padding: 11px 23px; font-size: 15px;
+.menu-btn span{display:block; width:17px; height:1.8px; border-radius:2px; background:var(--ink); transition:transform .2s var(--ease), opacity .16s var(--ease)}
+.menu-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(6.8px) rotate(45deg)}
+.menu-btn[aria-expanded="true"] span:nth-child(2){opacity:0}
+.menu-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-6.8px) rotate(-45deg)}
+.mobile-panel{display:none; border-top:1px solid var(--line-soft); padding:var(--s4) 0 var(--s5)}
+.mobile-panel.open{display:block}
+.mobile-panel a{display:block; padding:11px 2px; font-size:15px; font-weight:500; color:var(--ink-2); border-bottom:1px solid var(--line-soft)}
+.mobile-panel a.btn{
+  display:flex; width:100%; margin-top:var(--s4);
+  padding:13px 20px; font-size:15.5px; font-weight:650;
+  color:#fff; border-bottom:0;
 }
-.btn-outline:hover { background: #f5f3ff; border-color: #6c3bff; }
-.btn-large { padding: 14px 28px; font-size: 16px; border-radius: 14px; }
-.menu-toggle {
-  display: none; width: 36px; height: 36px; border: none; background: transparent;
-  cursor: pointer; position: relative; z-index: 60;
-}
-.menu-toggle span {
-  position: absolute; left: 6px; right: 6px; height: 2px; border-radius: 2px;
-  background: #0f172a; transition: transform 0.25s ease, opacity 0.2s;
-}
-.menu-toggle span:nth-child(1) { top: 15px; }
-.menu-toggle span:nth-child(2) { top: 19px; }
-.menu-toggle span:nth-child(3) { top: 23px; }
-.menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(4px) rotate(45deg); }
-.menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
-.menu-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-4px) rotate(-45deg); }
+.mobile-panel a.btn.btn-ghost{color:var(--ink)}
 
-/* Hero */
-.hero {
-  padding: clamp(60px, 8vh, 100px) 24px 0;
-  position: relative;
+/* ---------- section rhythm ---------- */
+.section{padding:clamp(44px,5vw,64px) 0}
+.section + .section{border-top:1px solid var(--line-soft)}
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:11.5px; font-weight:750; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:14px;
 }
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(24px, 4vw, 60px);
-  align-items: center;
-}
-.hero-copy { max-width: 520px; }
-.kicker {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: #6c3bff; margin-bottom: 16px;
-}
-.kicker::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 4px rgba(16,185,129,0.25); }
-h1 {
-  font-size: clamp(36px, 5vw, 52px); line-height: 1.1; letter-spacing: -0.04em;
-  font-weight: 800; margin: 0 0 18px; color: #0f172a;
-}
-.lede {
-  font-size: clamp(15px, 1.5vw, 18px); line-height: 1.6;
-  color: #475569; max-width: 48ch; margin: 0 0 24px;
-}
-.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 26px; }
-.stats {
-  display: flex; gap: 24px; flex-wrap: wrap; margin-top: 30px;
-  border-top: 1px solid rgba(15,23,42,0.08); padding-top: 20px;
-}
-.stats li { display: flex; flex-direction: column; gap: 3px; font-size: 13px; color: #64748b; }
-.stats li strong { font-size: 19px; color: #0f172a; font-variant-numeric: tabular-nums; }
-.hero-visual { position: relative; display: flex; flex-direction: column; align-items: center; gap: 16px; }
-.hero-img {
-  width: 100%; max-width: 560px; border-radius: 20px;
-  border: 1px solid rgba(15,23,42,0.08);
-  box-shadow: 0 24px 48px -16px rgba(15,23,42,0.10);
-}
-.phone {
-  width: min(190px, 90vw); height: auto; border-radius: 26px;
-  overflow: hidden; border: 1px solid rgba(15,23,42,0.08);
-  box-shadow: 0 20px 40px -14px rgba(15,23,42,0.12);
-}
-.phone img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.eyebrow::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--accent-2)}
+h2{font-size:clamp(25px,3.2vw,36px); line-height:1.15; letter-spacing:-.035em; font-weight:800; color:var(--ink)}
+.section-head{max-width:640px}
+.section-head p{margin-top:10px; color:var(--ink-2); font-size:16px}
 
-/* Features */
-.features { padding: clamp(70px, 10vh, 110px) 24px; background: #fafafa; }
-.section-title {
-  text-align: center; font-size: clamp(28px, 4vw, 40px); font-weight: 800;
-  letter-spacing: -0.04em; color: #0f172a; margin-bottom: 40px;
+/* ---------- hero ---------- */
+.hero{padding:clamp(36px,4.5vw,56px) 0 clamp(36px,4.5vw,52px)}
+.hero-grid{display:grid; grid-template-columns:1.02fr 1fr; gap:clamp(32px,4.5vw,60px); align-items:center}
+.kicker{
+  display:inline-flex; align-items:center; gap:9px;
+  font-size:12px; font-weight:700; letter-spacing:.02em; color:var(--ink-2);
+  background:var(--surface-2); border:1px solid var(--line);
+  padding:6px 12px; border-radius:999px; margin-bottom:20px;
 }
-.grid-3 {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+.kicker i{width:6px; height:6px; border-radius:50%; background:#10b981; box-shadow:0 0 0 3px rgba(16,185,129,.18)}
+h1{
+  font-size:clamp(34px,4.6vw,54px); line-height:1.06; letter-spacing:-.045em;
+  font-weight:820; color:var(--ink); margin-bottom:18px; max-width:15ch;
 }
-.card {
-  background: #ffffff; border: 1px solid rgba(15,23,42,0.06);
-  border-radius: 18px; padding: 24px 20px;
-  box-shadow: 0 10px 30px -14px rgba(15,23,42,0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.lede{font-size:clamp(15px,1.5vw,17.5px); line-height:1.62; color:var(--ink-2); max-width:46ch}
+.hero-actions{display:flex; flex-wrap:wrap; gap:12px; margin-top:28px}
+.hero-actions .btn{min-height:50px; padding:13px 24px; font-size:15.5px}
+.stats{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin-top:32px; border-top:1px solid var(--line)}
+.stats li{padding:16px 14px 0 0; min-width:0}
+.stats li + li{border-left:1px solid var(--line); padding-left:14px}
+.stats strong{display:block; font-size:21px; font-weight:800; letter-spacing:-.03em; font-variant-numeric:tabular-nums; color:var(--ink); line-height:1.2}
+.stats span{display:block; font-size:12.5px; color:var(--ink-3); margin-top:2px}
+.shot-frame{
+  background:var(--surface-2); border:1px solid var(--line); border-radius:18px;
+  overflow:hidden; box-shadow:var(--shadow-lg);
 }
-.card:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -14px rgba(15,23,42,0.12); }
-.icon {
-  width: 42px; height: 42px; border-radius: 12px;
-  background: linear-gradient(135deg, rgba(108,59,255,0.12), rgba(15,201,222,0.12));
-  display: grid; place-items: center; font-size: 20px;
-  margin-bottom: 14px; border: 1px solid rgba(108,59,255,0.14);
-}
-.card h3 { font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 8px; letter-spacing: -0.02em; }
-.card p { font-size: 14px; color: #475569; line-height: 1.6; }
+.shot-frame img{width:100%; height:auto; aspect-ratio:1458/950; object-fit:contain; transition:opacity .18s var(--ease)}
+.shot-frame img.swapping{opacity:0}
 
-/* How it works */
-.howitworks { padding: clamp(70px, 10vh, 110px) 24px; }
-.steps {
-  display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+/* ---------- features ---------- */
+.feature-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:0 clamp(24px,3.4vw,44px); margin-top:30px}
+.feature{padding:26px 0; border-top:1px solid var(--line)}
+.feature .ic{
+  width:34px; height:34px; border-radius:10px; display:grid; place-items:center;
+  background:var(--accent-soft); color:var(--accent); margin-bottom:14px;
 }
-.steps li {
-  flex: 1 1 250px; max-width: 300px; display: flex; flex-direction: column; gap: 12px;
-  padding: 24px 20px; border-radius: 18px; background: #ffffff;
-  border: 1px solid rgba(15,23,42,0.06);
-  box-shadow: 0 10px 30px -14px rgba(15,23,42,0.08);
-}
-.num {
-  width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg,#6c3bff,#0fc9de);
-  color: #fff; font-weight: 800; font-size: 14px; display: grid; place-items: center;
-  flex: none;
-}
-.steps h3 { font-size: 16px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; }
-.steps p { font-size: 14px; color: #475569; line-height: 1.6; }
+.feature .ic svg{width:18px; height:18px; display:block}
+.feature h3{font-size:15.5px; font-weight:700; letter-spacing:-.02em; margin-bottom:6px}
+.feature p{font-size:14.5px; line-height:1.6; color:var(--ink-2)}
 
-/* Screenshots */
-.shot-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
+/* ---------- screenshots ---------- */
+.tabs{display:flex; flex-wrap:wrap; gap:8px; margin:24px 0 18px}
+.tab{
+  font:inherit; font-size:13.5px; font-weight:600; color:var(--ink-2);
+  background:var(--surface); border:1px solid var(--line); border-radius:999px;
+  padding:8px 16px; cursor:pointer; transition:all .16s var(--ease);
 }
-.shot {
-  position: relative; border-radius: 18px; overflow: hidden;
-  border: 1px solid rgba(15,23,42,0.06);
-  background: #f8fafc;
-}
-.shot img { width: 100%; height: 200px; object-fit: cover; display: block; }
-.shot figcaption {
-  padding: 12px 14px; font-size: 13px; color: #475569;
-  background: #ffffff; border-top: 1px solid rgba(15,23,42,0.04);
-}
+.tab:hover{border-color:#c9cfe0; color:var(--ink)}
+.tab[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:#fff}
+.gallery{display:grid; gap:12px}
+.gallery .shot-frame{border-radius:16px}
+.gallery figcaption{font-size:13.5px; color:var(--ink-3); padding-left:2px}
 
-/* Download */
-.download { padding: clamp(70px, 10vh, 110px) 24px; background: #ffffff; text-align: center; }
-.download .section-title { margin-bottom: 10px; }
-.download .lede { color: #475569; max-width: 560px; margin: 0 auto 22px; }
-.download .btn-large { margin-bottom: 10px; }
-.note { font-size: 13px; color: #64748b; }
-
-/* Footer */
-.site-footer {
-  padding: 38px 24px 26px; border-top: 1px solid rgba(15,23,42,0.06); color: #475569;
-  font-size: 13px; text-align: center;
+/* ---------- how ---------- */
+.steps{display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(20px,3vw,40px); margin-top:30px; counter-reset:step}
+.step{position:relative; padding-top:22px; border-top:2px solid var(--line)}
+.step::before{
+  counter-increment:step; content:counter(step,decimal-leading-zero);
+  position:absolute; top:-13px; left:0; background:var(--surface); padding-right:10px;
+  font-size:12px; font-weight:800; letter-spacing:.06em; color:var(--accent);
 }
-.site-footer a { color: #6c3bff; text-decoration: underline; font-size: 13px; }
+.step h3{font-size:16px; font-weight:700; letter-spacing:-.02em; margin-bottom:6px}
+.step p{font-size:14.5px; line-height:1.6; color:var(--ink-2)}
 
-/* Responsive */
-@media (max-width: 900px) {
-  .nav-list { position: fixed; inset: 64px 0 0 0; background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(16px); border-bottom: 1px solid rgba(15,23,42,0.06);
-    flex-direction: column; padding: 24px; gap: 16px; display: none; z-index: 55;
-  }
-  .nav-list.open { display: flex; }
-  .menu-toggle { display: block; }
-  .hero-grid { grid-template-columns: 1fr; gap: 30px; }
-  .hero-visual { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 14px; }
-  .hero-img { max-width: 420px; }
-  .phone { width: 150px; }
-  .grid-3 { grid-template-columns: 1fr; }
-  .shot-grid { grid-template-columns: 1fr; }
+/* ---------- download ---------- */
+.download{background:var(--surface-2); border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft)}
+.dl-inner{display:grid; grid-template-columns:1fr auto; gap:var(--s6); align-items:center}
+.dl-meta{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+.chip{font-size:12.5px; font-weight:600; color:var(--ink-2); background:var(--surface); border:1px solid var(--line); padding:5px 11px; border-radius:999px}
+.dl-actions{display:flex; flex-direction:column; gap:10px; align-items:stretch; min-width:250px}
+.dl-actions .btn{min-height:50px; font-size:15.5px}
+.dl-note{font-size:12.5px; color:var(--ink-3); margin-top:16px; max-width:70ch}
+
+/* ---------- footer ---------- */
+.site-footer{padding:40px 0 34px; color:var(--ink-3); font-size:13.5px}
+.foot-top{display:flex; flex-wrap:wrap; gap:24px; justify-content:space-between; align-items:flex-start}
+.foot-brand{display:flex; align-items:center; gap:10px; font-weight:700; color:var(--ink); font-size:15px}
+.foot-brand img{width:24px; height:24px; border-radius:7px}
+.foot-links{display:flex; flex-wrap:wrap; gap:18px}
+.foot-links a{color:var(--ink-2)}
+.foot-links a:hover{color:var(--accent)}
+.foot-langs{display:flex; flex-wrap:wrap; gap:6px; margin:24px 0 18px; padding-top:20px; border-top:1px solid var(--line-soft)}
+.foot-langs button{
+  font:inherit; font-size:12.5px; font-weight:600; color:var(--ink-3);
+  background:transparent; border:1px solid transparent; border-radius:999px;
+  padding:5px 11px; cursor:pointer;
+}
+.foot-langs button:hover{color:var(--ink); background:var(--surface-2)}
+.foot-langs button[aria-pressed="true"]{color:var(--accent); background:var(--accent-soft)}
+
+/* ---------- japanese typography ---------- */
+html[lang="ja"] h1,html[lang="ja"] h2{letter-spacing:-.01em; line-height:1.25}
+html[lang="ja"] body{line-height:1.75}
+html[lang="ja"] .lede,html[lang="ja"] .feature p,html[lang="ja"] .step p{line-height:1.75}
+html[lang="ja"] h1{max-width:100%; font-size:clamp(30px,4vw,46px); word-break:auto-phrase; line-break:strict}
+html[lang="ja"] .lede{max-width:34em; word-break:auto-phrase}
+/* ---------- german hyphenation ---------- */
+html[lang="de"] .lede,html[lang="de"] .feature p,html[lang="de"] .step p{hyphens:auto}
+
+/* ---------- responsive ---------- */
+@media (max-width:980px){
+  .nav,.header-cta{display:none}
+  .menu-btn{display:flex}
+  .header-row{gap:var(--s3)}
+  .brand{margin-right:auto}
+  .hero-grid{grid-template-columns:1fr; gap:32px}
+  h1{max-width:20ch}
+  .feature-grid{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:1fr; gap:26px}
+  .step{padding-top:20px}
+  .dl-inner{grid-template-columns:1fr; gap:24px}
+  .dl-actions{min-width:0}
+}
+@media (max-width:620px){
+  .wrap{padding:0 18px}
+  .feature-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats li{padding:14px 14px 0 0}
+  .stats li:nth-child(odd){border-left:0; padding-left:0}
+  .stats li:nth-child(even){border-left:1px solid var(--line); padding-left:14px}
+  .stats li:nth-child(n+3){border-top:1px solid var(--line); margin-top:12px}
+  .hero-actions .btn{flex:1 1 100%}
+  .foot-top{flex-direction:column; gap:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms !important; animation-duration:.01ms !important; scroll-behavior:auto !important}
 }
 </style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="header-row">
+      <a class="brand" href="#top"><img src="icon.png" alt="" width="30" height="30" /><span>Dosyaktar</span></a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#features" data-i18n="nav.features">Features</a>
+        <a href="#screens" data-i18n="nav.screens">Screens</a>
+        <a href="#how" data-i18n="nav.how">How it works</a>
+      </nav>
+      <select class="lang-pick" id="langPick" aria-label="Language"></select>
+      <a class="btn btn-primary header-cta" href="https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.3.0/Dosyaktar.exe" data-i18n="cta.short">Download</a>
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mobilePanel" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-panel" id="mobilePanel">
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="#screens" data-i18n="nav.screens">Screens</a>
+      <a href="#how" data-i18n="nav.how">How it works</a>
+      <a class="btn btn-primary" href="https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.3.0/Dosyaktar.exe" data-i18n="cta.primary">Download for Windows</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="kicker"><i></i><span>Windows 10 / 11 · v2.3.0</span></p>
+        <h1 data-i18n="hero.title">Move files at LAN speed.</h1>
+        <p class="lede" data-i18n="hero.lede">No internet, no account, no ads. Run one EXE and move files, folders and installed games straight between two computers on the same network.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.3.0/Dosyaktar.exe" data-i18n="cta.primary">Download for Windows</a>
+          <a class="btn btn-ghost" href="#how" data-i18n="cta.secondary">See how it works</a>
+        </div>
+        <ul class="stats">
+          <li><strong>32</strong><span data-i18n="stat.channels">parallel channels</span></li>
+          <li><strong>8 MB</strong><span data-i18n="stat.chunks">chunk size</span></li>
+          <li><strong>7</strong><span data-i18n="stat.stores">game stores</span></li>
+          <li><strong>6</strong><span data-i18n="stat.langs">languages</span></li>
+        </ul>
+      </div>
+      <figure class="shot-frame" style="margin:0">
+        <img id="heroShot" src="shots/en-games.jpg" width="1458" height="950" alt="Dosyaktar game library" />
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="features.eyebrow">Features</p>
+        <h2 data-i18n="features.title">Everything in one window</h2>
+        <p data-i18n="features.sub">Files, folders, games and your phone — one flow.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature">
+          <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4.5 13.5H10l-1 8.5 8.5-11.5H12z"/></svg></div>
+          <h3 data-i18n="f1.t">Flash transfer</h3>
+          <p data-i18n="f1.d">Files are split into 8 MB chunks and carried over 32 parallel TCP channels.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="3.6"/><path d="M11.6 12H21l-2.6 2.6M17.6 12v2.6"/></svg></div>
+          <h3 data-i18n="f2.t">PIN pairing</h3>
+          <p data-i18n="f2.d">No account, no email. A 6-digit code on screen links the two devices.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="5.5"/><path d="M7 10.6v3M5.5 12.1h3M15.6 11.4h.01M17.6 13.4h.01"/></svg></div>
+          <h3 data-i18n="f3.t">Game transfer</h3>
+          <p data-i18n="f3.d">Steam, Epic, GOG, Battle.net, Ubisoft, EA and Riot libraries are scanned; the game lands in the target library.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.6"/><path d="M11 19.3h2"/></svg></div>
+          <h3 data-i18n="f4.t">Mobile bridge</h3>
+          <p data-i18n="f4.d">Send and receive from a phone browser. Nothing to install.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg></div>
+          <h3 data-i18n="f5.t">Six languages</h3>
+          <p data-i18n="f5.d">Turkish, English, German, French, Spanish, Japanese. The interface switches instantly.</p>
+        </article>
+        <article class="feature">
+          <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.9-.9 1.9-1.9 0-1.4-1.4-1.7-1.4-2.9 0-.8.7-1.4 1.6-1.4H16a5 5 0 0 0 5-5C21 6.2 17 3 12 3Z"/><circle cx="8" cy="10.4" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.8" cy="10.2" r="1.1" fill="currentColor" stroke="none"/></svg></div>
+          <h3 data-i18n="f6.t">Eight themes</h3>
+          <p data-i18n="f6.d">Prism, Midnight, Nordic, Aurora, Sunset, Cyber, Forest, Graphite — all at WCAG AA contrast.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="screens">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="screens.eyebrow">Screenshots</p>
+        <h2 data-i18n="screens.title">Real screens</h2>
+        <p data-i18n="screens.sub">The interface itself — not a mockup.</p>
+      </div>
+      <div class="tabs" role="group" aria-label="Screenshots">
+        <button class="tab" type="button" data-shot="games" aria-pressed="true" data-i18n="tab.games">Games</button>
+        <button class="tab" type="button" data-shot="send" aria-pressed="false" data-i18n="tab.send">Transfer</button>
+        <button class="tab" type="button" data-shot="settings" aria-pressed="false" data-i18n="tab.settings">Settings</button>
+      </div>
+      <figure class="gallery" style="margin:0">
+        <div class="shot-frame">
+          <img id="shotImg" src="shots/en-games.jpg" width="1458" height="950" alt="Dosyaktar game library" />
+        </div>
+        <figcaption id="shotCaption">Game library — 7 stores, covers and sizes.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="how.eyebrow">How it works</p>
+        <h2 data-i18n="how.title">Two devices, three steps</h2>
+      </div>
+      <ol class="steps">
+        <li class="step">
+          <h3 data-i18n="s1.t">Run</h3>
+          <p data-i18n="s1.d">Open Dosyaktar on both computers. There is nothing to install.</p>
+        </li>
+        <li class="step">
+          <h3 data-i18n="s2.t">Pair</h3>
+          <p data-i18n="s2.d">Click the other device and confirm the 6-digit PIN.</p>
+        </li>
+        <li class="step">
+          <h3 data-i18n="s3.t">Transfer</h3>
+          <p data-i18n="s3.d">Drop files, folders or a game; the transfer starts at once.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section download" id="download">
+    <div class="wrap dl-inner">
+      <div>
+        <h2 data-i18n="dl.title">Download Dosyaktar</h2>
+        <div class="dl-meta">
+          <span class="chip">Windows 10 / 11 · x64</span>
+          <span class="chip" data-i18n="dl.size">77.3 MB</span>
+          <span class="chip" data-i18n="dl.free">Free · no installer</span>
+        </div>
+        <p class="dl-note" data-i18n="dl.note">Both computers must run the same version. The Windows Firewall rule is added on first run.</p>
+      </div>
+      <div class="dl-actions">
+        <a class="btn btn-primary" href="https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.3.0/Dosyaktar.exe" data-i18n="dl.button">Download Dosyaktar v2.3.0</a>
+        <a class="btn btn-ghost" href="https://github.com/muhammertasci11/Dosyaktar/releases" data-i18n="dl.all">All releases</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <div class="foot-brand"><img src="icon.png" alt="" width="24" height="24" /><span>Dosyaktar</span></div>
+        <p style="margin-top:6px" data-i18n="foot.tag">Files, folders and games over your local network.</p>
+      </div>
+      <div class="foot-links">
+        <a href="https://github.com/muhammertasci11/Dosyaktar">GitHub</a>
+        <a href="https://github.com/muhammertasci11/Dosyaktar#readme" data-i18n="foot.readme">README</a>
+        <a href="https://github.com/muhammertasci11/Dosyaktar/releases" data-i18n="foot.releases">Releases</a>
+      </div>
+    </div>
+    <div class="foot-langs" id="footLangs" role="group" aria-label="Language"></div>
+    <p><span data-i18n="foot.made">Built by Muhammer Taşçı</span> · .NET 8 / WPF · © 2026</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var I18N = {
+    en: {
+      "meta.title": "Dosyaktar — Files, folders and games over your local network",
+      "meta.desc": "Dosyaktar v2.3.0 — transfer files, folders and installed games between Windows PCs on the same network. No internet, no account, no ads. One self-contained EXE in six languages.",
+      "nav.features": "Features", "nav.screens": "Screens", "nav.how": "How it works",
+      "cta.short": "Download", "cta.primary": "Download for Windows", "cta.secondary": "See how it works",
+      "hero.title": "Move files at LAN speed.",
+      "hero.lede": "No internet, no account, no ads. Run one EXE and move files, folders and installed games straight between two computers on the same network.",
+      "stat.channels": "parallel channels", "stat.chunks": "chunk size", "stat.stores": "game stores", "stat.langs": "languages",
+      "features.eyebrow": "Features", "features.title": "Everything in one window",
+      "features.sub": "Files, folders, games and your phone — one flow.",
+      "f1.t": "Flash transfer", "f1.d": "Files are split into 8 MB chunks and carried over 32 parallel TCP channels.",
+      "f2.t": "PIN pairing", "f2.d": "No account, no email. A 6-digit code on screen links the two devices.",
+      "f3.t": "Game transfer", "f3.d": "Steam, Epic, GOG, Battle.net, Ubisoft, EA and Riot libraries are scanned; the game lands in the target library.",
+      "f4.t": "Mobile bridge", "f4.d": "Send and receive from a phone browser. Nothing to install.",
+      "f5.t": "Six languages", "f5.d": "Turkish, English, German, French, Spanish, Japanese. The interface switches instantly.",
+      "f6.t": "Eight themes", "f6.d": "Prism, Midnight, Nordic, Aurora, Sunset, Cyber, Forest, Graphite — all at WCAG AA contrast.",
+      "screens.eyebrow": "Screenshots", "screens.title": "Real screens",
+      "screens.sub": "The interface itself — not a mockup.",
+      "tab.games": "Games", "tab.send": "Transfer", "tab.settings": "Settings",
+      "shot.games": "Game library — 7 stores, covers and sizes.",
+      "shot.send": "Transfer — device discovery, queue and activity log.",
+      "shot.settings": "Settings — theme, language and network.",
+      "how.eyebrow": "How it works", "how.title": "Two devices, three steps",
+      "s1.t": "Run", "s1.d": "Open Dosyaktar on both computers. There is nothing to install.",
+      "s2.t": "Pair", "s2.d": "Click the other device and confirm the 6-digit PIN.",
+      "s3.t": "Transfer", "s3.d": "Drop files, folders or a game; the transfer starts at once.",
+      "dl.title": "Download Dosyaktar", "dl.size": "77.3 MB", "dl.free": "Free · no installer",
+      "dl.note": "Both computers must run the same version. The Windows Firewall rule is added on first run.",
+      "dl.button": "Download Dosyaktar v2.3.0", "dl.all": "All releases",
+      "foot.tag": "Files, folders and games over your local network.",
+      "foot.readme": "README", "foot.releases": "Releases", "foot.made": "Built by Muhammer Taşçı"
+    },
+    tr: {
+      "meta.title": "Dosyaktar — Yerel ağda dosya, klasör ve oyun transferi",
+      "meta.desc": "Dosyaktar v2.3.0 — aynı ağdaki Windows bilgisayarlar arasında dosya, klasör ve kurulu oyun transferi. İnternet yok, hesap yok, reklam yok. Altı dilde tek EXE.",
+      "nav.features": "Özellikler", "nav.screens": "Ekranlar", "nav.how": "Nasıl çalışır",
+      "cta.short": "İndir", "cta.primary": "Windows için indir", "cta.secondary": "Nasıl çalışır",
+      "hero.title": "Aynı ağda, ışık hızında dosya taşı.",
+      "hero.lede": "İnternet yok, hesap yok, reklam yok. Tek bir EXE çalıştırın; aynı ağdaki iki bilgisayar arasında dosya, klasör ve kurulu oyunlar doğrudan taşınır.",
+      "stat.channels": "paralel kanal", "stat.chunks": "parça boyu", "stat.stores": "oyun mağazası", "stat.langs": "dil",
+      "features.eyebrow": "Özellikler", "features.title": "Tek pencerede her şey",
+      "features.sub": "Dosya, klasör, oyun ve telefon — hepsi aynı akışta.",
+      "f1.t": "Flash aktarım", "f1.d": "Dosyalar 8 MB'lik parçalara bölünür ve 32 paralel TCP kanalıyla eşzamanlı taşınır.",
+      "f2.t": "PIN eşleştirme", "f2.d": "Hesap yok, e-posta yok. Ekranda beliren 6 haneli kod iki cihazı bağlar.",
+      "f3.t": "Oyun aktarımı", "f3.d": "Steam, Epic, GOG, Battle.net, Ubisoft, EA ve Riot kitaplıkları taranır; oyun hedef kitaplığa eklenir.",
+      "f4.t": "Mobil köprü", "f4.d": "Telefon tarayıcısından dosya gönder ve al. Uygulama kurmak gerekmez.",
+      "f5.t": "Altı dil", "f5.d": "Türkçe, İngilizce, Almanca, Fransızca, İspanyolca, Japonca. Arayüz anında değişir.",
+      "f6.t": "Sekiz tema", "f6.d": "Prism, Midnight, Nordic, Aurora, Sunset, Cyber, Forest, Graphite. Hepsi WCAG AA kontrastlı.",
+      "screens.eyebrow": "Ekran görüntüleri", "screens.title": "Gerçek ekranlar",
+      "screens.sub": "Arayüzün kendisi — mockup değil.",
+      "tab.games": "Oyunlar", "tab.send": "Aktarım", "tab.settings": "Ayarlar",
+      "shot.games": "Oyun kitaplığı — 7 sağlayıcı, kapaklar ve boyutlar.",
+      "shot.send": "Aktarım — cihaz keşfi, kuyruk ve etkinlik günlüğü.",
+      "shot.settings": "Ayarlar — tema, dil ve ağ.",
+      "how.eyebrow": "Nasıl çalışır", "how.title": "İki cihaz, üç adım",
+      "s1.t": "Başlat", "s1.d": "Dosyaktar'ı iki bilgisayarda da açın. Kurulum yok.",
+      "s2.t": "Eşleştir", "s2.d": "Karşı cihaza tıklayın, 6 haneli PIN'i onaylayın.",
+      "s3.t": "Aktar", "s3.d": "Dosya, klasör veya oyun bırakın; aktarım anında başlar.",
+      "dl.title": "Dosyaktar'ı indir", "dl.size": "77,3 MB", "dl.free": "Ücretsiz · kurulum yok",
+      "dl.note": "İki bilgisayarda da aynı sürüm çalışmalı. İlk açılışta Windows Firewall kuralı otomatik eklenir.",
+      "dl.button": "Dosyaktar v2.3.0 indir", "dl.all": "Tüm sürümler",
+      "foot.tag": "Yerel ağda dosya, klasör ve oyun transferi.",
+      "foot.readme": "README", "foot.releases": "Sürümler", "foot.made": "Muhammer Taşçı tarafından geliştirildi"
+    },
+    de: {
+      "meta.title": "Dosyaktar — Dateien, Ordner und Spiele im lokalen Netz",
+      "meta.desc": "Dosyaktar v2.3.0 — Dateien, Ordner und installierte Spiele zwischen Windows-PCs im selben Netz übertragen. Kein Internet, kein Konto, keine Werbung. Eine EXE in sechs Sprachen.",
+      "nav.features": "Funktionen", "nav.screens": "Ansichten", "nav.how": "So funktioniert's",
+      "cta.short": "Download", "cta.primary": "Für Windows laden", "cta.secondary": "So funktioniert's",
+      "hero.title": "Dateien in LAN-Geschwindigkeit.",
+      "hero.lede": "Kein Internet, kein Konto, keine Werbung. Eine EXE starten und Dateien, Ordner und installierte Spiele direkt zwischen zwei Rechnern im selben Netz übertragen.",
+      "stat.channels": "parallele Kanäle", "stat.chunks": "Blockgröße", "stat.stores": "Spiele-Stores", "stat.langs": "Sprachen",
+      "features.eyebrow": "Funktionen", "features.title": "Alles in einem Fenster",
+      "features.sub": "Dateien, Ordner, Spiele und das Telefon — ein Ablauf.",
+      "f1.t": "Flash-Übertragung", "f1.d": "Dateien werden in 8-MB-Blöcke geteilt und über 32 parallele TCP-Kanäle übertragen.",
+      "f2.t": "PIN-Kopplung", "f2.d": "Kein Konto, keine E-Mail. Ein 6-stelliger Code auf dem Bildschirm verbindet beide Geräte.",
+      "f3.t": "Spiele übertragen", "f3.d": "Steam, Epic, GOG, Battle.net, Ubisoft, EA und Riot werden durchsucht; das Spiel landet in der Zielbibliothek.",
+      "f4.t": "Mobil-Brücke", "f4.d": "Senden und empfangen im Handy-Browser. Nichts zu installieren.",
+      "f5.t": "Sechs Sprachen", "f5.d": "Türkisch, Englisch, Deutsch, Französisch, Spanisch, Japanisch. Die Oberfläche wechselt sofort.",
+      "f6.t": "Acht Designs", "f6.d": "Prism, Midnight, Nordic, Aurora, Sunset, Cyber, Forest, Graphite — alle mit WCAG-AA-Kontrast.",
+      "screens.eyebrow": "Ansichten", "screens.title": "Echte Ansichten",
+      "screens.sub": "Die Oberfläche selbst — kein Mockup.",
+      "tab.games": "Spiele", "tab.send": "Übertragung", "tab.settings": "Optionen",
+      "shot.games": "Spielebibliothek — 7 Stores, Cover und Größen.",
+      "shot.send": "Übertragung — Gerätesuche, Warteschlange und Aktivität.",
+      "shot.settings": "Optionen — Design, Sprache und Netzwerk.",
+      "how.eyebrow": "So funktioniert's", "how.title": "Zwei Geräte, drei Schritte",
+      "s1.t": "Starten", "s1.d": "Dosyaktar auf beiden Rechnern öffnen. Es gibt nichts zu installieren.",
+      "s2.t": "Koppeln", "s2.d": "Auf das andere Gerät klicken und den 6-stelligen PIN bestätigen.",
+      "s3.t": "Übertragen", "s3.d": "Dateien, Ordner oder ein Spiel ablegen; die Übertragung startet sofort.",
+      "dl.title": "Dosyaktar herunterladen", "dl.size": "77,3 MB", "dl.free": "Kostenlos · kein Installer",
+      "dl.note": "Auf beiden Rechnern muss dieselbe Version laufen. Die Windows-Firewall-Regel wird beim ersten Start ergänzt.",
+      "dl.button": "Dosyaktar v2.3.0 herunterladen", "dl.all": "Alle Releases",
+      "foot.tag": "Dateien, Ordner und Spiele im lokalen Netz.",
+      "foot.readme": "README", "foot.releases": "Releases", "foot.made": "Entwickelt von Muhammer Taşçı"
+    },
+    fr: {
+      "meta.title": "Dosyaktar — Fichiers, dossiers et jeux sur votre réseau local",
+      "meta.desc": "Dosyaktar v2.3.0 — transférez fichiers, dossiers et jeux installés entre PC Windows du même réseau. Sans Internet, sans compte, sans publicité. Un seul EXE en six langues.",
+      "nav.features": "Fonctions", "nav.screens": "Aperçus", "nav.how": "Fonctionnement",
+      "cta.short": "Télécharger", "cta.primary": "Télécharger pour Windows", "cta.secondary": "Voir le fonctionnement",
+      "hero.title": "Transférez à la vitesse du réseau local.",
+      "hero.lede": "Sans Internet, sans compte, sans publicité. Lancez un seul EXE et transférez fichiers, dossiers et jeux installés directement entre deux ordinateurs du même réseau.",
+      "stat.channels": "canaux parallèles", "stat.chunks": "taille des blocs", "stat.stores": "boutiques de jeux", "stat.langs": "langues",
+      "features.eyebrow": "Fonctions", "features.title": "Tout dans une fenêtre",
+      "features.sub": "Fichiers, dossiers, jeux et téléphone — un seul flux.",
+      "f1.t": "Transfert Flash", "f1.d": "Les fichiers sont découpés en blocs de 8 Mo et transportés sur 32 canaux TCP parallèles.",
+      "f2.t": "Appairage par PIN", "f2.d": "Pas de compte, pas d'e-mail. Un code à 6 chiffres relie les deux appareils.",
+      "f3.t": "Transfert de jeux", "f3.d": "Les bibliothèques Steam, Epic, GOG, Battle.net, Ubisoft, EA et Riot sont analysées ; le jeu arrive dans la bibliothèque cible.",
+      "f4.t": "Passerelle mobile", "f4.d": "Envoyez et recevez depuis le navigateur du téléphone. Rien à installer.",
+      "f5.t": "Six langues", "f5.d": "Turc, anglais, allemand, français, espagnol, japonais. L'interface change instantanément.",
+      "f6.t": "Huit thèmes", "f6.d": "Prism, Midnight, Nordic, Aurora, Sunset, Cyber, Forest, Graphite — tous conformes WCAG AA.",
+      "screens.eyebrow": "Aperçus", "screens.title": "De vrais écrans",
+      "screens.sub": "L'interface elle-même — pas une maquette.",
+      "tab.games": "Jeux", "tab.send": "Transfert", "tab.settings": "Réglages",
+      "shot.games": "Bibliothèque de jeux — 7 boutiques, jaquettes et tailles.",
+      "shot.send": "Transfert — découverte, file d'attente et journal.",
+      "shot.settings": "Réglages — thème, langue et réseau.",
+      "how.eyebrow": "Fonctionnement", "how.title": "Deux appareils, trois étapes",
+      "s1.t": "Lancer", "s1.d": "Ouvrez Dosyaktar sur les deux ordinateurs. Rien à installer.",
+      "s2.t": "Appairer", "s2.d": "Cliquez sur l'autre appareil et confirmez le PIN à 6 chiffres.",
+      "s3.t": "Transférer", "s3.d": "Déposez fichiers, dossiers ou un jeu ; le transfert démarre aussitôt.",
+      "dl.title": "Télécharger Dosyaktar", "dl.size": "77,3 Mo", "dl.free": "Gratuit · sans installateur",
+      "dl.note": "Les deux ordinateurs doivent utiliser la même version. La règle de pare-feu Windows est ajoutée au premier lancement.",
+      "dl.button": "Télécharger Dosyaktar v2.3.0", "dl.all": "Toutes les versions",
+      "foot.tag": "Fichiers, dossiers et jeux sur votre réseau local.",
+      "foot.readme": "README", "foot.releases": "Versions", "foot.made": "Développé par Muhammer Taşçı"
+    },
+    es: {
+      "meta.title": "Dosyaktar — Archivos, carpetas y juegos por tu red local",
+      "meta.desc": "Dosyaktar v2.3.0 — mueve archivos, carpetas y juegos instalados entre PC Windows de la misma red. Sin Internet, sin cuenta, sin anuncios. Un solo EXE en seis idiomas.",
+      "nav.features": "Funciones", "nav.screens": "Capturas", "nav.how": "Cómo funciona",
+      "cta.short": "Descargar", "cta.primary": "Descargar para Windows", "cta.secondary": "Ver cómo funciona",
+      "hero.title": "Mueve archivos a velocidad de red local.",
+      "hero.lede": "Sin Internet, sin cuenta, sin anuncios. Ejecuta un solo EXE y mueve archivos, carpetas y juegos instalados directamente entre dos equipos de la misma red.",
+      "stat.channels": "canales paralelos", "stat.chunks": "tamaño de bloque", "stat.stores": "tiendas de juegos", "stat.langs": "idiomas",
+      "features.eyebrow": "Funciones", "features.title": "Todo en una ventana",
+      "features.sub": "Archivos, carpetas, juegos y el móvil — un solo flujo.",
+      "f1.t": "Transferencia Flash", "f1.d": "Los archivos se dividen en bloques de 8 MB y viajan por 32 canales TCP en paralelo.",
+      "f2.t": "Emparejamiento por PIN", "f2.d": "Sin cuenta ni correo. Un código de 6 dígitos enlaza los dos equipos.",
+      "f3.t": "Transferencia de juegos", "f3.d": "Se exploran las bibliotecas de Steam, Epic, GOG, Battle.net, Ubisoft, EA y Riot; el juego aparece en la biblioteca de destino.",
+      "f4.t": "Puente móvil", "f4.d": "Envía y recibe desde el navegador del móvil. Nada que instalar.",
+      "f5.t": "Seis idiomas", "f5.d": "Turco, inglés, alemán, francés, español, japonés. La interfaz cambia al instante.",
+      "f6.t": "Ocho temas", "f6.d": "Prism, Midnight, Nordic, Aurora, Sunset, Cyber, Forest, Graphite — todos con contraste WCAG AA.",
+      "screens.eyebrow": "Capturas", "screens.title": "Pantallas reales",
+      "screens.sub": "La interfaz tal cual — sin maquetas.",
+      "tab.games": "Juegos", "tab.send": "Transferencia", "tab.settings": "Ajustes",
+      "shot.games": "Biblioteca de juegos — 7 tiendas, carátulas y tamaños.",
+      "shot.send": "Transferencia — descubrimiento, cola y registro de actividad.",
+      "shot.settings": "Ajustes — tema, idioma y red.",
+      "how.eyebrow": "Cómo funciona", "how.title": "Dos equipos, tres pasos",
+      "s1.t": "Abrir", "s1.d": "Abre Dosyaktar en los dos ordenadores. No hay nada que instalar.",
+      "s2.t": "Emparejar", "s2.d": "Haz clic en el otro equipo y confirma el PIN de 6 dígitos.",
+      "s3.t": "Transferir", "s3.d": "Suelta archivos, carpetas o un juego; la transferencia empieza al momento.",
+      "dl.title": "Descargar Dosyaktar", "dl.size": "77,3 MB", "dl.free": "Gratis · sin instalador",
+      "dl.note": "Los dos equipos deben usar la misma versión. La regla del firewall de Windows se añade al primer inicio.",
+      "dl.button": "Descargar Dosyaktar v2.3.0", "dl.all": "Todas las versiones",
+      "foot.tag": "Archivos, carpetas y juegos por tu red local.",
+      "foot.readme": "README", "foot.releases": "Versiones", "foot.made": "Creado por Muhammer Taşçı"
+    },
+    ja: {
+      "meta.title": "Dosyaktar — ローカルネットワークでファイル・フォルダー・ゲームを転送",
+      "meta.desc": "Dosyaktar v2.3.0 — 同じネットワーク上の Windows PC 間でファイル・フォルダー・インストール済みゲームを転送。インターネット不要、アカウント不要、広告なし。6言語対応の単一 EXE。",
+      "nav.features": "機能", "nav.screens": "画面", "nav.how": "使い方",
+      "cta.short": "ダウンロード", "cta.primary": "Windows 版をダウンロード", "cta.secondary": "使い方を見る",
+      "hero.title": "LAN の速さでファイルを転送。",
+      "hero.lede": "インターネット不要、アカウント不要、広告なし。EXE を1つ起動するだけで、同じネットワーク上の2台の PC 間でファイル・フォルダー・インストール済みゲームを直接転送できます。",
+      "stat.channels": "並列チャネル", "stat.chunks": "ブロックサイズ", "stat.stores": "ゲームストア", "stat.langs": "言語",
+      "features.eyebrow": "機能", "features.title": "すべてを1つのウィンドウで",
+      "features.sub": "ファイルもフォルダーもゲームもスマホも、同じ流れで。",
+      "f1.t": "フラッシュ転送", "f1.d": "ファイルを 8 MB のブロックに分割し、32 本の TCP チャネルで並列に転送します。",
+      "f2.t": "PIN ペアリング", "f2.d": "アカウントもメールも不要。画面の6桁コードで2台をつなぎます。",
+      "f3.t": "ゲーム転送", "f3.d": "Steam、Epic、GOG、Battle.net、Ubisoft、EA、Riot のライブラリを検出し、転送先のライブラリに登録します。",
+      "f4.t": "モバイルブリッジ", "f4.d": "スマホのブラウザから送受信。アプリのインストールは不要です。",
+      "f5.t": "6言語", "f5.d": "トルコ語・英語・ドイツ語・フランス語・スペイン語・日本語。表示はすぐに切り替わります。",
+      "f6.t": "8テーマ", "f6.d": "Prism、Midnight、Nordic、Aurora、Sunset、Cyber、Forest、Graphite。すべて WCAG AA コントラスト。",
+      "screens.eyebrow": "画面", "screens.title": "実際の画面",
+      "screens.sub": "モックアップではなく、アプリそのものです。",
+      "tab.games": "ゲーム", "tab.send": "転送", "tab.settings": "設定",
+      "shot.games": "ゲームライブラリ — 7つのストア、カバーとサイズ。",
+      "shot.send": "転送 — デバイス検出、キュー、アクティビティ。",
+      "shot.settings": "設定 — テーマ、言語、ネットワーク。",
+      "how.eyebrow": "使い方", "how.title": "2台、3ステップ",
+      "s1.t": "起動", "s1.d": "2台の PC で Dosyaktar を開きます。インストールはありません。",
+      "s2.t": "ペアリング", "s2.d": "相手のデバイスをクリックし、6桁の PIN を確認します。",
+      "s3.t": "転送", "s3.d": "ファイル、フォルダー、ゲームをドロップするとすぐに始まります。",
+      "dl.title": "Dosyaktar をダウンロード", "dl.size": "77.3 MB", "dl.free": "無料 · インストーラー不要",
+      "dl.note": "2台とも同じバージョンで動作している必要があります。初回起動時に Windows ファイアウォールの規則が追加されます。",
+      "dl.button": "Dosyaktar v2.3.0 をダウンロード", "dl.all": "すべてのリリース",
+      "foot.tag": "ローカルネットワークでファイル・フォルダー・ゲームを転送。",
+      "foot.readme": "README", "foot.releases": "リリース", "foot.made": "開発: Muhammer Taşçı"
+    }
+  };
+
+  var LANGS = [
+    ["tr", "Türkçe"], ["en", "English"], ["de", "Deutsch"],
+    ["fr", "Français"], ["es", "Español"], ["ja", "日本語"]
+  ];
+
+  var state = { lang: "en", shot: "games" };
+
+  function detect() {
+    var q = new URLSearchParams(location.search).get("lang");
+    if (q && I18N[q]) return q;
+    try {
+      var saved = localStorage.getItem("dosyaktar.lang");
+      if (saved && I18N[saved]) return saved;
+    } catch (e) {}
+    var nav = (navigator.language || "en").slice(0, 2).toLowerCase();
+    return I18N[nav] ? nav : "en";
+  }
+
+  var shotAlt = {
+    games: "Dosyaktar — game library",
+    send: "Dosyaktar — transfer",
+    settings: "Dosyaktar — settings"
+  };
+
+  function render() {
+    var t = I18N[state.lang];
+    document.documentElement.lang = state.lang;
+    document.title = t["meta.title"];
+    var md = document.querySelector('meta[name="description"]');
+    if (md) md.setAttribute("content", t["meta.desc"]);
+
+    var nodes = document.querySelectorAll("[data-i18n]");
+    for (var i = 0; i < nodes.length; i++) {
+      var k = nodes[i].getAttribute("data-i18n");
+      if (t[k]) nodes[i].textContent = t[k];
+    }
+
+    var src = "shots/" + state.lang + "-" + state.shot + ".jpg";
+    var shotImg = document.getElementById("shotImg");
+    shotImg.src = src;
+    shotImg.alt = shotAlt[state.shot];
+    document.getElementById("shotCaption").textContent = t["shot." + state.shot];
+    document.getElementById("heroShot").src = "shots/" + state.lang + "-games.jpg";
+
+    var tabs = document.querySelectorAll(".tab");
+    for (var j = 0; j < tabs.length; j++) {
+      tabs[j].setAttribute("aria-pressed", tabs[j].getAttribute("data-shot") === state.shot ? "true" : "false");
+    }
+
+    var pick = document.getElementById("langPick");
+    pick.value = state.lang;
+    pick.setAttribute("aria-label", state.lang === "ja" ? "言語" : "Language");
+
+    var foot = document.getElementById("footLangs").children;
+    for (var n = 0; n < foot.length; n++) {
+      foot[n].setAttribute("aria-pressed", foot[n].getAttribute("data-lang") === state.lang ? "true" : "false");
+    }
+  }
+
+  function setLang(code, remember) {
+    if (!I18N[code]) return;
+    state.lang = code;
+    if (remember) { try { localStorage.setItem("dosyaktar.lang", code); } catch (e) {} }
+    render();
+  }
+
+  // language picker
+  var pick = document.getElementById("langPick");
+  LANGS.forEach(function (l) {
+    var o = document.createElement("option");
+    o.value = l[0];
+    o.textContent = l[1];
+    pick.appendChild(o);
+  });
+  pick.addEventListener("change", function () { setLang(pick.value, true); });
+
+  // footer language row
+  var foot = document.getElementById("footLangs");
+  LANGS.forEach(function (l) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = l[1];
+    b.setAttribute("data-lang", l[0]);
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", function () { setLang(l[0], true); });
+    foot.appendChild(b);
+  });
+
+  // screenshot tabs
+  var tabs = document.querySelectorAll(".tab");
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener("click", function () {
+      var next = this.getAttribute("data-shot");
+      if (next === state.shot) return;
+      state.shot = next;
+      var img = document.getElementById("shotImg");
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduce) { render(); return; }
+      img.classList.add("swapping");
+      setTimeout(function () { render(); img.classList.remove("swapping"); }, 140);
+    });
+  }
+
+  // mobile menu
+  var menuBtn = document.getElementById("menuBtn");
+  var panel = document.getElementById("mobilePanel");
+  menuBtn.addEventListener("click", function () {
+    var open = menuBtn.getAttribute("aria-expanded") === "true";
+    menuBtn.setAttribute("aria-expanded", open ? "false" : "true");
+    panel.classList.toggle("open", !open);
+  });
+  panel.addEventListener("click", function (e) {
+    if (e.target.tagName === "A") {
+      menuBtn.setAttribute("aria-expanded", "false");
+      panel.classList.remove("open");
+    }
+  });
+
+  setLang(detect(), false);
+})();
+</script>
 </body>
 </html>

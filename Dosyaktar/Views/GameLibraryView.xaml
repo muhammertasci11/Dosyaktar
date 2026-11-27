@@ -1,6 +1,7 @@
 <UserControl x:Class="Dosyaktar.Views.GameLibraryView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Dosyaktar.Localization"
              xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <UserControl.Resources>
@@ -199,7 +200,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Oyun Kütüphanesi"
+                <TextBlock Text="{loc:T 'Oyun Kütüphanesi'}"
                            Style="{StaticResource DisplayText}"
                            FontSize="25"/>
             </StackPanel>
@@ -209,20 +210,20 @@
                        Style="{StaticResource MutedText}"
                        VerticalAlignment="Center"
                        Margin="0,0,12,0"
-                       Text="28 oyun · 4 sağlayıcı · 512 GB"/>
+                       Text="{loc:T '28 oyun · 4 sağlayıcı · 512 GB'}"/>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                 <Button x:Name="BtnRefresh"
                         Style="{StaticResource GhostButton}"
                         Padding="12,9"
                         Click="BtnRefresh_Click"
-                        ToolTip="Tarama yap">
+                        ToolTip="{loc:T 'Tarama yap'}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#xE72C;"
                                    FontFamily="{StaticResource IconFont}"
                                    FontSize="13"
                                    VerticalAlignment="Center"/>
-                        <TextBlock Text="Yenile"
+                        <TextBlock Text="{loc:T 'Yenile'}"
                                    FontSize="13"
                                    Margin="7,0,0,0"
                                    VerticalAlignment="Center"/>
@@ -259,7 +260,7 @@
                                    FontFamily="{StaticResource IconFont}"
                                    FontSize="13"
                                    VerticalAlignment="Center"/>
-                        <TextBlock Text="Klasör ekle"
+                        <TextBlock Text="{loc:T 'Klasör ekle'}"
                                    FontSize="13"
                                    Margin="7,0,0,0"
                                    VerticalAlignment="Center"/>
@@ -286,7 +287,7 @@
                 <!-- Search box -->
                 <TextBox x:Name="TxtSearch"
                          Style="{StaticResource ModernTextBox}"
-                         Tag="Oyun ara"
+                         Tag="{loc:T 'Oyun ara'}"
                          Width="260"
                          VerticalAlignment="Center"
                          TextChanged="TxtSearch_TextChanged"
@@ -350,15 +351,15 @@
                               Margin="16,0,16,0"
                               Padding="0,2,0,2">
                     <StackPanel x:Name="ChipPanel" Orientation="Horizontal">
-                        <RadioButton x:Name="ChipAll" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="Hepsi" Tag="all" IsChecked="True" Checked="Provider_Checked"/>
-                        <RadioButton x:Name="ChipSteam" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="Steam" Tag="steam" Checked="Provider_Checked" Margin="8,0,0,0"/>
-                        <RadioButton x:Name="ChipEpic" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="Epic" Tag="epic" Checked="Provider_Checked" Margin="8,0,0,0"/>
-                        <RadioButton x:Name="ChipGog" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="GOG" Tag="gog" Checked="Provider_Checked" Margin="8,0,0,0"/>
-                        <RadioButton x:Name="ChipBattleNet" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="Battle.net" Tag="battlenet" Checked="Provider_Checked" Margin="8,0,0,0"/>
-                        <RadioButton x:Name="ChipUbisoft" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="Ubisoft" Tag="ubisoft" Checked="Provider_Checked" Margin="8,0,0,0"/>
-                        <RadioButton x:Name="ChipEa" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="EA" Tag="ea" Checked="Provider_Checked" Margin="8,0,0,0"/>
-                        <RadioButton x:Name="ChipRiot" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="Riot" Tag="riot" Checked="Provider_Checked" Margin="8,0,0,0"/>
-                        <RadioButton x:Name="ChipFolder" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="Klasör" Tag="folder" Checked="Provider_Checked" Margin="8,0,0,0"/>
+                        <RadioButton x:Name="ChipAll" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="{loc:T 'Hepsi'}" Tag="all" IsChecked="True" Checked="Provider_Checked"/>
+                        <RadioButton x:Name="ChipSteam" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="{loc:T 'Steam'}" Tag="steam" Checked="Provider_Checked" Margin="8,0,0,0"/>
+                        <RadioButton x:Name="ChipEpic" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="{loc:T 'Epic'}" Tag="epic" Checked="Provider_Checked" Margin="8,0,0,0"/>
+                        <RadioButton x:Name="ChipGog" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="{loc:T 'GOG'}" Tag="gog" Checked="Provider_Checked" Margin="8,0,0,0"/>
+                        <RadioButton x:Name="ChipBattleNet" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="{loc:T 'Battle.net'}" Tag="battlenet" Checked="Provider_Checked" Margin="8,0,0,0"/>
+                        <RadioButton x:Name="ChipUbisoft" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="{loc:T 'Ubisoft'}" Tag="ubisoft" Checked="Provider_Checked" Margin="8,0,0,0"/>
+                        <RadioButton x:Name="ChipEa" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="{loc:T 'EA'}" Tag="ea" Checked="Provider_Checked" Margin="8,0,0,0"/>
+                        <RadioButton x:Name="ChipRiot" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="{loc:T 'Riot'}" Tag="riot" Checked="Provider_Checked" Margin="8,0,0,0"/>
+                        <RadioButton x:Name="ChipFolder" GroupName="gamefilter" Style="{StaticResource TabRadioButton}" Content="{loc:T 'Klasör'}" Tag="folder" Checked="Provider_Checked" Margin="8,0,0,0"/>
                     </StackPanel>
                 </ScrollViewer>
 
@@ -376,7 +377,7 @@
                                FontSize="11"
                                VerticalAlignment="Center"
                                Margin="8,0,0,0"
-                               Text="Boyutlar hesaplanıyor… 7/28"
+                               Text="{loc:T 'Boyutlar hesaplanıyor… 7/28'}"
                                Visibility="Collapsed"/>
                 </StackPanel>
             </Grid>
@@ -409,7 +410,7 @@
                         </ItemsControl>
                         <TextBlock x:Name="TxtScanStatus"
                                    Style="{StaticResource MutedText}"
-                                   Text="Oyunlar taranıyor…"
+                                   Text="{loc:T 'Oyunlar taranıyor…'}"
                                    HorizontalAlignment="Center"
                                    Margin="0,16,0,0"/>
                     </StackPanel>
@@ -435,11 +436,11 @@
                                          VerticalAlignment="Center"/>
                             </Grid>
                         </Border>
-                        <TextBlock Text="Oyun bulunamadı"
+                        <TextBlock Text="{loc:T 'Oyun bulunamadı'}"
                                    Style="{StaticResource SectionText}"
                                    FontSize="17"
                                    HorizontalAlignment="Center"/>
-                        <TextBlock Text="Steam ve Epic kütüphaneleri otomatik taranır. Diğer sağlayıcılar veya özel konumlar için bir klasör ekleyin."
+                        <TextBlock Text="{loc:T 'Steam ve Epic kütüphaneleri otomatik taranır. Diğer sağlayıcılar veya özel konumlar için bir klasör ekleyin.'}"
                                    Style="{StaticResource MutedText}"
                                    TextAlignment="Center"
                                    MaxWidth="360"
@@ -453,7 +454,7 @@
                                            FontFamily="{StaticResource IconFont}"
                                            FontSize="13"
                                            VerticalAlignment="Center"/>
-                                <TextBlock Text="Klasör ekle"
+                                <TextBlock Text="{loc:T 'Klasör ekle'}"
                                            FontSize="13"
                                            Margin="7,0,0,0"
                                            VerticalAlignment="Center"/>
@@ -465,13 +466,13 @@
                 <!-- No results (filter hides everything) -->
                 <Border x:Name="NoResults" Visibility="Collapsed">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="Bu filtreye uyan oyun yok"
+                        <TextBlock Text="{loc:T 'Bu filtreye uyan oyun yok'}"
                                    Style="{StaticResource SectionText}"
                                    FontSize="17"
                                    HorizontalAlignment="Center"/>
                         <Button x:Name="BtnClearFilter"
                                 Style="{StaticResource GhostButton}"
-                                Content="Filtreyi temizle"
+                                Content="{loc:T 'Filtreyi temizle'}"
                                 Margin="0,12,0,0"
                                 Click="BtnClearFilter_Click"/>
                     </StackPanel>
@@ -522,7 +523,7 @@
                                             CornerRadius="16"
                                             Background="{DynamicResource AccentSoftBrush}">
                                         <TextBlock x:Name="TxtDetailInitial"
-                                                   Text="?"
+                                                   Text="{loc:T '?'}"
                                                    FontFamily="{StaticResource DisplayFont}"
                                                    FontSize="44"
                                                    FontWeight="Bold"
@@ -609,38 +610,38 @@
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Button x:Name="BtnSendGame"
                                         Style="{StaticResource PrimaryButton}"
-                                        Content="Gönder"
+                                        Content="{loc:T 'Gönder'}"
                                         Padding="20,11"
                                         IsEnabled="False"
                                         Click="BtnSendGame_Click"/>
                                 <Button x:Name="BtnLaunchGame"
                                         Style="{StaticResource SecondaryButton}"
-                                        Content="Başlat"
+                                        Content="{loc:T 'Başlat'}"
                                         Padding="16,11"
                                         Margin="8,0,0,0"
                                         Click="BtnLaunchGame_Click"/>
                                 <Button x:Name="BtnOpenGameFolder"
                                         Style="{StaticResource GhostButton}"
-                                        Content="Klasörü aç"
+                                        Content="{loc:T 'Klasörü aç'}"
                                         Padding="12,9"
                                         Margin="8,0,0,0"
                                         Click="BtnOpenGameFolder_Click"/>
                             </StackPanel>
 
                             <!-- How it works expander -->
-                            <Expander Header="Nasıl çalışır?" Margin="0,16,0,0" IsExpanded="False">
+                            <Expander Header="{loc:T 'Nasıl çalışır?'}" Margin="0,16,0,0" IsExpanded="False">
                                 <StackPanel Margin="4,8,0,0">
                                     <TextBlock Style="{StaticResource MutedText}" FontSize="11.5" TextWrapping="Wrap" Margin="0,0,0,8">
-                                        <Run Text="• Steam oyunları: "/>
-                                        <Run Text="Alıcı bilgisayarda steamapps/common içine yerleştirilir ve manifest (appmanifest_&lt;appid&gt;.acf) kayıt altına alınır; Steam yeniden başlatıldığında kütüphanede görünür."/>
+                                        <Run Text="{loc:T '• Steam oyunları: '}"/>
+                                        <Run Text="{loc:T 'Alıcı bilgisayarda steamapps/common içine yerleştirilir ve manifest (appmanifest_&lt;appid&gt;.acf) kayıt altına alınır; Steam yeniden başlatıldığında kütüphanede görünür.'}"/>
                                     </TextBlock>
                                     <TextBlock Style="{StaticResource MutedText}" FontSize="11.5" TextWrapping="Wrap" Margin="0,0,0,8">
-                                        <Run Text="• Epic oyunları: "/>
-                                        <Run Text="Klasör kopyalanır; Epic Launcher'da 'Doğrula' seçeneğiyle kayıt tamamlanabilir."/>
+                                        <Run Text="{loc:T '• Epic oyunları: '}"/>
+                                        <Run Text="{loc:T &quot;Klasör kopyalanır; Epic Launcher'da 'Doğrula' seçeneğiyle kayıt tamamlanabilir.&quot;}"/>
                                     </TextBlock>
                                     <TextBlock Style="{StaticResource MutedText}" FontSize="11.5" TextWrapping="Wrap">
-                                        <Run Text="• Diğer sağlayıcılar (GOG, Battle.net, Ubisoft, EA, Riot): "/>
-                                        <Run Text="Oyun klasörü olduğu gibi kopyalanır; başlatıcıya manuel eklenmesi gerekebilir."/>
+                                        <Run Text="{loc:T '• Diğer sağlayıcılar (GOG, Battle.net, Ubisoft, EA, Riot): '}"/>
+                                        <Run Text="{loc:T 'Oyun klasörü olduğu gibi kopyalanır; başlatıcıya manuel eklenmesi gerekebilir.'}"/>
                                     </TextBlock>
                                 </StackPanel>
                             </Expander>
@@ -651,12 +652,12 @@
 
                     <!-- Empty detail state -->
                     <StackPanel x:Name="DetailEmpty" VerticalAlignment="Center" Visibility="Visible">
-                        <TextBlock Text="Bir oyun seç"
+                        <TextBlock Text="{loc:T 'Bir oyun seç'}"
                                    Style="{StaticResource SectionText}"
                                    FontSize="16"
                                    HorizontalAlignment="Center"
                                    Margin="0,0,0,8"/>
-                        <TextBlock Text="Listeden bir oyuna tıklayın. Gönder, başlat veya klasörü aç."
+                        <TextBlock Text="{loc:T 'Listeden bir oyuna tıklayın. Gönder, başlat veya klasörü aç.'}"
                                    Style="{StaticResource MutedText}"
                                    TextAlignment="Center"
                                    TextWrapping="Wrap"
@@ -680,7 +681,7 @@
             <TextBlock Foreground="{DynamicResource DangerInkBrush}"
                        FontSize="12.5"
                        TextWrapping="Wrap"
-                       Text="Bir hata oluştu. Detaylar için geçmişe bakın."/>
+                       Text="{loc:T 'Bir hata oluştu. Detaylar için geçmişe bakın.'}"/>
         </Border>
 
     </Grid>

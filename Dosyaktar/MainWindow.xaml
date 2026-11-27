@@ -5,6 +5,7 @@
         xmlns:views="clr-namespace:Dosyaktar.Views"
         xmlns:controls="clr-namespace:Dosyaktar.Controls"
         xmlns:fx="clr-namespace:Dosyaktar.Fx"
+        xmlns:loc="clr-namespace:Dosyaktar.Localization"
         Title="Dosyaktar"
         Width="1320" Height="860"
         MinWidth="1020" MinHeight="660"
@@ -63,7 +64,7 @@
                     Width="286" Margin="0,0,14,14" Padding="16"
                     Cursor="Hand"
                     fx:Tilt.IsEnabled="True" fx:Tilt.Strength="6"
-                    ToolTip="Cihaza bağlanmak için tıklayın">
+                    ToolTip="{loc:T 'Cihaza bağlanmak için tıklayın'}">
                 <StackPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -114,7 +115,7 @@
                         </StackPanel>
 
                         <Button Grid.Column="1"
-                                Content="Gönder"
+                                Content="{loc:T 'Gönder'}"
                                 Style="{StaticResource SecondaryButton}"
                                 Padding="14,7"
                                 FontSize="12"
@@ -200,7 +201,7 @@
                     BorderBrush="{DynamicResource GlassBorderBrush}"
                     BorderThickness="1"
                     Focusable="True" Cursor="Hand"
-                    ToolTip="Dosya konumunu açar (çift tık veya Enter)"
+                    ToolTip="{loc:T 'Dosya konumunu açar (çift tık veya Enter)'}"
                     MouseLeftButtonDown="HistoryRow_MouseLeftButtonDown"
                     KeyDown="HistoryRow_KeyDown">
                 <Grid>
@@ -270,7 +271,7 @@
                     </StackPanel>
 
                     <Button Grid.Column="2" Style="{StaticResource GhostButton}"
-                            Content="Kes" FontSize="11" Padding="10,6"
+                            Content="{loc:T 'Kes'}" FontSize="11" Padding="10,6"
                             Tag="{Binding}" Click="BtnDisconnectMobile_Click"/>
                 </Grid>
             </Border>
@@ -546,13 +547,13 @@
                            Margin="0,0,10,0" VerticalAlignment="Center"
                            RenderOptions.BitmapScalingMode="HighQuality"
                            SnapsToDevicePixels="True"
-                           ToolTip="Dosyaktar">
+                           ToolTip="{loc:T 'Dosyaktar'}">
                         <Image.Clip>
                             <RectangleGeometry Rect="0,0,30,30" RadiusX="9" RadiusY="9"/>
                         </Image.Clip>
                     </Image>
 
-                    <TextBlock Text="Dosyaktar" FontFamily="{StaticResource DisplayFont}"
+                    <TextBlock Text="{loc:T 'Dosyaktar'}" FontFamily="{StaticResource DisplayFont}"
                                FontSize="15" FontWeight="Bold" VerticalAlignment="Center"/>
 
                     <Border Style="{StaticResource ChipBadge}" Margin="9,0,0,0" Padding="7,2">
@@ -563,7 +564,7 @@
 
                     <Border Width="1" Height="16" Background="{DynamicResource DividerBrush}" Margin="14,0"/>
 
-                    <TextBlock x:Name="TxtPageTitle" Text="Keşif"
+                    <TextBlock x:Name="TxtPageTitle" Text="{loc:T 'Keşif'}"
                                FontSize="12.5" VerticalAlignment="Center"
                                Foreground="{DynamicResource TextMutedBrush}"/>
                 </StackPanel>
@@ -575,19 +576,19 @@
                         <StackPanel Orientation="Horizontal">
                             <Ellipse Width="6" Height="6" Fill="{DynamicResource SuccessBrush}"
                                      VerticalAlignment="Center" Margin="0,0,6,0"/>
-                            <TextBlock x:Name="TxtTitleNet" Text="LAN"
+                            <TextBlock x:Name="TxtTitleNet" Text="{loc:T 'LAN'}"
                                        FontSize="10.5" FontWeight="SemiBold"
                                        Foreground="{DynamicResource SuccessInkBrush}"/>
                         </StackPanel>
                     </Border>
 
                     <Button Style="{StaticResource IconButton}" Content="&#xE921;"
-                            Click="BtnMinimize_Click" ToolTip="Küçült"/>
+                            Click="BtnMinimize_Click" ToolTip="{loc:T 'Küçült'}"/>
                     <Button Style="{StaticResource IconButton}" Content="&#xE922;"
-                            Click="BtnMaximize_Click" ToolTip="Büyüt" Margin="2,0"/>
+                            Click="BtnMaximize_Click" ToolTip="{loc:T 'Büyüt'}" Margin="2,0"/>
                     <Button Style="{StaticResource IconButton}" Content="&#xE711;"
                             Click="BtnCloseWindow_Click" Foreground="{DynamicResource DangerInkBrush}"
-                            ToolTip="Kapat"/>
+                            ToolTip="{loc:T 'Kapat'}"/>
                 </StackPanel>
             </Grid>
 
@@ -621,20 +622,20 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel>
-                                    <TextBlock Text="KİŞİSELLEŞTİRME" Style="{StaticResource EyebrowText}"
+                                    <TextBlock Text="{loc:T 'KİŞİSELLEŞTİRME'}" Style="{StaticResource EyebrowText}"
                                                Foreground="{DynamicResource AccentInkBrush}" Margin="0,0,0,7"/>
-                                    <TextBlock Text="Profil ve avatarlar" Style="{StaticResource DisplayText}" FontSize="26"/>
-                                    <TextBlock Text="Adını yaz, animasyonlu avatarını seç. Ağda bu kimlikle görünürsün."
+                                    <TextBlock Text="{loc:T 'Profil ve avatarlar'}" Style="{StaticResource DisplayText}" FontSize="26"/>
+                                    <TextBlock Text="{loc:T 'Adını yaz, animasyonlu avatarını seç. Ağda bu kimlikle görünürsün.'}"
                                                Style="{StaticResource MutedText}" Margin="0,3,0,0"/>
                                 </StackPanel>
                                 <Button Grid.Column="1" Style="{StaticResource SecondaryButton}"
                                         VerticalAlignment="Bottom" Click="BtnProfileBack_Click"
-                                        ToolTip="Önceki sayfaya dön (Esc)"
+                                        ToolTip="{loc:T 'Önceki sayfaya dön (Esc)'}"
                                         AutomationProperties.Name="Geri dön">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="&#xE72B;" FontFamily="{StaticResource IconFont}"
                                                    FontSize="11" VerticalAlignment="Center" Margin="0,0,7,0"/>
-                                        <TextBlock Text="Geri"/>
+                                        <TextBlock Text="{loc:T 'Geri'}"/>
                                     </StackPanel>
                                 </Button>
                             </Grid>
@@ -661,25 +662,25 @@
                                                                      VerticalAlignment="Center"/>
                                         </Grid>
 
-                                        <TextBlock x:Name="TxtProfilePreviewName" Text="Dosyaktar"
+                                        <TextBlock x:Name="TxtProfilePreviewName" Text="{loc:T 'Dosyaktar'}"
                                                    FontFamily="{StaticResource DisplayFont}"
                                                    FontSize="21" FontWeight="SemiBold"
                                                    HorizontalAlignment="Center" Margin="0,6,0,0"
                                                    TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock x:Name="TxtProfileAvatarName" Text="Kedi"
+                                        <TextBlock x:Name="TxtProfileAvatarName" Text="{loc:T 'Kedi'}"
                                                    Style="{StaticResource MutedText}"
                                                    HorizontalAlignment="Center" Margin="0,2,0,0"/>
 
                                         <Border Style="{StaticResource DividerLine}" Margin="0,18,0,16"/>
 
-                                        <TextBlock Text="GÖRÜNEN AD" Style="{StaticResource EyebrowText}" Margin="0,0,0,7"/>
+                                        <TextBlock Text="{loc:T 'GÖRÜNEN AD'}" Style="{StaticResource EyebrowText}" Margin="0,0,0,7"/>
                                         <TextBox x:Name="TxtProfileName" Style="{StaticResource ModernTextBox}"
                                                  MaxLength="32" Tag="Cihaz adın"
                                                  TextChanged="TxtProfileName_TextChanged"
                                                  LostFocus="TxtProfileName_LostFocus"
                                                  KeyDown="TxtProfileName_KeyDown"
                                                  AutomationProperties.Name="Görünen ad"/>
-                                        <TextBlock Text="Aynı ağdaki cihazlar ve mobil köprü bu adı görür."
+                                        <TextBlock Text="{loc:T 'Aynı ağdaki cihazlar ve mobil köprü bu adı görür.'}"
                                                    Style="{StaticResource MutedText}" Margin="0,7,0,0"
                                                    TextWrapping="Wrap"/>
 
@@ -689,7 +690,7 @@
                                                 <TextBlock Text="&#xE916;" FontFamily="{StaticResource IconFont}"
                                                            FontSize="9" Foreground="{DynamicResource AccentInkBrush}"
                                                            VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                                <TextBlock Text="Canlı önizleme" FontSize="10.5" FontWeight="SemiBold"
+                                                <TextBlock Text="{loc:T 'Canlı önizleme'}" FontSize="10.5" FontWeight="SemiBold"
                                                            Foreground="{DynamicResource AccentInkBrush}"/>
                                             </StackPanel>
                                         </Border>
@@ -702,8 +703,8 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,6">
                                             <StackPanel>
-                                                <TextBlock Text="Avatar galerisi" Style="{StaticResource SectionText}" FontSize="16"/>
-                                                <TextBlock Text="32 avatar · her biri kendi ritminde hareket eder"
+                                                <TextBlock Text="{loc:T 'Avatar galerisi'}" Style="{StaticResource SectionText}" FontSize="16"/>
+                                                <TextBlock Text="{loc:T '32 avatar · her biri kendi ritminde hareket eder'}"
                                                            Style="{StaticResource MutedText}" Margin="0,2,0,0"/>
                                             </StackPanel>
                                             <Border Style="{StaticResource ChipBadge}" HorizontalAlignment="Right"
@@ -716,30 +717,30 @@
                                         </Grid>
 
                                         <WrapPanel x:Name="AvatarCategoryBar" Margin="0,10,0,2">
-                                            <RadioButton Content="Tümü" Tag="Tümü" GroupName="avatarFilter"
+                                            <RadioButton Content="{loc:T 'Tümü'}" Tag="Tümü" GroupName="avatarFilter"
                                                          Style="{StaticResource FilterChip}" IsChecked="True"
                                                          Checked="AvatarFilter_Checked"/>
-                                            <RadioButton Content="Hayvanlar" Tag="Hayvanlar" GroupName="avatarFilter"
+                                            <RadioButton Content="{loc:T 'Hayvanlar'}" Tag="Hayvanlar" GroupName="avatarFilter"
                                                          Style="{StaticResource FilterChip}"
                                                          Checked="AvatarFilter_Checked"/>
-                                            <RadioButton Content="Uzay" Tag="Uzay" GroupName="avatarFilter"
+                                            <RadioButton Content="{loc:T 'Uzay'}" Tag="Uzay" GroupName="avatarFilter"
                                                          Style="{StaticResource FilterChip}"
                                                          Checked="AvatarFilter_Checked"/>
-                                            <RadioButton Content="Doğa" Tag="Doğa" GroupName="avatarFilter"
+                                            <RadioButton Content="{loc:T 'Doğa'}" Tag="Doğa" GroupName="avatarFilter"
                                                          Style="{StaticResource FilterChip}"
                                                          Checked="AvatarFilter_Checked"/>
-                                            <RadioButton Content="Karakterler" Tag="Karakterler" GroupName="avatarFilter"
+                                            <RadioButton Content="{loc:T 'Karakterler'}" Tag="Karakterler" GroupName="avatarFilter"
                                                          Style="{StaticResource FilterChip}"
                                                          Checked="AvatarFilter_Checked"/>
                                         </WrapPanel>
 
                                         <WrapPanel x:Name="AvatarGallery" Margin="0,10,0,0"/>
 
-                                        <TextBlock x:Name="EmptyAvatarFilter" Text="Bu kategoride avatar yok."
+                                        <TextBlock x:Name="EmptyAvatarFilter" Text="{loc:T 'Bu kategoride avatar yok.'}"
                                                    Style="{StaticResource MutedText}" Visibility="Collapsed"/>
 
                                         <Border Style="{StaticResource DividerLine}" Margin="0,8,0,12"/>
-                                        <TextBlock Text="Bir avatara tıkla — seçim anında kaydedilir. Hareket azaltma açıksa avatarlar sabit görünür."
+                                        <TextBlock Text="{loc:T 'Bir avatara tıkla — seçim anında kaydedilir. Hareket azaltma açıksa avatarlar sabit görünür.'}"
                                                    Style="{StaticResource MutedText}" TextWrapping="Wrap"/>
                                     </StackPanel>
                                 </Border>
@@ -768,27 +769,27 @@
 
                         <StackPanel Grid.Row="1" Margin="9,4" VerticalAlignment="Top">
                             <controls:NavTabButton x:Name="RbSend" GroupName="nav" IsChecked="True"
-                                         Content="Keşif" IconData="{StaticResource IconCompass}"
+                                         Content="{loc:T 'Keşif'}" IconData="{StaticResource IconCompass}"
                                          Style="{StaticResource SidebarTabButton}"
                                          Checked="Nav_Checked"/>
                             <controls:NavTabButton x:Name="RbSession" GroupName="nav"
-                                         Content="Oturum" IconData="{StaticResource IconLink}"
+                                         Content="{loc:T 'Oturum'}" IconData="{StaticResource IconLink}"
                                          Style="{StaticResource SidebarTabButton}"
                                          Checked="Nav_Checked"/>
                             <controls:NavTabButton x:Name="RbGames" GroupName="nav"
-                                         Content="Oyunlar" IconData="{StaticResource IconGamepad}"
+                                         Content="{loc:T 'Oyunlar'}" IconData="{StaticResource IconGamepad}"
                                          Style="{StaticResource SidebarTabButton}"
                                          Checked="Nav_Checked"/>
                             <controls:NavTabButton x:Name="RbMobile" GroupName="nav"
-                                         Content="Mobil" IconData="{StaticResource IconPhone}"
+                                         Content="{loc:T 'Mobil'}" IconData="{StaticResource IconPhone}"
                                          Style="{StaticResource SidebarTabButton}"
                                          Checked="Nav_Checked"/>
                             <controls:NavTabButton x:Name="RbHistory" GroupName="nav"
-                                         Content="Geçmiş" IconData="{StaticResource IconHistory}"
+                                         Content="{loc:T 'Geçmiş'}" IconData="{StaticResource IconHistory}"
                                          Style="{StaticResource SidebarTabButton}"
                                          Checked="Nav_Checked"/>
                             <controls:NavTabButton x:Name="RbSettings" GroupName="nav"
-                                         Content="Ayarlar" IconData="{StaticResource IconTune}"
+                                         Content="{loc:T 'Ayarlar'}" IconData="{StaticResource IconTune}"
                                          Style="{StaticResource SidebarTabButton}"
                                          Checked="Nav_Checked"/>
                         </StackPanel>
@@ -796,12 +797,12 @@
                         <StackPanel Grid.Row="2" Margin="9,0,9,12">
                             <Button Style="{StaticResource IconButton}" Content="&#xE790;"
                                     Width="Auto" Height="34" FontSize="16"
-                                    Click="BtnThemeCycle_Click" ToolTip="Temayı değiştir"/>
+                                    Click="BtnThemeCycle_Click" ToolTip="{loc:T 'Temayı değiştir'}"/>
                             <Border Height="1" Background="{DynamicResource DividerBrush}" Margin="8,8"/>
                             <Button x:Name="AvatarTile" Style="{StaticResource AvatarTileButton}"
                                     HorizontalAlignment="Center"
                                     Click="AvatarTile_Click"
-                                    ToolTip="Profil ve avatarlar"
+                                    ToolTip="{loc:T 'Profil ve avatarlar'}"
                                     AutomationProperties.Name="Profil ve avatarlar">
                                 <controls:AnimatedAvatar x:Name="AvatarSmall" Width="30" Height="30"/>
                             </Button>
@@ -826,17 +827,17 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="AKTARIM" Style="{StaticResource EyebrowText}"
+                                <TextBlock Text="{loc:T 'AKTARIM'}" Style="{StaticResource EyebrowText}"
                                            Foreground="{DynamicResource AccentInkBrush}" Margin="0,0,0,7"/>
-                                <TextBlock Text="Yakındaki cihazlar" Style="{StaticResource DisplayText}" FontSize="26"/>
-                                <TextBlock x:Name="TxtPeerSubtitle" Text="Aynı ağdaki cihazlar aranıyor…"
+                                <TextBlock Text="{loc:T 'Yakındaki cihazlar'}" Style="{StaticResource DisplayText}" FontSize="26"/>
+                                <TextBlock x:Name="TxtPeerSubtitle" Text="{loc:T 'Aynı ağdaki cihazlar aranıyor…'}"
                                            Style="{StaticResource MutedText}" Margin="0,3,0,0"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
-                                <Button Style="{StaticResource SecondaryButton}" Content="Oyunlar"
+                                <Button Style="{StaticResource SecondaryButton}" Content="{loc:T 'Oyunlar'}"
                                         Padding="14,9" Margin="0,0,8,0" Click="BtnGameTransfer_Click"/>
                                 <Button Style="{StaticResource IconButton}" Content="&#xE72C;"
-                                        Width="38" Height="38" Click="BtnRefresh_Click" ToolTip="Yenile"/>
+                                        Width="38" Height="38" Click="BtnRefresh_Click" ToolTip="{loc:T 'Yenile'}"/>
                             </StackPanel>
                         </Grid>
 
@@ -907,8 +908,8 @@
                                             </Ellipse>
                                         </Grid>
                                         <StackPanel VerticalAlignment="Center">
-                                            <TextBlock Text="Cihaz aranıyor" Style="{StaticResource SectionText}"/>
-                                            <TextBlock Text="Karşı tarafta Dosyaktar açık olmalı ve iki cihaz aynı ağda olmalı."
+                                            <TextBlock Text="{loc:T 'Cihaz aranıyor'}" Style="{StaticResource SectionText}"/>
+                                            <TextBlock Text="{loc:T 'Karşı tarafta Dosyaktar açık olmalı ve iki cihaz aynı ağda olmalı.'}"
                                                        Style="{StaticResource MutedText}" Margin="0,2,0,0"/>
                                         </StackPanel>
                                     </StackPanel>
@@ -958,19 +959,19 @@
                                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
 
-                                    <TextBlock Text="Dosyaları buraya bırak" FontFamily="{StaticResource DisplayFont}"
+                                    <TextBlock Text="{loc:T 'Dosyaları buraya bırak'}" FontFamily="{StaticResource DisplayFont}"
                                                FontSize="19" FontWeight="SemiBold"
                                                HorizontalAlignment="Center" Margin="0,18,0,4"/>
                                     <TextBlock x:Name="TxtDropHint"
-                                               Text="Klasör, oyun veya 50 GB'lık tek dosya — hepsi olur."
+                                               Text="{loc:T &quot;Klasör, oyun veya 50 GB'lık tek dosya — hepsi olur.&quot;}"
                                                Style="{StaticResource MutedText}"
                                                HorizontalAlignment="Center"
                                                TextAlignment="Center" MaxWidth="440"/>
 
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                                        <Button Content="Dosya seç" Style="{StaticResource PrimaryButton}"
+                                        <Button Content="{loc:T 'Dosya seç'}" Style="{StaticResource PrimaryButton}"
                                                 Padding="20,11" Click="BtnPickFiles_Click"/>
-                                        <Button Content="Klasör seç" Style="{StaticResource SecondaryButton}"
+                                        <Button Content="{loc:T 'Klasör seç'}" Style="{StaticResource SecondaryButton}"
                                                 Padding="18,11" Margin="9,0,0,0" Click="BtnPickFolder_Click"/>
                                     </StackPanel>
 
@@ -981,7 +982,7 @@
                                             <TextBlock Text="&#xE727;" FontFamily="{StaticResource IconFont}"
                                                        FontSize="12" Foreground="{DynamicResource AccentInkBrush}"
                                                        VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                            <TextBlock Text="Hedef:" FontSize="11.5"
+                                            <TextBlock Text="{loc:T 'Hedef:'}" FontSize="11.5"
                                                        Foreground="{DynamicResource TextSecBrush}"
                                                        VerticalAlignment="Center"/>
                                             <TextBlock x:Name="TxtTargetName" FontSize="11.5" FontWeight="SemiBold"
@@ -1003,10 +1004,10 @@
                     <Grid x:Name="PageSession" Visibility="Collapsed">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel Margin="6,6,6,0">
-                                <TextBlock Text="OTURUM" Style="{StaticResource EyebrowText}"
+                                <TextBlock Text="{loc:T 'OTURUM'}" Style="{StaticResource EyebrowText}"
                                            Foreground="{DynamicResource AccentInkBrush}" Margin="0,0,0,7"/>
-                                <TextBlock Text="Aktif oturum" Style="{StaticResource DisplayText}" FontSize="26"/>
-                                <TextBlock Text="Eşleşen cihazla canlı bağlantı."
+                                <TextBlock Text="{loc:T 'Aktif oturum'}" Style="{StaticResource DisplayText}" FontSize="26"/>
+                                <TextBlock Text="{loc:T 'Eşleşen cihazla canlı bağlantı.'}"
                                            Style="{StaticResource MutedText}" Margin="0,3,0,20"/>
 
                                 <!-- connected card -->
@@ -1027,7 +1028,7 @@
                                             </Border>
 
                                             <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
-                                                <TextBlock x:Name="TxtSessName" Text="Cihaz"
+                                                <TextBlock x:Name="TxtSessName" Text="{loc:T 'Cihaz'}"
                                                            FontFamily="{StaticResource DisplayFont}"
                                                            FontSize="17" FontWeight="SemiBold"/>
                                                 <TextBlock x:Name="TxtSessIp" Text="—" Style="{StaticResource MutedText}"
@@ -1040,7 +1041,7 @@
                                                     <StackPanel Orientation="Horizontal">
                                                         <Ellipse Width="6" Height="6" Fill="{DynamicResource SuccessBrush}"
                                                                  VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                                        <TextBlock Text="Bağlı" FontSize="10.5" FontWeight="SemiBold"
+                                                        <TextBlock Text="{loc:T 'Bağlı'}" FontSize="10.5" FontWeight="SemiBold"
                                                                    Foreground="{DynamicResource SuccessInkBrush}"/>
                                                     </StackPanel>
                                                 </Border>
@@ -1056,22 +1057,22 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
                                             <StackPanel>
-                                                <TextBlock Text="OTURUM" Style="{StaticResource EyebrowText}"/>
+                                                <TextBlock Text="{loc:T 'OTURUM'}" Style="{StaticResource EyebrowText}"/>
                                                 <TextBlock x:Name="TxtSessSince" Text="—" FontSize="12.5" Margin="0,3,0,0"/>
                                             </StackPanel>
                                             <StackPanel Grid.Column="1">
-                                                <TextBlock Text="PORT" Style="{StaticResource EyebrowText}"/>
+                                                <TextBlock Text="{loc:T 'PORT'}" Style="{StaticResource EyebrowText}"/>
                                                 <TextBlock x:Name="TxtSessPort" Text="5001" FontSize="12.5" Margin="0,3,0,0"/>
                                             </StackPanel>
                                             <StackPanel Grid.Column="2">
-                                                <TextBlock Text="MOD" Style="{StaticResource EyebrowText}"/>
-                                                <TextBlock x:Name="TxtSessMode" Text="Standart" FontSize="12.5" Margin="0,3,0,0"/>
+                                                <TextBlock Text="{loc:T 'MOD'}" Style="{StaticResource EyebrowText}"/>
+                                                <TextBlock x:Name="TxtSessMode" Text="{loc:T 'Standart'}" FontSize="12.5" Margin="0,3,0,0"/>
                                             </StackPanel>
                                         </Grid>
 
                                         <Border Style="{StaticResource DividerLine}"/>
 
-                                        <TextBlock x:Name="TxtSessionPercent" Text="Hazır"
+                                        <TextBlock x:Name="TxtSessionPercent" Text="{loc:T 'Hazır'}"
                                                    Style="{StaticResource SectionText}" Margin="0,0,0,8"/>
                                         <ProgressBar x:Name="PbSession" Style="{StaticResource ModernProgress}" Value="0"/>
                                         <Grid Margin="0,8,0,0">
@@ -1081,14 +1082,14 @@
                                         </Grid>
 
                                         <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
-                                            <Button Content="Dosya gönder" Style="{StaticResource PrimaryButton}"
+                                            <Button Content="{loc:T 'Dosya gönder'}" Style="{StaticResource PrimaryButton}"
                                                     Click="BtnSessionSendFiles_Click"/>
-                                            <Button Content="Klasör gönder" Style="{StaticResource SecondaryButton}"
+                                            <Button Content="{loc:T 'Klasör gönder'}" Style="{StaticResource SecondaryButton}"
                                                     Margin="9,0,0,0" Click="BtnSessionSendFolder_Click"/>
-                                            <Button x:Name="BtnReceiveToggle" Content="Almayı durdur"
+                                            <Button x:Name="BtnReceiveToggle" Content="{loc:T 'Almayı durdur'}"
                                                     Style="{StaticResource GhostButton}"
                                                     Margin="9,0,0,0" Click="BtnReceiveToggle_Click"/>
-                                            <Button Content="Bağlantıyı kes" Style="{StaticResource GhostButton}"
+                                            <Button Content="{loc:T 'Bağlantıyı kes'}" Style="{StaticResource GhostButton}"
                                                     Margin="16,0,0,0"
                                                     Click="BtnDisconnect_Click"/>
                                         </StackPanel>
@@ -1098,28 +1099,28 @@
                                 <!-- not connected -->
                                 <Border x:Name="SessionEmpty" Style="{StaticResource GlassCard}">
                                     <StackPanel>
-                                        <TextBlock Text="Henüz bir cihaza bağlı değilsin"
+                                        <TextBlock Text="{loc:T 'Henüz bir cihaza bağlı değilsin'}"
                                                    Style="{StaticResource SectionText}" FontSize="16"/>
-                                        <TextBlock Text="Keşif sekmesinden bir cihaz seç ya da karşı ekranda beliren PIN'i buraya gir."
+                                        <TextBlock Text="{loc:T &quot;Keşif sekmesinden bir cihaz seç ya da karşı ekranda beliren PIN'i buraya gir.&quot;}"
                                                    Style="{StaticResource MutedText}" Margin="0,4,0,18"/>
 
-                                        <TextBlock Text="PIN ile eşleş" Style="{StaticResource EyebrowText}" Margin="0,0,0,8"/>
+                                        <TextBlock Text="{loc:T 'PIN ile eşleş'}" Style="{StaticResource EyebrowText}" Margin="0,0,0,8"/>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBox x:Name="TxtPairPin" Style="{StaticResource ModernTextBox}"
                                                      Width="170" MaxLength="6" FontSize="20"
                                                      FontFamily="{StaticResource MonoFont}"
                                                      Tag="000000" VerticalContentAlignment="Center"/>
-                                            <Button Content="Eşleş" Style="{StaticResource PrimaryButton}"
+                                            <Button Content="{loc:T 'Eşleş'}" Style="{StaticResource PrimaryButton}"
                                                     Margin="9,0,0,0" Click="BtnPairWithPin_Click"/>
                                         </StackPanel>
 
                                         <Border Style="{StaticResource DividerLine}" Margin="0,20"/>
 
-                                        <TextBlock Text="IP ile doğrudan bağlan" Style="{StaticResource EyebrowText}" Margin="0,0,0,8"/>
+                                        <TextBlock Text="{loc:T 'IP ile doğrudan bağlan'}" Style="{StaticResource EyebrowText}" Margin="0,0,0,8"/>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBox x:Name="TxtManualIp" Style="{StaticResource ModernTextBox}"
                                                      Width="200" Tag="192.168.1.24"/>
-                                            <Button Content="Bağlan" Style="{StaticResource SecondaryButton}"
+                                            <Button Content="{loc:T 'Bağlan'}" Style="{StaticResource SecondaryButton}"
                                                     Margin="9,0,0,0" Click="BtnManualConnect_Click"/>
                                         </StackPanel>
                                     </StackPanel>
@@ -1138,15 +1139,15 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel>
-                                        <TextBlock Text="TELEFON KÖPRÜSÜ" Style="{StaticResource EyebrowText}"
+                                        <TextBlock Text="{loc:T 'TELEFON KÖPRÜSÜ'}" Style="{StaticResource EyebrowText}"
                                                    Foreground="{DynamicResource AccentInkBrush}" Margin="0,0,0,7"/>
-                                        <TextBlock Text="Mobil köprü" Style="{StaticResource DisplayText}" FontSize="26"/>
-                                        <TextBlock Text="Telefonun tarayıcısından gönder ve al — uygulama kurmadan."
+                                        <TextBlock Text="{loc:T 'Mobil köprü'}" Style="{StaticResource DisplayText}" FontSize="26"/>
+                                        <TextBlock Text="{loc:T 'Telefonun tarayıcısından gönder ve al — uygulama kurmadan.'}"
                                                    Style="{StaticResource MutedText}" Margin="0,3,0,0"/>
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
-                                        <Button x:Name="BtnToggleBridge" Content="Köprüyü kapat"
+                                        <Button x:Name="BtnToggleBridge" Content="{loc:T 'Köprüyü kapat'}"
                                                 Style="{StaticResource SecondaryButton}" Click="BtnToggleBridge_Click"/>
                                     </StackPanel>
                                 </Grid>
@@ -1166,13 +1167,13 @@
                                                        RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                                             </Border>
 
-                                            <TextBlock Text="Telefonla tara" Style="{StaticResource SectionText}"
+                                            <TextBlock Text="{loc:T 'Telefonla tara'}" Style="{StaticResource SectionText}"
                                                        HorizontalAlignment="Center" Margin="0,14,0,2"/>
-                                            <TextBlock x:Name="TxtMobileUrl" Text="http://—"
+                                            <TextBlock x:Name="TxtMobileUrl" Text="{loc:T 'http://—'}"
                                                        Style="{StaticResource MonoText}"
                                                        HorizontalAlignment="Center" TextAlignment="Center"
                                                        TextWrapping="Wrap"/>
-                                            <Button Content="Adresi kopyala" Style="{StaticResource GhostButton}"
+                                            <Button Content="{loc:T 'Adresi kopyala'}" Style="{StaticResource GhostButton}"
                                                     Margin="0,6,0,0" Click="BtnCopyUrl_Click"/>
                                         </StackPanel>
                                     </Border>
@@ -1182,12 +1183,12 @@
                                         <Border Style="{StaticResource GlassCard}" Margin="0,0,0,14">
                                             <StackPanel>
                                                 <Grid>
-                                                    <TextBlock Text="Bağlantı kodu" Style="{StaticResource EyebrowText}"/>
+                                                    <TextBlock Text="{loc:T 'Bağlantı kodu'}" Style="{StaticResource EyebrowText}"/>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                                         <Ellipse Width="7" Height="7" x:Name="BridgeDot"
                                                                  Fill="{DynamicResource SuccessBrush}" VerticalAlignment="Center"
                                                                  Margin="0,0,6,0"/>
-                                                        <TextBlock x:Name="TxtBridgeState" Text="Yayında"
+                                                        <TextBlock x:Name="TxtBridgeState" Text="{loc:T 'Yayında'}"
                                                                    FontSize="10.5" FontWeight="SemiBold"
                                                                    Foreground="{DynamicResource SuccessInkBrush}"/>
                                                     </StackPanel>
@@ -1203,9 +1204,9 @@
                                                            Style="{StaticResource MutedText}" Margin="0,2,0,0"/>
 
                                                 <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
-                                                    <Button Content="Yeni kod" Style="{StaticResource SecondaryButton}"
+                                                    <Button Content="{loc:T 'Yeni kod'}" Style="{StaticResource SecondaryButton}"
                                                             Padding="14,9" Click="BtnNewPin_Click"/>
-                                                    <Button Content="IP'yi kopyala" Style="{StaticResource GhostButton}"
+                                                    <Button Content="{loc:T &quot;IP'yi kopyala&quot;}" Style="{StaticResource GhostButton}"
                                                             Padding="12,9" Margin="6,0,0,0" Click="BtnCopyIp_Click"/>
                                                 </StackPanel>
                                             </StackPanel>
@@ -1214,7 +1215,7 @@
                                         <Border Style="{StaticResource GlassCard}">
                                             <StackPanel>
                                                 <Grid Margin="0,0,0,10">
-                                                    <TextBlock Text="Bağlı telefonlar" Style="{StaticResource SectionText}"/>
+                                                    <TextBlock Text="{loc:T 'Bağlı telefonlar'}" Style="{StaticResource SectionText}"/>
                                                     <TextBlock x:Name="TxtMobileCount" Text="0"
                                                                FontSize="11" FontWeight="Bold"
                                                                Foreground="{DynamicResource AccentInkBrush}"
@@ -1225,7 +1226,7 @@
                                                               ItemTemplate="{StaticResource MobileSessionTemplate}"/>
 
                                                 <TextBlock x:Name="EmptyMobileSessions"
-                                                           Text="Henüz telefon bağlanmadı. QR'ı okutman yeterli."
+                                                           Text="{loc:T &quot;Henüz telefon bağlanmadı. QR'ı okutman yeterli.&quot;}"
                                                            Style="{StaticResource MutedText}"/>
                                             </StackPanel>
                                         </Border>
@@ -1237,16 +1238,16 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,12">
                                             <StackPanel>
-                                                <TextBlock Text="Telefona açılan dosyalar" Style="{StaticResource SectionText}"/>
-                                                <TextBlock Text="Buraya eklediğin dosyalar telefonun 'Al' sekmesinde görünür."
+                                                <TextBlock Text="{loc:T 'Telefona açılan dosyalar'}" Style="{StaticResource SectionText}"/>
+                                                <TextBlock Text="{loc:T &quot;Buraya eklediğin dosyalar telefonun 'Al' sekmesinde görünür.&quot;}"
                                                            Style="{StaticResource MutedText}" Margin="0,2,0,0"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
                                                         VerticalAlignment="Center">
-                                                <TextBlock x:Name="TxtSharedCount" Text="0 dosya"
+                                                <TextBlock x:Name="TxtSharedCount" Text="{loc:T '0 dosya'}"
                                                            Style="{StaticResource MutedText}"
                                                            VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                                <Button Content="Dosya ekle" Style="{StaticResource PrimaryButton}"
+                                                <Button Content="{loc:T 'Dosya ekle'}" Style="{StaticResource PrimaryButton}"
                                                         Padding="16,9" Click="BtnAddShared_Click"/>
                                             </StackPanel>
                                         </Grid>
@@ -1254,7 +1255,7 @@
                                         <ItemsControl x:Name="SharedFilesList"
                                                       ItemTemplate="{StaticResource SharedFileTemplate}"/>
                                         <TextBlock x:Name="EmptyShared"
-                                                   Text="Henüz dosya paylaşmadın."
+                                                   Text="{loc:T 'Henüz dosya paylaşmadın.'}"
                                                    Style="{StaticResource MutedText}"/>
                                     </StackPanel>
                                 </Border>
@@ -1268,14 +1269,14 @@
                             <StackPanel Margin="6,6,6,0">
                                 <Grid Margin="0,0,0,16">
                                     <StackPanel>
-                                        <TextBlock Text="KAYITLAR" Style="{StaticResource EyebrowText}"
+                                        <TextBlock Text="{loc:T 'KAYITLAR'}" Style="{StaticResource EyebrowText}"
                                                    Foreground="{DynamicResource AccentInkBrush}" Margin="0,0,0,7"/>
-                                        <TextBlock Text="Transfer geçmişi" Style="{StaticResource DisplayText}" FontSize="26"/>
-                                        <TextBlock Text="Son 250 aktarım, cihazında saklanır."
+                                        <TextBlock Text="{loc:T 'Transfer geçmişi'}" Style="{StaticResource DisplayText}" FontSize="26"/>
+                                        <TextBlock Text="{loc:T 'Son 250 aktarım, cihazında saklanır.'}"
                                                    Style="{StaticResource MutedText}" Margin="0,3,0,0"/>
                                     </StackPanel>
                                     <Button x:Name="BtnClearHistory" Style="{StaticResource SecondaryButton}"
-                                            Content="Geçmişi temizle"
+                                            Content="{loc:T 'Geçmişi temizle'}"
                                             HorizontalAlignment="Right" VerticalAlignment="Bottom"
                                             Click="BtnClearHistory_Click"/>
                                 </Grid>
@@ -1292,9 +1293,9 @@
                                                            FontSize="26" Foreground="{DynamicResource AccentInkBrush}"
                                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
-                                            <TextBlock Text="Henüz aktarım yok" Style="{StaticResource SectionText}"
+                                            <TextBlock Text="{loc:T 'Henüz aktarım yok'}" Style="{StaticResource SectionText}"
                                                        HorizontalAlignment="Center" Margin="0,16,0,3"/>
-                                            <TextBlock Text="İlk dosyanı gönderdiğinde burada görünecek."
+                                            <TextBlock Text="{loc:T 'İlk dosyanı gönderdiğinde burada görünecek.'}"
                                                        Style="{StaticResource MutedText}" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
@@ -1307,10 +1308,10 @@
                     <Grid x:Name="PageSettings" Visibility="Collapsed">
                         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
                             <StackPanel Margin="6,6,6,0">
-                                <TextBlock Text="TERCİHLER" Style="{StaticResource EyebrowText}"
+                                <TextBlock Text="{loc:T 'TERCİHLER'}" Style="{StaticResource EyebrowText}"
                                            Foreground="{DynamicResource AccentInkBrush}" Margin="0,0,0,7"/>
-                                <TextBlock Text="Ayarlar" Style="{StaticResource DisplayText}" FontSize="26"/>
-                                <TextBlock Text="Görünüm, ağ ve aktarım davranışı."
+                                <TextBlock Text="{loc:T 'Ayarlar'}" Style="{StaticResource DisplayText}" FontSize="26"/>
+                                <TextBlock Text="{loc:T 'Görünüm, ağ ve aktarım davranışı.'}"
                                            Style="{StaticResource MutedText}" Margin="0,3,0,16"/>
 
                                 <!-- themes -->
@@ -1318,11 +1319,11 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,14">
                                             <StackPanel>
-                                                <TextBlock Text="Tema" Style="{StaticResource SettingLabel}"/>
-                                                <TextBlock Text="Seçim anında uygulanır ve hatırlanır."
+                                                <TextBlock Text="{loc:T 'Tema'}" Style="{StaticResource SettingLabel}"/>
+                                                <TextBlock Text="{loc:T 'Seçim anında uygulanır ve hatırlanır.'}"
                                                            Style="{StaticResource MutedText}"/>
                                             </StackPanel>
-                                            <TextBlock x:Name="TxtActiveTheme" Text="Prism"
+                                            <TextBlock x:Name="TxtActiveTheme" Text="{loc:T 'Prism'}"
                                                        HorizontalAlignment="Right" VerticalAlignment="Center"
                                                        FontSize="11.5" FontWeight="SemiBold"
                                                        Foreground="{DynamicResource AccentInkBrush}"/>
@@ -1332,10 +1333,33 @@
                                     </StackPanel>
                                 </Border>
 
+                                <!-- language -->
+                                <Border Style="{StaticResource SettingCard}">
+                                    <StackPanel>
+                                        <TextBlock Text="{loc:T 'Dil'}" Style="{StaticResource SettingLabel}"/>
+                                        <TextBlock Text="{loc:T 'Arayüz dili anında değişir.'}"
+                                                   Style="{StaticResource MutedText}" Margin="0,2,0,12"/>
+                                        <WrapPanel x:Name="LangPanel">
+                                            <RadioButton x:Name="LangTr" Style="{StaticResource TabRadioButton}" GroupName="lang"
+                                                         Content="Türkçe" Tag="tr" Margin="0,0,8,8" Checked="Lang_Checked"/>
+                                            <RadioButton x:Name="LangEn" Style="{StaticResource TabRadioButton}" GroupName="lang"
+                                                         Content="English" Tag="en" Margin="0,0,8,8" Checked="Lang_Checked"/>
+                                            <RadioButton x:Name="LangDe" Style="{StaticResource TabRadioButton}" GroupName="lang"
+                                                         Content="Deutsch" Tag="de" Margin="0,0,8,8" Checked="Lang_Checked"/>
+                                            <RadioButton x:Name="LangFr" Style="{StaticResource TabRadioButton}" GroupName="lang"
+                                                         Content="Français" Tag="fr" Margin="0,0,8,8" Checked="Lang_Checked"/>
+                                            <RadioButton x:Name="LangEs" Style="{StaticResource TabRadioButton}" GroupName="lang"
+                                                         Content="Español" Tag="es" Margin="0,0,8,8" Checked="Lang_Checked"/>
+                                            <RadioButton x:Name="LangJa" Style="{StaticResource TabRadioButton}" GroupName="lang"
+                                                         Content="日本語" Tag="ja" Margin="0,0,8,8" Checked="Lang_Checked"/>
+                                        </WrapPanel>
+                                    </StackPanel>
+                                </Border>
+
                                 <!-- network -->
                                 <Border Style="{StaticResource SettingCard}">
                                     <StackPanel>
-                                        <TextBlock Text="Ağ" Style="{StaticResource SettingLabel}" Margin="0,0,0,14"/>
+                                        <TextBlock Text="{loc:T 'Ağ'}" Style="{StaticResource SettingLabel}" Margin="0,0,0,14"/>
 
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -1344,13 +1368,13 @@
                                             </Grid.ColumnDefinitions>
 
                                             <StackPanel Margin="0,0,12,0">
-                                                <TextBlock Text="Cihaz adı" Style="{StaticResource MutedText}" Margin="0,0,0,6"/>
+                                                <TextBlock Text="{loc:T 'Cihaz adı'}" Style="{StaticResource MutedText}" Margin="0,0,0,6"/>
                                                 <TextBox x:Name="TxtHostname" Style="{StaticResource ModernTextBox}"
                                                          LostFocus="Setting_Changed"/>
                                             </StackPanel>
 
                                             <StackPanel Grid.Column="1">
-                                                <TextBlock Text="Aktarım portu" Style="{StaticResource MutedText}" Margin="0,0,0,6"/>
+                                                <TextBlock Text="{loc:T 'Aktarım portu'}" Style="{StaticResource MutedText}" Margin="0,0,0,6"/>
                                                 <TextBox x:Name="TxtPort" Style="{StaticResource ModernTextBox}"
                                                          LostFocus="Setting_Changed"/>
                                             </StackPanel>
@@ -1359,7 +1383,7 @@
                                         <Border Style="{StaticResource DividerLine}" Margin="0,18,0,14"/>
 
                                         <CheckBox x:Name="ChkAutoReceive" Style="{StaticResource ToggleSwitch}"
-                                                  Content="Otomatik alma modu — gelen aktarımları sormadan kabul et"
+                                                  Content="{loc:T 'Otomatik alma modu — gelen aktarımları sormadan kabul et'}"
                                                   Click="Setting_Changed"/>
                                     </StackPanel>
                                 </Border>
@@ -1367,7 +1391,7 @@
                                 <!-- storage -->
                                 <Border Style="{StaticResource SettingCard}">
                                     <StackPanel>
-                                        <TextBlock Text="Kayıt yeri" Style="{StaticResource SettingLabel}" Margin="0,0,0,14"/>
+                                        <TextBlock Text="{loc:T 'Kayıt yeri'}" Style="{StaticResource SettingLabel}" Margin="0,0,0,14"/>
 
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -1376,11 +1400,11 @@
                                             </Grid.ColumnDefinitions>
                                             <TextBox x:Name="TxtDownloadFolder" Style="{StaticResource ModernTextBox}"
                                                      LostFocus="Setting_Changed"/>
-                                            <Button Grid.Column="1" Content="Gözat" Style="{StaticResource SecondaryButton}"
+                                            <Button Grid.Column="1" Content="{loc:T 'Gözat'}" Style="{StaticResource SecondaryButton}"
                                                     Margin="9,0,0,0" Click="BtnBrowseFolder_Click"/>
                                         </Grid>
 
-                                        <Button Content="Klasörü aç" Style="{StaticResource GhostButton}"
+                                        <Button Content="{loc:T 'Klasörü aç'}" Style="{StaticResource GhostButton}"
                                                 HorizontalAlignment="Left" Margin="0,8,0,0"
                                                 Click="BtnOpenDownloadFolder_Click"/>
                                     </StackPanel>
@@ -1389,15 +1413,15 @@
                                 <!-- transfer -->
                                 <Border Style="{StaticResource SettingCard}">
                                     <StackPanel>
-                                        <TextBlock Text="Aktarım" Style="{StaticResource SettingLabel}" Margin="0,0,0,14"/>
+                                        <TextBlock Text="{loc:T 'Aktarım'}" Style="{StaticResource SettingLabel}" Margin="0,0,0,14"/>
 
                                         <CheckBox x:Name="ChkFlashMode" Style="{StaticResource ToggleSwitch}"
-                                                  Content="Flash modu — dosyayı paralel kanallara böl"
+                                                  Content="{loc:T 'Flash modu — dosyayı paralel kanallara böl'}"
                                                   Click="Setting_Changed"/>
 
                                         <StackPanel Margin="0,18,0,0">
                                             <Grid>
-                                                <TextBlock Text="Paralel kanal sayısı" Style="{StaticResource MutedText}"/>
+                                                <TextBlock Text="{loc:T 'Paralel kanal sayısı'}" Style="{StaticResource MutedText}"/>
                                                 <TextBlock x:Name="TxtFlashConns" Text="8"
                                                            HorizontalAlignment="Right"
                                                            FontSize="12" FontWeight="SemiBold"
@@ -1413,10 +1437,10 @@
                                         <Border Style="{StaticResource DividerLine}" Margin="0,14,0,14"/>
 
                                         <CheckBox x:Name="ChkCheckUpdates" Style="{StaticResource ToggleSwitch}"
-                                                  Content="Açılışta güncellemeleri kontrol et"
+                                                  Content="{loc:T 'Açılışta güncellemeleri kontrol et'}"
                                                   Click="Setting_Changed"/>
                                         <CheckBox x:Name="ChkAutoUpdate" Style="{StaticResource ToggleSwitch}"
-                                                  Content="Yeni sürümü arka planda indir"
+                                                  Content="{loc:T 'Yeni sürümü arka planda indir'}"
                                                   Margin="0,14,0,0" Click="Setting_Changed"/>
                                     </StackPanel>
                                 </Border>
@@ -1424,16 +1448,16 @@
                                 <!-- about -->
                                 <Border Style="{StaticResource SettingCard}">
                                     <StackPanel>
-                                        <TextBlock Text="Uygulama" Style="{StaticResource SettingLabel}" Margin="0,0,0,14"/>
+                                        <TextBlock Text="{loc:T 'Uygulama'}" Style="{StaticResource SettingLabel}" Margin="0,0,0,14"/>
 
                                         <Grid>
                                             <StackPanel>
                                                 <TextBlock x:Name="TxtAppVersion" Text="Dosyaktar v2.1.0"
                                                            FontSize="13" FontWeight="SemiBold"/>
-                                                <TextBlock Text=".NET 8 · WPF · tek dosya"
+                                                <TextBlock Text="{loc:T '.NET 8 · WPF · tek dosya'}"
                                                            Style="{StaticResource MutedText}" Margin="0,2,0,0"/>
                                             </StackPanel>
-                                            <Button Content="Güncellemeleri kontrol et"
+                                            <Button Content="{loc:T 'Güncellemeleri kontrol et'}"
                                                     Style="{StaticResource SecondaryButton}"
                                                     HorizontalAlignment="Right" VerticalAlignment="Center"
                                                     Click="BtnCheckUpdates_Click"/>
@@ -1441,7 +1465,7 @@
 
                                         <Border Style="{StaticResource DividerLine}" Margin="0,16,0,14"/>
 
-                                        <Button Content="Uygulama verilerini sıfırla"
+                                        <Button Content="{loc:T 'Uygulama verilerini sıfırla'}"
                                                 Style="{StaticResource DangerButton}"
                                                 HorizontalAlignment="Left"
                                                 Click="BtnResetApp_Click"/>
@@ -1467,7 +1491,7 @@
                             <!-- active transfer -->
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
-                                    <TextBlock Text="Aktarım" Style="{StaticResource SectionText}"/>
+                                    <TextBlock Text="{loc:T 'Aktarım'}" Style="{StaticResource SectionText}"/>
                                     <Border Style="{StaticResource ChipBadge}" HorizontalAlignment="Right"
                                             Padding="7,2" Background="{DynamicResource AccentSoftBrush}">
                                         <TextBlock x:Name="TxtQueueCount" Text="0"
@@ -1495,19 +1519,19 @@
                                                        FontSize="10.5" FontWeight="SemiBold"
                                                        Foreground="{DynamicResource SuccessInkBrush}"/>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                <TextBlock x:Name="TxtActivePercent" Text="0%"
+                                                <TextBlock x:Name="TxtActivePercent" Text="{loc:T '0%'}"
                                                            FontSize="10.5"
                                                            Foreground="{DynamicResource TextMutedBrush}"
                                                            VerticalAlignment="Center" Margin="0,0,8,0"/>
                                                 <Button x:Name="BtnCancelTransfer" Style="{StaticResource IconButton}"
                                                         Content="&#xE711;" Width="22" Height="22" FontSize="9"
-                                                        Click="BtnCancelTransfer_Click" ToolTip="İptal"/>
+                                                        Click="BtnCancelTransfer_Click" ToolTip="{loc:T 'İptal'}"/>
                                             </StackPanel>
                                         </Grid>
                                     </StackPanel>
                                 </Border>
 
-                                <TextBlock Text="Kuyruk" Style="{StaticResource EyebrowText}" Margin="2,16,0,8"/>
+                                <TextBlock Text="{loc:T 'Kuyruk'}" Style="{StaticResource EyebrowText}" Margin="2,16,0,8"/>
                             </StackPanel>
 
                             <!-- queue list -->
@@ -1516,7 +1540,7 @@
                                     <ItemsControl x:Name="QueueList" ItemTemplate="{StaticResource QueueItemTemplate}"/>
                                 </ScrollViewer>
 
-                                <TextBlock x:Name="EmptyQueue" Text="Kuyruk boş. Göndermek için dosya ekle."
+                                <TextBlock x:Name="EmptyQueue" Text="{loc:T 'Kuyruk boş. Göndermek için dosya ekle.'}"
                                            Style="{StaticResource MutedText}"
                                            TextAlignment="Center" VerticalAlignment="Top"/>
                             </Grid>
@@ -1525,7 +1549,7 @@
                             <StackPanel Grid.Row="2" Margin="0,12,0,0">
                                 <Border Style="{StaticResource DividerLine}" Margin="0,0,0,10"/>
                                 <Grid Margin="2,0,0,7">
-                                    <TextBlock Text="Etkinlik" Style="{StaticResource EyebrowText}"/>
+                                    <TextBlock Text="{loc:T 'Etkinlik'}" Style="{StaticResource EyebrowText}"/>
                                     <TextBlock x:Name="TxtStatusNet" Text="—"
                                                HorizontalAlignment="Right"
                                                Style="{StaticResource MutedText}" FontSize="10"/>
@@ -1549,13 +1573,13 @@
                         <Ellipse x:Name="StatusDot" Width="7" Height="7"
                                  Fill="{DynamicResource SuccessBrush}" VerticalAlignment="Center"
                                  Margin="0,0,8,0"/>
-                        <TextBlock x:Name="TxtStatus" Text="Hazır" FontSize="11"
+                        <TextBlock x:Name="TxtStatus" Text="{loc:T 'Hazır'}" FontSize="11"
                                    VerticalAlignment="Center"
                                    Foreground="{DynamicResource TextSecBrush}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <TextBlock x:Name="TxtStatusMobile" Text="Mobil köprü: kapalı"
+                        <TextBlock x:Name="TxtStatusMobile" Text="{loc:T 'Mobil köprü: kapalı'}"
                                    FontSize="10.5" VerticalAlignment="Center"
                                    Foreground="{DynamicResource TextMutedBrush}"/>
                         <Border Width="1" Height="12" Background="{DynamicResource DividerBrush}" Margin="12,0"/>
@@ -1582,9 +1606,9 @@
                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
 
-                    <TextBlock Text="Eşleşme isteği" Style="{StaticResource DisplayText}" FontSize="20"
+                    <TextBlock Text="{loc:T 'Eşleşme isteği'}" Style="{StaticResource DisplayText}" FontSize="20"
                                HorizontalAlignment="Center" Margin="0,16,0,4"/>
-                    <TextBlock x:Name="TxtPairingHost" Text="Cihaz"
+                    <TextBlock x:Name="TxtPairingHost" Text="{loc:T 'Cihaz'}"
                                Style="{StaticResource SectionText}"
                                HorizontalAlignment="Center"/>
                     <TextBlock x:Name="TxtPairingIp" Text="—"
@@ -1599,7 +1623,7 @@
                                    Foreground="{DynamicResource AccentInkBrush}"/>
                     </Border>
 
-                    <TextBlock x:Name="TxtPairingHint" Text="Kod iki cihazda da aynıysa kabul edin."
+                    <TextBlock x:Name="TxtPairingHint" Text="{loc:T 'Kod iki cihazda da aynıysa kabul edin.'}"
                                Style="{StaticResource MutedText}" HorizontalAlignment="Center"
                                Margin="0,10,0,0"/>
 
@@ -1608,13 +1632,13 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Content="Reddet" Style="{StaticResource DangerButton}"
+                        <Button Content="{loc:T 'Reddet'}" Style="{StaticResource DangerButton}"
                                 Margin="0,0,5,0" Click="BtnPairingReject_Click"/>
-                        <Button Grid.Column="1" Content="Kabul et" Style="{StaticResource PrimaryButton}"
+                        <Button Grid.Column="1" Content="{loc:T 'Kabul et'}" Style="{StaticResource PrimaryButton}"
                                 Margin="5,0,0,0" Click="BtnPairingAccept_Click"/>
                     </Grid>
 
-                    <Button x:Name="BtnPairingCancel" Content="İptal" Style="{StaticResource GhostButton}"
+                    <Button x:Name="BtnPairingCancel" Content="{loc:T 'İptal'}" Style="{StaticResource GhostButton}"
                             HorizontalAlignment="Center" Margin="0,8,0,0"
                             Click="BtnPairingCancel_Click"/>
                 </StackPanel>
@@ -1631,7 +1655,7 @@
                     <TextBlock Text="&#xE898;" FontFamily="{StaticResource IconFont}"
                                FontSize="42" Foreground="{DynamicResource AccentInkBrush}"
                                HorizontalAlignment="Center"/>
-                    <TextBlock Text="Bırak, gerisini biz hallederiz"
+                    <TextBlock Text="{loc:T 'Bırak, gerisini biz hallederiz'}"
                                Style="{StaticResource DisplayText}" FontSize="20"
                                HorizontalAlignment="Center" Margin="0,14,0,0"/>
                 </StackPanel>

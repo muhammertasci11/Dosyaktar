@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Dosyaktar.Localization;
 using Dosyaktar.Services;
 using Microsoft.Win32;
 using Path = System.IO.Path;
@@ -132,6 +133,7 @@ namespace Dosyaktar
             UpdateSessionUi();
             UpdateMobileUi();
             LoadHistoryIntoView();
+            ApplyLanguage();
 
             StateChanged  += OnWindowStateChanged;
             Loaded        += OnLoaded;
@@ -144,7 +146,7 @@ namespace Dosyaktar
 
             StartDiscovery();
             try { _pairing.StartListening(); }
-            catch (Exception ex) { AppendLog("Eşleşme servisi başlatılamadı: " + ex.Message, "err"); }
+            catch (Exception ex) { AppendLog(Loc.S("Eşleşme servisi başlatılamadı: ") + ex.Message, "err"); }
 
             RestoreLastPage();
         }
@@ -171,7 +173,7 @@ namespace Dosyaktar
             _ = Task.Run(() =>
             {
                 bool ok = NetworkManager.EnsureFirewallRule(out string message);
-                Dispatcher.InvokeAsync(() => AppendLog("[Ağ] " + message, ok ? "info" : "warn"));
+                Dispatcher.InvokeAsync(() => AppendLog(Loc.S("[Ağ] ") + message, ok ? "info" : "warn"));
             });
         }
 
@@ -291,8 +293,8 @@ namespace Dosyaktar
         private void WireEvents()
         {
             // ağ
-            _net.LogMessage += (_, m) => AppendLog("[Ağ] " + m);
-            _net.Error      += (_, m) => AppendLog("[Ağ] " + m, "err");
+            _net.LogMessage += (_, m) => AppendLog(Loc.S("[Ağ] ") + m);
+            _net.Error      += (_, m) => AppendLog(Loc.S("[Ağ] ") + m, "err");
 
             // gönderim
             _sender.StatusChanged += (_, m) => OnSenderStatus(m);
@@ -301,19 +303,19 @@ namespace Dosyaktar
             _sender.FlashProgressChanged += (_, p) => Dispatcher.InvokeAsync(() => ShowFlash(p));
 
             // alım
-            _receiver.StatusChanged += (_, m) => AppendLog("[Alım] " + m);
-            _receiver.Error         += (_, m) => AppendLog("[Alım] " + m, "err");
+            _receiver.StatusChanged += (_, m) => AppendLog(Loc.S("[Alım] ") + m);
+            _receiver.Error         += (_, m) => AppendLog(Loc.S("[Alım] ") + m, "err");
             _receiver.ProgressChanged += (_, p) => Dispatcher.InvokeAsync(() => ShowProgress(p, false));
             _receiver.FlashProgressChanged += (_, p) => Dispatcher.InvokeAsync(() => ShowFlash(p));
 
             // keşif
             _discovery.PeersChanged += (_, list) => Dispatcher.InvokeAsync(() => UpdatePeerList(list));
-            _discovery.LogMessage   += (_, m) => AppendLog("[Keşif] " + m);
+            _discovery.LogMessage   += (_, m) => AppendLog(Loc.S("[Keşif] ") + m);
 
             // eşleşme
             _pairing.PairingRequested        += Pairing_Requested;
             _pairing.PairingResponseReceived += Pairing_ResponseReceived;
-            _pairing.LogMessage              += (_, m) => AppendLog("[Eşleşme] " + m);
+            _pairing.LogMessage              += (_, m) => AppendLog(Loc.S("[Eşleşme] ") + m);
 
             // mobil köprü
             _mobile.Log += m => AppendLog("[Mobil] " + m);
@@ -418,14 +420,14 @@ namespace Dosyaktar
                     GroupName = "avatarPick",
                     Tag       = spec.Name,
                     Content   = avatar,
-                    ToolTip   = spec.Name,
+                    ToolTip   = Loc.S(spec.Name),
                     IsChecked = string.Equals(spec.Id, selected.Id, StringComparison.Ordinal)
                 };
 
                 // Seçim olayı, başlangıç değeri atandıktan sonra bağlanır:
                 // açılışta gereksiz kayıt yazılmaz.
                 tile.Checked += (_, _) => SelectAvatar(spec.Id);
-                System.Windows.Automation.AutomationProperties.SetName(tile, spec.Name);
+                System.Windows.Automation.AutomationProperties.SetName(tile, Loc.S(spec.Name));
                 System.Windows.Automation.AutomationProperties.SetAutomationId(tile, "avatar_" + spec.Id);
 
                 AvatarGallery.Children.Add(tile);
@@ -496,7 +498,7 @@ namespace Dosyaktar
                 ProfilePreview.AvatarId = spec.Id;
                 AvatarSmall.AvatarId    = spec.Id;
 
-                if (TxtProfileAvatarName != null) TxtProfileAvatarName.Text = spec.Name;
+                if (TxtProfileAvatarName != null) TxtProfileAvatarName.Text = Loc.S(spec.Name);
                 if (TxtProfilePreviewName != null) TxtProfilePreviewName.Text = name;
 
                 if (TxtProfileName != null && !TxtProfileName.IsKeyboardFocusWithin
@@ -506,7 +508,7 @@ namespace Dosyaktar
                 }
 
                 if (AvatarTile != null)
-                    AvatarTile.ToolTip = "Profil ve avatarlar · " + spec.Name;
+                    AvatarTile.ToolTip = Loc.S("Profil ve avatarlar") + " · " + Loc.S(spec.Name);
 
                 foreach (var (tileSpec, tile) in _avatarTiles)
                 {
@@ -584,7 +586,7 @@ namespace Dosyaktar
                 finally { _suppressSettings = false; }
 
                 StartDiscovery();
-                SetStatus("Profil adı güncellendi", "ok");
+                SetStatus(Loc.S("Profil adı güncellendi"), "ok");
             }
 
             _syncingProfile = true;
@@ -601,6 +603,60 @@ namespace Dosyaktar
             SyncProfileUi();
         }
 
+        // ─── dil ─────────────────────────────────────────────────────────────
+        private string _currentPageKey = "send";
+
+        /// <summary>Sayfa başlığı kod tarafından yazılır; dil değişince yeniden uygulanır.</summary>
+        private void ApplyPageTitle()
+        {
+            TxtPageTitle.Text = _currentPageKey switch
+            {
+                "session"  => Loc.S("Oturum"),
+                "games"    => Loc.S("Oyunlar"),
+                "mobile"   => Loc.S("Mobil köprü"),
+                "history"  => Loc.S("Geçmiş"),
+                "settings" => Loc.S("Ayarlar"),
+                "profile"  => Loc.S("Profil"),
+                _          => Loc.S("Keşif")
+            };
+        }
+
+        private void Lang_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!_initialized) return;
+            if (sender is not FrameworkElement fe || fe.Tag is not string code) return;
+
+            string next = Loc.Normalize(code);
+            if (next == Loc.Current) return;
+
+            _settings.Language = next;
+            SettingsService.Save(_settings);
+            Loc.SetLanguage(next);
+            ApplyLanguage();
+        }
+
+        /// <summary>XAML bağlarını değil, kodun yazdığı metinleri tazeler.</summary>
+        private void ApplyLanguage()
+        {
+            _suppressSettings = true;
+            try
+            {
+                LangTr.IsChecked = Loc.Current == "tr";
+                LangEn.IsChecked = Loc.Current == "en";
+                LangDe.IsChecked = Loc.Current == "de";
+                LangFr.IsChecked = Loc.Current == "fr";
+                LangEs.IsChecked = Loc.Current == "es";
+                LangJa.IsChecked = Loc.Current == "ja";
+            }
+            finally { _suppressSettings = false; }
+
+            ApplyPageTitle();
+            UpdateQueueUi();
+            UpdateSharedUi();
+            UpdateSessionUi();
+            UpdateMobileUi();
+        }
+
         private void ShowPage(string key)
         {
             if (PageSend == null) return;
@@ -609,7 +665,7 @@ namespace Dosyaktar
             if (key != "profile" && _settings.LastPage != key)
             {
                 _settings.LastPage = key;
-                SettingsService.Save(_settings);
+                if (!App.Ephemeral) SettingsService.Save(_settings);
             }
 
             PageSend.Visibility     = key == "send"     ? Visibility.Visible : Visibility.Collapsed;
@@ -629,16 +685,8 @@ namespace Dosyaktar
                 SyncProfileUi();
             }
 
-            TxtPageTitle.Text = key switch
-            {
-                "session"  => "Oturum",
-                "games"    => "Oyunlar",
-                "mobile"   => "Mobil köprü",
-                "history"  => "Geçmiş",
-                "settings" => "Ayarlar",
-                "profile"  => "Profil",
-                _          => "Keşif"
-            };
+            _currentPageKey = key;
+            ApplyPageTitle();
 
             var page = key switch
             {
@@ -821,7 +869,7 @@ namespace Dosyaktar
         {
             _discovery.DeviceName = _settings.Hostname;
             _discovery.Start(EffectivePort, _isConnectedSession);
-            AppendLog($"Keşif başladı · port {EffectivePort}");
+            AppendLog(Loc.F("Keşif başladı · port {0}", EffectivePort));
         }
 
         private void UpdatePeerList(IReadOnlyList<DiscoveredPeer> peers)
@@ -842,8 +890,8 @@ namespace Dosyaktar
 
         private void BtnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            AppendLog("Ağ taraması yenilendi.");
-            SetStatus("Cihazlar taranıyor…", "info");
+            AppendLog(Loc.S("Ağ taraması yenilendi."));
+            SetStatus(Loc.S("Cihazlar taranıyor…"), "info");
             StartDiscovery();
         }
 
@@ -862,7 +910,7 @@ namespace Dosyaktar
 
             if (_isConnectedSession)
             {
-                SetStatus("Önce mevcut oturumu kapat", "warn");
+                SetStatus(Loc.S("Önce mevcut oturumu kapat"), "warn");
                 return;
             }
 
@@ -882,7 +930,7 @@ namespace Dosyaktar
         {
             _selectedPeer = null;
             SelectedTargetBar.Visibility = Visibility.Collapsed;
-            TxtDropHint.Text = "Klasör, oyun veya 50 GB'lık tek dosya — hepsi olur.";
+            TxtDropHint.Text = Loc.S("Klasör, oyun veya 50 GB'lık tek dosya — hepsi olur.");
         }
 
         private void BtnClearTarget_Click(object sender, RoutedEventArgs e) => ClearSelectedPeer();
@@ -907,7 +955,7 @@ namespace Dosyaktar
             if (!sent)
             {
                 HidePairingOverlay();
-                SetStatus("İstek gönderilemedi — güvenlik duvarı engelliyor olabilir", "err");
+                SetStatus(Loc.S("İstek gönderilemedi — güvenlik duvarı engelliyor olabilir"), "err");
 
                 var answer = MessageBox.Show(
                     "İstek gönderilemedi.\n\nWindows Güvenlik Duvarı bağlantıyı engelliyor olabilir. " +
@@ -981,15 +1029,15 @@ namespace Dosyaktar
 
                 if (e.Accepted)
                 {
-                    AppendLog("Eşleşme kabul edildi.");
+                    AppendLog(Loc.S("Eşleşme kabul edildi."));
                     StartSession(e.IP,
                         string.IsNullOrEmpty(_pendingPairName) ? e.IP : _pendingPairName,
                         _pendingPairPort);
                 }
                 else
                 {
-                    AppendLog("Eşleşme reddedildi.", "warn");
-                    SetStatus("Karşı cihaz isteği reddetti", "warn");
+                    AppendLog(Loc.S("Eşleşme reddedildi."), "warn");
+                    SetStatus(Loc.S("Karşı cihaz isteği reddetti"), "warn");
                 }
             });
         }
@@ -1010,15 +1058,15 @@ namespace Dosyaktar
             HidePairingOverlay();
 
             await _pairing.SendResponseAsync(ip, false);
-            AppendLog("Eşleşme isteği reddedildi.", "warn");
-            SetStatus("İstek reddedildi", "warn");
+            AppendLog(Loc.S("Eşleşme isteği reddedildi."), "warn");
+            SetStatus(Loc.S("İstek reddedildi"), "warn");
         }
 
         private void BtnPairingCancel_Click(object sender, RoutedEventArgs e)
         {
             HidePairingOverlay();
-            SetStatus("Eşleşme iptal edildi", "info");
-            AppendLog("Eşleşme isteği iptal edildi.");
+            SetStatus(Loc.S("Eşleşme iptal edildi"), "info");
+            AppendLog(Loc.S("Eşleşme isteği iptal edildi."));
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -1109,7 +1157,7 @@ namespace Dosyaktar
                     }
                     else if (!_closing && _receiving)
                     {
-                        AppendLog("[Alım] " + result.Message, "warn");
+                        AppendLog(Loc.S("[Alım] ") + result.Message, "warn");
                     }
                 }
                 catch (OperationCanceledException)
@@ -1119,7 +1167,7 @@ namespace Dosyaktar
                 catch (Exception ex)
                 {
                     if (!_receiving || _closing) break;
-                    AppendLog("[Alım] " + ex.Message, "err");
+                    AppendLog(Loc.S("[Alım] ") + ex.Message, "err");
                     await Task.Delay(1200);
                 }
             }
@@ -1163,8 +1211,8 @@ namespace Dosyaktar
                         Success   = true,
                         When      = DateTime.Now
                     });
-                    SetStatus("Dosyalar alındı", "ok");
-                    AppendLog("[Alındı] " + dir, "ok");
+                    SetStatus(Loc.S("Dosyalar alındı"), "ok");
+                    AppendLog(Loc.S("[Alındı] ") + dir, "ok");
                 });
             });
         }
@@ -1187,12 +1235,12 @@ namespace Dosyaktar
                 {
                     TxtSessionPercent.Text = "Dinleniyor";
                     TxtSessionSpeed.Text   = "port " + EffectivePort;
-                    TxtSessionEta.Text     = "gönderim bekleniyor";
+                    TxtSessionEta.Text     = Loc.S("gönderim bekleniyor");
                 }
             }
             else
             {
-                TxtSessionPercent.Text = "Alma kapalı — 'Almaya başla'ya bas";
+                TxtSessionPercent.Text = Loc.S("Alma kapalı — 'Almaya başla'ya bas");
                 TxtSessionSpeed.Text   = "";
                 TxtSessionEta.Text     = "";
             }
@@ -1223,7 +1271,7 @@ namespace Dosyaktar
             PbSession.Value = 0;
             TxtSessionSpeed.Text = "";
             TxtSessionEta.Text = "";
-            TxtSessionPercent.Text = "Hazır";
+            TxtSessionPercent.Text = Loc.S("Hazır");
 
             UpdateSessionUi();
             ShowPage("send");
@@ -1231,8 +1279,8 @@ namespace Dosyaktar
 
             GamesView.SetSendAvailable(false);
 
-            SetStatus("Oturum sonlandırıldı", "info");
-            AppendLog("Oturum kapatıldı.");
+            SetStatus(Loc.S("Oturum sonlandırıldı"), "info");
+            AppendLog(Loc.S("Oturum kapatıldı."));
         }
 
         private async void BtnPairWithPin_Click(object sender, RoutedEventArgs e)
@@ -1241,14 +1289,14 @@ namespace Dosyaktar
 
             if (pin.Length != 6)
             {
-                SetStatus("PIN 6 haneli olmalı", "warn");
+                SetStatus(Loc.S("PIN 6 haneli olmalı"), "warn");
                 TxtPairPin.Focus();
                 return;
             }
 
             // PIN karşıdan gelen isteklerde kullanılır; hedef IP yoksa istek gönderilemez.
-            SetStatus("PIN, karşı cihazın isteğini onaylamak için kullanılır", "info");
-            AppendLog("PIN doğrulama: karşı cihazdan istek bekleniyor.", "warn");
+            SetStatus(Loc.S("PIN, karşı cihazın isteğini onaylamak için kullanılır"), "info");
+            AppendLog(Loc.S("PIN doğrulama: karşı cihazdan istek bekleniyor."), "warn");
             await Task.CompletedTask;
         }
 
@@ -1258,14 +1306,14 @@ namespace Dosyaktar
 
             if (!NetworkManager.IsValidIP(ip))
             {
-                SetStatus("Geçersiz IP adresi", "warn");
+                SetStatus(Loc.S("Geçersiz IP adresi"), "warn");
                 TxtManualIp.Focus();
                 return;
             }
 
             if (_isConnectedSession)
             {
-                SetStatus("Önce mevcut oturumu kapat", "warn");
+                SetStatus(Loc.S("Önce mevcut oturumu kapat"), "warn");
                 return;
             }
 
@@ -1307,7 +1355,7 @@ namespace Dosyaktar
         {
             var dlg = new OpenFileDialog
             {
-                Title = "Gönderilecek dosyaları seç",
+                Title = Loc.S("Gönderilecek dosyaları seç"),
                 Multiselect = true
             };
 
@@ -1317,7 +1365,7 @@ namespace Dosyaktar
 
         private void BtnPickFolder_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new OpenFolderDialog { Title = "Gönderilecek klasörü seç" };
+            var dlg = new OpenFolderDialog { Title = Loc.S("Gönderilecek klasörü seç") };
             if (dlg.ShowDialog() == true)
                 _ = SendFolderAsync(dlg.FolderName);
         }
@@ -1403,7 +1451,7 @@ namespace Dosyaktar
             }
 
             if (dirs.Count > 0)
-                AppendLog("Klasörler tek tek gönderilir; bu bırakmada yalnızca dosyalar alındı.", "warn");
+                AppendLog(Loc.S("Klasörler tek tek gönderilir; bu bırakmada yalnızca dosyalar alındı."), "warn");
 
             await HandlePathsAsync(files);
         }
@@ -1425,7 +1473,7 @@ namespace Dosyaktar
 
             if (peer == null)
             {
-                SetStatus("Hedef seçilmedi — Keşif'te bir cihaza 'Gönder' de", "warn");
+                SetStatus(Loc.S("Hedef seçilmedi — Keşif'te bir cihaza 'Gönder' de"), "warn");
                 ShowPage("send");
                 RbSend.IsChecked = true;
                 OpenPairingPromptForSelection();
@@ -1438,7 +1486,7 @@ namespace Dosyaktar
         private void OpenPairingPromptForSelection()
         {
             if (_peers.Count == 0)
-                AppendLog("Ağda cihaz yok. Karşı tarafta Dosyaktar açık ve aynı ağda olmalı.", "warn");
+                AppendLog(Loc.S("Ağda cihaz yok. Karşı tarafta Dosyaktar açık ve aynı ağda olmalı."), "warn");
             else
                 AppendLog($"{_files.Count} dosya kuyrukta — bir cihaza 'Gönder' de.", "warn");
         }
@@ -1481,20 +1529,20 @@ namespace Dosyaktar
         {
             if (!_isConnectedSession)
             {
-                SetStatus("Önce bir cihazla eşleş", "warn");
+                SetStatus(Loc.S("Önce bir cihazla eşleş"), "warn");
                 return;
             }
 
             if (_senderBusy)
             {
-                AppendLog("Zaten bir aktarım sürüyor.", "warn");
+                AppendLog(Loc.S("Zaten bir aktarım sürüyor."), "warn");
                 return;
             }
 
             var snapshot = _files.Select(f => f.Path).Where(File.Exists).ToList();
             if (snapshot.Count == 0)
             {
-                SetStatus("Gönderilecek dosya yok", "warn");
+                SetStatus(Loc.S("Gönderilecek dosya yok"), "warn");
                 return;
             }
 
@@ -1505,7 +1553,7 @@ namespace Dosyaktar
                 snapshot.Count == 1 ? Path.GetFileName(snapshot[0]) : $"{snapshot.Count} dosya",
                 _connectedTargetName);
 
-            SetStatus("Gönderiliyor…", "accent");
+            SetStatus(Loc.S("Gönderiliyor…"), "accent");
 
             TransferResult result;
             try
@@ -1538,7 +1586,7 @@ namespace Dosyaktar
 
                 _files.Clear();
                 UpdateQueueUi();
-                SetStatus("Transfer tamamlandı", "ok");
+                SetStatus(Loc.S("Transfer tamamlandı"), "ok");
             }
             else if (cancelled)
             {
@@ -1557,7 +1605,7 @@ namespace Dosyaktar
                     Success   = false,
                     When      = DateTime.Now
                 });
-                SetStatus("Transfer başarısız: " + result.Message, "err");
+                SetStatus(Loc.S("Transfer başarısız: ") + result.Message, "err");
             }
         }
 
@@ -1565,19 +1613,19 @@ namespace Dosyaktar
         {
             if (!Directory.Exists(folder))
             {
-                SetStatus("Klasör bulunamadı", "err");
+                SetStatus(Loc.S("Klasör bulunamadı"), "err");
                 return;
             }
 
             if (!_isConnectedSession)
             {
-                SetStatus("Klasör göndermek için önce bir cihaza bağlan", "warn");
+                SetStatus(Loc.S("Klasör göndermek için önce bir cihaza bağlan"), "warn");
                 return;
             }
 
             if (_senderBusy)
             {
-                AppendLog("Zaten bir aktarım sürüyor.", "warn");
+                AppendLog(Loc.S("Zaten bir aktarım sürüyor."), "warn");
                 return;
             }
 
@@ -1586,7 +1634,7 @@ namespace Dosyaktar
 
             string name = new DirectoryInfo(folder).Name;
             BeginTransferCard(name, _connectedTargetName + " · klasör");
-            SetStatus("Klasör taranıyor…", "accent");
+            SetStatus(Loc.S("Klasör taranıyor…"), "accent");
 
             TransferResult result;
             try
@@ -1613,17 +1661,17 @@ namespace Dosyaktar
                     Success   = true,
                     When      = DateTime.Now
                 });
-                SetStatus("Klasör gönderildi", "ok");
+                SetStatus(Loc.S("Klasör gönderildi"), "ok");
             }
             else if (result.Message.Contains("iptal", StringComparison.OrdinalIgnoreCase))
             {
                 CompleteTransferCard(false, "İptal edildi");
-                SetStatus("Klasör gönderimi iptal edildi", "warn");
+                SetStatus(Loc.S("Klasör gönderimi iptal edildi"), "warn");
             }
             else
             {
                 CompleteTransferCard(false, "Başarısız");
-                SetStatus("Klasör gönderilemedi: " + result.Message, "err");
+                SetStatus(Loc.S("Klasör gönderilemedi: ") + result.Message, "err");
             }
         }
 
@@ -1639,7 +1687,7 @@ namespace Dosyaktar
             PbActive.Value = 0;
             TxtActivePercent.Text = "…";
             TxtActiveSpeed.SetResourceReference(TextBlock.ForegroundProperty, "SuccessBrush");
-            TxtActiveSpeed.Text = "Hazırlanıyor";
+            TxtActiveSpeed.Text = Loc.S("Hazırlanıyor");
         }
 
         private void ShowProgress(TransferProgress p, bool outgoing)
@@ -1703,7 +1751,7 @@ namespace Dosyaktar
             }
 
             try { _sender.Cancel(); } catch { }
-            SetStatus("İptal isteği gönderildi…", "warn");
+            SetStatus(Loc.S("İptal isteği gönderildi…"), "warn");
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -1720,13 +1768,13 @@ namespace Dosyaktar
         {
             if (!_isConnectedSession)
             {
-                SetStatus("Oyun göndermek için önce bir cihaza bağlan", "warn");
+                SetStatus(Loc.S("Oyun göndermek için önce bir cihaza bağlan"), "warn");
                 return;
             }
 
             if (_senderBusy)
             {
-                SetStatus("Zaten bir aktarım sürüyor — bitmesini bekle", "warn");
+                SetStatus(Loc.S("Zaten bir aktarım sürüyor — bitmesini bekle"), "warn");
                 return;
             }
 
@@ -1735,7 +1783,7 @@ namespace Dosyaktar
             GamesView.SetSending(true);
 
             BeginTransferCard(game.Name, _connectedTargetName + " · oyun");
-            SetStatus("Oyun hazırlanıyor…", "accent");
+            SetStatus(Loc.S("Oyun hazırlanıyor…"), "accent");
             AppendLog($"{game.Name} gönderiliyor ({game.ProviderName})…");
 
             TransferResult result;
@@ -1767,14 +1815,14 @@ namespace Dosyaktar
                     Success   = true,
                     When      = DateTime.Now
                 });
-                SetStatus("Oyun gönderildi", "ok");
+                SetStatus(Loc.S("Oyun gönderildi"), "ok");
                 return;
             }
 
             if (result.Message.Contains("iptal", StringComparison.OrdinalIgnoreCase))
             {
                 CompleteTransferCard(false, "İptal edildi");
-                SetStatus("Oyun gönderimi iptal edildi", "warn");
+                SetStatus(Loc.S("Oyun gönderimi iptal edildi"), "warn");
                 return;
             }
 
@@ -1793,7 +1841,7 @@ namespace Dosyaktar
                 When      = DateTime.Now
             });
 
-            SetStatus("Oyun gönderilemedi: " + result.Message, "err");
+            SetStatus(Loc.S("Oyun gönderilemedi: ") + result.Message, "err");
             AppendLog(result.Message, "err");
 
             if (connectionFailure)
@@ -1856,15 +1904,15 @@ namespace Dosyaktar
 
 
                 UpdateMobileUi();
-                SetStatus("Mobil köprü açık", "ok");
+                SetStatus(Loc.S("Mobil köprü açık"), "ok");
                 AppendLog($"Mobil köprü: {_mobile.BaseUrl}");
             }
             catch (Exception ex)
             {
 
                 UpdateMobileUi();
-                SetStatus("Mobil köprü açılamadı", "err");
-                AppendLog("Mobil köprü hatası: " + ex.Message, "err");
+                SetStatus(Loc.S("Mobil köprü açılamadı"), "err");
+                AppendLog(Loc.S("Mobil köprü hatası: ") + ex.Message, "err");
             }
         }
 
@@ -1873,8 +1921,8 @@ namespace Dosyaktar
             if (_mobile.IsRunning)
             {
                 _mobile.Stop();
-                SetStatus("Mobil köprü kapatıldı", "info");
-                AppendLog("Mobil köprü kapatıldı.");
+                SetStatus(Loc.S("Mobil köprü kapatıldı"), "info");
+                AppendLog(Loc.S("Mobil köprü kapatıldı."));
             }
             else
             {
@@ -1891,13 +1939,13 @@ namespace Dosyaktar
 
             bool on = _mobile.IsRunning;
 
-            TxtStatusMobile.Text = on ? "Mobil köprü: açık" : "Mobil köprü: kapalı";
+            TxtStatusMobile.Text = Loc.S(on ? "Mobil köprü: açık" : "Mobil köprü: kapalı");
 
-            TxtBridgeState.Text = on ? "Yayında" : "Kapalı";
+            TxtBridgeState.Text = Loc.S(on ? "Yayında" : "Kapalı");
             TxtBridgeState.SetResourceReference(TextBlock.ForegroundProperty, on ? "SuccessBrush" : "TextMutedBrush");
             BridgeDot.SetResourceReference(System.Windows.Shapes.Shape.FillProperty, on ? "SuccessBrush" : "TextMutedBrush");
 
-            BtnToggleBridge.Content = on ? "Köprüyü kapat" : "Köprüyü aç";
+            BtnToggleBridge.Content = Loc.S(on ? "Köprüyü kapat" : "Köprüyü aç");
             BtnToggleBridge.Style = (Style)FindResource(on ? "SecondaryButton" : "PrimaryButton");
 
             TxtMobilePin.Text = on ? FormatPin(_mobile.Pin) : "— — —";
@@ -1911,7 +1959,7 @@ namespace Dosyaktar
             else
             {
                 TxtMobileUrl.Text = "http://—";
-                TxtMobileIp.Text  = "Köprü kapalı — açınca adres oluşur";
+                TxtMobileIp.Text  = Loc.S("Köprü kapalı — açınca adres oluşur");
                 ImgQr.Source      = null;
             }
         }
@@ -1930,7 +1978,7 @@ namespace Dosyaktar
             {
                 _mobile.RefreshPin();
                 UpdateMobileUi();
-                SetStatus("Yeni bağlantı kodu üretildi", "ok");
+                SetStatus(Loc.S("Yeni bağlantı kodu üretildi"), "ok");
             }
         }
 
@@ -1938,17 +1986,17 @@ namespace Dosyaktar
         {
             if (!_mobile.IsRunning)
             {
-                SetStatus("Köprü kapalı — adres yok", "warn");
+                SetStatus(Loc.S("Köprü kapalı — adres yok"), "warn");
                 return;
             }
 
-            CopyToClipboard(_mobile.BaseUrl, "Adres kopyalandı");
+            CopyToClipboard(_mobile.BaseUrl, Loc.S("Adres kopyalandı"));
         }
 
         private void BtnCopyIp_Click(object sender, RoutedEventArgs e)
         {
             string ip = _mobile.IsRunning ? _mobile.IpAddress : NetworkManager.GetLocalIP();
-            CopyToClipboard(ip, "IP kopyalandı");
+            CopyToClipboard(ip, Loc.S("IP kopyalandı"));
         }
 
         private void BtnDisconnectMobile_Click(object sender, RoutedEventArgs e)
@@ -2028,7 +2076,7 @@ namespace Dosyaktar
         {
             var dlg = new OpenFileDialog
             {
-                Title = "Telefona açılacak dosyalar",
+                Title = Loc.S("Telefona açılacak dosyalar"),
                 Multiselect = true
             };
 
@@ -2125,7 +2173,7 @@ namespace Dosyaktar
 
             if (path.Length == 0)
             {
-                SetStatus("Bu kayıt için dosya konumu yok", "warn");
+                SetStatus(Loc.S("Bu kayıt için dosya konumu yok"), "warn");
                 return;
             }
 
@@ -2137,7 +2185,7 @@ namespace Dosyaktar
                     {
                         UseShellExecute = true
                     });
-                    SetStatus("Konum açıldı: " + Path.GetFileName(path), "ok");
+                    SetStatus(Loc.S("Konum açıldı: ") + Path.GetFileName(path), "ok");
                     return;
                 }
 
@@ -2149,15 +2197,15 @@ namespace Dosyaktar
                     {
                         UseShellExecute = true
                     });
-                    SetStatus("Klasör açıldı: " + folder, "ok");
+                    SetStatus(Loc.S("Klasör açıldı: ") + folder, "ok");
                     return;
                 }
 
-                SetStatus("Dosya artık yerinde değil", "warn");
+                SetStatus(Loc.S("Dosya artık yerinde değil"), "warn");
             }
             catch (Exception ex)
             {
-                SetStatus("Konum açılamadı: " + ex.Message, "err");
+                SetStatus(Loc.S("Konum açılamadı: ") + ex.Message, "err");
             }
         }
 
@@ -2184,7 +2232,7 @@ namespace Dosyaktar
             HistoryService.Clear();
             _history.Clear();
             UpdateHistoryUi();
-            SetStatus("Geçmiş temizlendi", "info");
+            SetStatus(Loc.S("Geçmiş temizlendi"), "info");
         }
 
         // ═════════════════════════════════════════════════════════════════════
@@ -2207,13 +2255,13 @@ namespace Dosyaktar
                     GroupName = "theme",
                     Style     = tileStyle,
                     Tag       = palette.Name,
-                    ToolTip   = palette.Description,
+                    ToolTip   = Loc.S(palette.Description),
                     Content   = BuildThemeSwatch(palette),
                     IsChecked = palette.Id == current
                 };
 
                 System.Windows.Automation.AutomationProperties.SetName(tile, palette.Name);
-                System.Windows.Automation.AutomationProperties.SetHelpText(tile, palette.Description);
+                System.Windows.Automation.AutomationProperties.SetHelpText(tile, Loc.S(palette.Description));
                 System.Windows.Automation.AutomationProperties.SetAutomationId(tile, "RbTheme_" + palette.Id);
 
                 var captured = palette;
@@ -2403,7 +2451,7 @@ namespace Dosyaktar
         {
             var dlg = new OpenFolderDialog
             {
-                Title = "Kayıt klasörünü seç",
+                Title = Loc.S("Kayıt klasörünü seç"),
                 InitialDirectory = Directory.Exists(TxtDownloadFolder.Text)
                     ? TxtDownloadFolder.Text
                     : Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
@@ -2427,7 +2475,7 @@ namespace Dosyaktar
             }
             catch (Exception ex)
             {
-                SetStatus("Klasör açılamadı: " + ex.Message, "err");
+                SetStatus(Loc.S("Klasör açılamadı: ") + ex.Message, "err");
             }
         }
 
@@ -2483,7 +2531,7 @@ namespace Dosyaktar
         {
             var svc = new UpdateService();
 
-            svc.StatusChanged += (_, msg) => Dispatcher.InvokeAsync(() => AppendLog("[Güncelleme] " + msg));
+            svc.StatusChanged += (_, msg) => Dispatcher.InvokeAsync(() => AppendLog(Loc.S("[Güncelleme] ") + msg));
 
             try
             {
@@ -2496,13 +2544,13 @@ namespace Dosyaktar
                 }
                 else if (!silentAuto)
                 {
-                    SetStatus("Sürüm güncel", "ok");
+                    SetStatus(Loc.S("Sürüm güncel"), "ok");
                 }
             }
             catch (Exception ex)
             {
-                AppendLog("[Güncelleme] " + ex.Message, "err");
-                if (!silentAuto) SetStatus("Güncelleme kontrolü başarısız", "err");
+                AppendLog(Loc.S("[Güncelleme] ") + ex.Message, "err");
+                if (!silentAuto) SetStatus(Loc.S("Güncelleme kontrolü başarısız"), "err");
             }
         }
 
@@ -2518,8 +2566,8 @@ namespace Dosyaktar
 
                 if (string.IsNullOrEmpty(ip) || ip == "127.0.0.1")
                 {
-                    TxtTitleNet.Text  = "Ağ yok";
-                    TxtStatusNet.Text = "Bağlantı yok";
+                    TxtTitleNet.Text  = Loc.S("Ağ yok");
+                    TxtStatusNet.Text = Loc.S("Bağlantı yok");
                     TxtTitleNet.SetResourceReference(TextBlock.ForegroundProperty, "TextMutedBrush");
                     return;
                 }
@@ -2539,7 +2587,7 @@ namespace Dosyaktar
             }
             catch
             {
-                TxtTitleNet.Text  = "Ağ";
+                TxtTitleNet.Text  = Loc.S("Ağ");
                 TxtStatusNet.Text = "Tespit edilemedi";
             }
         }
@@ -2686,7 +2734,7 @@ namespace Dosyaktar
             }
             catch (Exception ex)
             {
-                SetStatus("Panoya kopyalanamadı: " + ex.Message, "err");
+                SetStatus(Loc.S("Panoya kopyalanamadı: ") + ex.Message, "err");
             }
         }
     }

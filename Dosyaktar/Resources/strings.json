@@ -1,0 +1,2319 @@
+{
+  "Dosyaktar": {
+    "en": "Dosyaktar",
+    "de": "Dosyaktar",
+    "fr": "Dosyaktar",
+    "es": "Dosyaktar",
+    "ja": "Dosyaktar"
+  },
+  "Keşif": {
+    "en": "Discover",
+    "de": "Entdecken",
+    "fr": "Découvrir",
+    "es": "Descubrir",
+    "ja": "検出"
+  },
+  "Oturum": {
+    "en": "Session",
+    "de": "Sitzung",
+    "fr": "Session",
+    "es": "Sesión",
+    "ja": "セッション"
+  },
+  "Oyunlar": {
+    "en": "Games",
+    "de": "Spiele",
+    "fr": "Jeux",
+    "es": "Juegos",
+    "ja": "ゲーム"
+  },
+  "Mobil": {
+    "en": "Mobile",
+    "de": "Mobil",
+    "fr": "Mobile",
+    "es": "Móvil",
+    "ja": "モバイル"
+  },
+  "Geçmiş": {
+    "en": "History",
+    "de": "Verlauf",
+    "fr": "Historique",
+    "es": "Historial",
+    "ja": "履歴"
+  },
+  "Ayarlar": {
+    "en": "Settings",
+    "de": "Optionen",
+    "fr": "Paramètres",
+    "es": "Ajustes",
+    "ja": "設定"
+  },
+  "Profil": {
+    "en": "Profile",
+    "de": "Profil",
+    "fr": "Profil",
+    "es": "Perfil",
+    "ja": "プロフィール"
+  },
+  "Profil ve avatarlar": {
+    "en": "Profile and avatars",
+    "de": "Profil und Avatare",
+    "fr": "Profil et avatars",
+    "es": "Perfil y avatares",
+    "ja": "プロフィールとアバター"
+  },
+  "OTURUM": {
+    "en": "SESSION",
+    "de": "SITZUNG",
+    "fr": "SESSION",
+    "es": "SESIÓN",
+    "ja": "セッション"
+  },
+  "Cihaz": {
+    "en": "Device",
+    "de": "Gerät",
+    "fr": "Appareil",
+    "es": "Dispositivo",
+    "ja": "デバイス"
+  },
+  "Hazır": {
+    "en": "Ready",
+    "de": "Bereit",
+    "fr": "Prêt",
+    "es": "Listo",
+    "ja": "準備完了"
+  },
+  "Aktarım": {
+    "en": "Transfer",
+    "de": "Übertragung",
+    "fr": "Transfert",
+    "es": "Transferencia",
+    "ja": "転送"
+  },
+  "0%": {
+    "en": "0%",
+    "de": "0 %",
+    "fr": "0 %",
+    "es": "0 %",
+    "ja": "0%"
+  },
+  "Gönder": {
+    "en": "Send",
+    "de": "Senden",
+    "fr": "Envoyer",
+    "es": "Enviar",
+    "ja": "送信"
+  },
+  "Klasörü aç": {
+    "en": "Open folder",
+    "de": "Ordner öffnen",
+    "fr": "Ouvrir le dossier",
+    "es": "Abrir carpeta",
+    "ja": "フォルダーを開く"
+  },
+  "İptal": {
+    "en": "Cancel",
+    "de": "Abbrechen",
+    "fr": "Annuler",
+    "es": "Cancelar",
+    "ja": "キャンセル"
+  },
+  "Yenile": {
+    "en": "Refresh",
+    "de": "Aktualisieren",
+    "fr": "Actualiser",
+    "es": "Actualizar",
+    "ja": "更新"
+  },
+  "Klasör ekle": {
+    "en": "Add folder",
+    "de": "Ordner hinzufügen",
+    "fr": "Ajouter un dossier",
+    "es": "Añadir carpeta",
+    "ja": "フォルダーを追加"
+  },
+  "KİŞİSELLEŞTİRME": {
+    "en": "PERSONALIZATION",
+    "de": "PERSONALISIERUNG",
+    "fr": "PERSONNALISATION",
+    "es": "PERSONALIZACIÓN",
+    "ja": "カスタマイズ"
+  },
+  "Adını yaz, animasyonlu avatarını seç. Ağda bu kimlikle görünürsün.": {
+    "en": "Type your name and pick an animated avatar. This is how you appear on the network.",
+    "de": "Gib deinen Namen ein und wähle einen animierten Avatar. So erscheinst du im Netzwerk.",
+    "fr": "Saisissez votre nom et choisissez un avatar animé. C'est ainsi que vous apparaissez sur le réseau.",
+    "es": "Escribe tu nombre y elige un avatar animado. Así apareces en la red.",
+    "ja": "名前を入力し、アニメーションアバターを選びます。ネットワーク上ではこの名前で表示されます。"
+  },
+  "Geri": {
+    "en": "Back",
+    "de": "Zurück",
+    "fr": "Retour",
+    "es": "Atrás",
+    "ja": "戻る"
+  },
+  "Kedi": {
+    "en": "Cat",
+    "de": "Katze",
+    "fr": "Chat",
+    "es": "Gato",
+    "ja": "ネコ"
+  },
+  "GÖRÜNEN AD": {
+    "en": "DISPLAY NAME",
+    "de": "ANZEIGENAME",
+    "fr": "NOM AFFICHÉ",
+    "es": "NOMBRE VISIBLE",
+    "ja": "表示名"
+  },
+  "Aynı ağdaki cihazlar ve mobil köprü bu adı görür.": {
+    "en": "Devices on the same network and the mobile bridge see this name.",
+    "de": "Geräte im selben Netzwerk und die Mobil-Brücke sehen diesen Namen.",
+    "fr": "Les appareils du même réseau et le pont mobile voient ce nom.",
+    "es": "Los dispositivos de la misma red y el puente móvil ven este nombre.",
+    "ja": "同じネットワークのデバイスとスマホブリッジにこの名前が表示されます。"
+  },
+  "Canlı önizleme": {
+    "en": "Live preview",
+    "de": "Live-Vorschau",
+    "fr": "Aperçu en direct",
+    "es": "Vista previa en vivo",
+    "ja": "ライブプレビュー"
+  },
+  "Avatar galerisi": {
+    "en": "Avatar gallery",
+    "de": "Avatar-Galerie",
+    "fr": "Galerie d'avatars",
+    "es": "Galería de avatares",
+    "ja": "アバターギャラリー"
+  },
+  "32 avatar · her biri kendi ritminde hareket eder": {
+    "en": "32 avatars · each moves to its own rhythm",
+    "de": "32 Avatare · jeder bewegt sich in seinem eigenen Rhythmus",
+    "fr": "32 avatars · chacun bouge à son propre rythme",
+    "es": "32 avatares · cada uno se mueve a su propio ritmo",
+    "ja": "32 体のアバター · それぞれ独自のリズムで動きます"
+  },
+  "Bu kategoride avatar yok.": {
+    "en": "No avatars in this category.",
+    "de": "Keine Avatare in dieser Kategorie.",
+    "fr": "Aucun avatar dans cette catégorie.",
+    "es": "No hay avatares en esta categoría.",
+    "ja": "このカテゴリにアバターはありません。"
+  },
+  "Bir avatara tıkla — seçim anında kaydedilir. Hareket azaltma açıksa avatarlar sabit görünür.": {
+    "en": "Click an avatar — the choice is saved instantly. With reduced motion on, avatars stay still.",
+    "de": "Klicke auf einen Avatar — die Auswahl wird sofort gespeichert. Bei reduzierter Bewegung bleiben Avatare still.",
+    "fr": "Cliquez sur un avatar — le choix est enregistré immédiatement. Si les animations sont réduites, les avatars restent immobiles.",
+    "es": "Haz clic en un avatar: la elección se guarda al instante. Con movimiento reducido, los avatares se quedan quietos.",
+    "ja": "アバターをクリックすると即座に保存されます。視差効果を減らす設定が有効な場合、アバターは静止します。"
+  },
+  "Hayvanlar": {
+    "en": "Animals",
+    "de": "Tiere",
+    "fr": "Animaux",
+    "es": "Animales",
+    "ja": "動物"
+  },
+  "Uzay": {
+    "en": "Space",
+    "de": "Weltraum",
+    "fr": "Espace",
+    "es": "Espacio",
+    "ja": "宇宙"
+  },
+  "Doğa": {
+    "en": "Nature",
+    "de": "Natur",
+    "fr": "Nature",
+    "es": "Naturaleza",
+    "ja": "自然"
+  },
+  "Karakterler": {
+    "en": "Characters",
+    "de": "Charaktere",
+    "fr": "Personnages",
+    "es": "Personajes",
+    "ja": "キャラクター"
+  },
+  "Tümü": {
+    "en": "All",
+    "de": "Alle",
+    "fr": "Tous",
+    "es": "Todos",
+    "ja": "すべて"
+  },
+  "Yakındaki cihazlar": {
+    "en": "Nearby devices",
+    "de": "Geräte in der Nähe",
+    "fr": "Appareils à proximité",
+    "es": "Dispositivos cercanos",
+    "ja": "近くのデバイス"
+  },
+  "Aynı ağdaki cihazlar aranıyor…": {
+    "en": "Searching for devices on the same network…",
+    "de": "Geräte im selben Netzwerk werden gesucht…",
+    "fr": "Recherche des appareils sur le même réseau…",
+    "es": "Buscando dispositivos en la misma red…",
+    "ja": "同じネットワークのデバイスを検索しています…"
+  },
+  "Cihaz aranıyor": {
+    "en": "Searching for devices",
+    "de": "Gerätesuche läuft",
+    "fr": "Recherche d'appareils",
+    "es": "Buscando dispositivos",
+    "ja": "デバイスを検索中"
+  },
+  "Karşı tarafta Dosyaktar açık olmalı ve iki cihaz aynı ağda olmalı.": {
+    "en": "Dosyaktar must be open on the other device, and both must be on the same network.",
+    "de": "Auf dem anderen Gerät muss Dosyaktar laufen, und beide müssen im selben Netzwerk sein.",
+    "fr": "Dosyaktar doit être ouvert sur l'autre appareil et les deux doivent être sur le même réseau.",
+    "es": "Dosyaktar debe estar abierto en el otro dispositivo y ambos deben estar en la misma red.",
+    "ja": "相手のデバイスで Dosyaktar を開き、両方が同じネットワークに接続されている必要があります。"
+  },
+  "Dosyaları buraya bırak": {
+    "en": "Drop files here",
+    "de": "Dateien hier ablegen",
+    "fr": "Déposez les fichiers ici",
+    "es": "Suelta los archivos aquí",
+    "ja": "ここにファイルをドロップ"
+  },
+  "Klasör, oyun veya 50 GB'lık tek dosya — hepsi olur.": {
+    "en": "A folder, a game or a single 50 GB file — all fine.",
+    "de": "Ein Ordner, ein Spiel oder eine einzelne 50-GB-Datei — alles möglich.",
+    "fr": "Un dossier, un jeu ou un seul fichier de 50 Go — tout est possible.",
+    "es": "Una carpeta, un juego o un solo archivo de 50 GB: todo vale.",
+    "ja": "フォルダー、ゲーム、50 GB の単一ファイルまで対応します。"
+  },
+  "Hedef:": {
+    "en": "Target:",
+    "de": "Ziel:",
+    "fr": "Cible :",
+    "es": "Destino:",
+    "ja": "送信先:"
+  },
+  "Aktif oturum": {
+    "en": "Active session",
+    "de": "Aktive Sitzung",
+    "fr": "Session active",
+    "es": "Sesión activa",
+    "ja": "アクティブなセッション"
+  },
+  "Eşleşen cihazla canlı bağlantı.": {
+    "en": "Live link to the paired device.",
+    "de": "Live-Verbindung zum gekoppelten Gerät.",
+    "fr": "Liaison en direct avec l'appareil appairé.",
+    "es": "Conexión en vivo con el dispositivo emparejado.",
+    "ja": "ペアリング済みデバイスとのライブ接続。"
+  },
+  "Bağlı": {
+    "en": "Connected",
+    "de": "Verbunden",
+    "fr": "Connecté",
+    "es": "Conectado",
+    "ja": "接続中"
+  },
+  "Standart": {
+    "en": "Standard",
+    "de": "Standard",
+    "fr": "Standard",
+    "es": "Estándar",
+    "ja": "標準"
+  },
+  "Henüz bir cihaza bağlı değilsin": {
+    "en": "You are not connected to a device yet",
+    "de": "Du bist noch mit keinem Gerät verbunden",
+    "fr": "Vous n'êtes encore connecté à aucun appareil",
+    "es": "Aún no estás conectado a ningún dispositivo",
+    "ja": "まだデバイスに接続していません"
+  },
+  "Keşif sekmesinden bir cihaz seç ya da karşı ekranda beliren PIN'i buraya gir.": {
+    "en": "Pick a device in the Discover tab, or enter the PIN shown on the other screen.",
+    "de": "Wähle ein Gerät im Tab „Entdecken“ oder gib die PIN vom anderen Bildschirm ein.",
+    "fr": "Choisissez un appareil dans l'onglet Découvrir ou saisissez le PIN affiché sur l'autre écran.",
+    "es": "Elige un dispositivo en la pestaña Descubrir o introduce el PIN que aparece en la otra pantalla.",
+    "ja": "「検出」タブでデバイスを選ぶか、相手の画面に表示された PIN を入力してください。"
+  },
+  "PIN ile eşleş": {
+    "en": "Pair with PIN",
+    "de": "Mit PIN koppeln",
+    "fr": "Appairer avec un PIN",
+    "es": "Emparejar con PIN",
+    "ja": "PIN でペアリング"
+  },
+  "IP ile doğrudan bağlan": {
+    "en": "Connect directly by IP",
+    "de": "Direkt per IP verbinden",
+    "fr": "Se connecter directement par IP",
+    "es": "Conectar directamente por IP",
+    "ja": "IP で直接接続"
+  },
+  "Eşleş": {
+    "en": "Pair",
+    "de": "Koppeln",
+    "fr": "Appairer",
+    "es": "Emparejar",
+    "ja": "ペアリング"
+  },
+  "Bağlan": {
+    "en": "Connect",
+    "de": "Verbinden",
+    "fr": "Connecter",
+    "es": "Conectar",
+    "ja": "接続"
+  },
+  "Bağlantıyı kes": {
+    "en": "Disconnect",
+    "de": "Trennen",
+    "fr": "Déconnecter",
+    "es": "Desconectar",
+    "ja": "切断"
+  },
+  "Eşleşme isteği": {
+    "en": "Pairing request",
+    "de": "Kopplungsanfrage",
+    "fr": "Demande d'appairage",
+    "es": "Solicitud de emparejamiento",
+    "ja": "ペアリング要求"
+  },
+  "Kod iki cihazda da aynıysa kabul edin.": {
+    "en": "Accept if the code matches on both devices.",
+    "de": "Akzeptiere, wenn der Code auf beiden Geräten gleich ist.",
+    "fr": "Acceptez si le code est identique sur les deux appareils.",
+    "es": "Acepta si el código coincide en ambos dispositivos.",
+    "ja": "両方のデバイスでコードが同じなら承認してください。"
+  },
+  "Reddet": {
+    "en": "Decline",
+    "de": "Ablehnen",
+    "fr": "Refuser",
+    "es": "Rechazar",
+    "ja": "拒否"
+  },
+  "Kabul et": {
+    "en": "Accept",
+    "de": "Annehmen",
+    "fr": "Accepter",
+    "es": "Aceptar",
+    "ja": "承認"
+  },
+  "Cihaza bağlanmak için tıklayın": {
+    "en": "Click to connect to this device",
+    "de": "Klicken, um dich mit diesem Gerät zu verbinden",
+    "fr": "Cliquez pour vous connecter à cet appareil",
+    "es": "Haz clic para conectarte a este dispositivo",
+    "ja": "クリックしてこのデバイスに接続"
+  },
+  "Bırak, gerisini biz hallederiz": {
+    "en": "Drop it, we'll take it from here",
+    "de": "Ablegen, den Rest übernehmen wir",
+    "fr": "Déposez, on s'occupe du reste",
+    "es": "Suéltalo, nosotros nos encargamos",
+    "ja": "ドロップするだけで完了します"
+  },
+  "TELEFON KÖPRÜSÜ": {
+    "en": "PHONE BRIDGE",
+    "de": "TELEFON-BRÜCKE",
+    "fr": "PONT TÉLÉPHONE",
+    "es": "PUENTE MÓVIL",
+    "ja": "スマホブリッジ"
+  },
+  "Mobil köprü": {
+    "en": "Mobile bridge",
+    "de": "Mobil-Brücke",
+    "fr": "Pont mobile",
+    "es": "Puente móvil",
+    "ja": "スマホブリッジ"
+  },
+  "Telefonun tarayıcısından gönder ve al — uygulama kurmadan.": {
+    "en": "Send and receive from your phone's browser — no app to install.",
+    "de": "Senden und empfangen im Browser des Telefons — ohne App-Installation.",
+    "fr": "Envoyez et recevez depuis le navigateur du téléphone — sans installer d'application.",
+    "es": "Envía y recibe desde el navegador del teléfono, sin instalar nada.",
+    "ja": "スマホのブラウザから送受信。アプリのインストールは不要です。"
+  },
+  "Telefonla tara": {
+    "en": "Scan with your phone",
+    "de": "Mit dem Telefon scannen",
+    "fr": "Scanner avec le téléphone",
+    "es": "Escanear con el teléfono",
+    "ja": "スマホでスキャン"
+  },
+  "Bağlantı kodu": {
+    "en": "Connection code",
+    "de": "Verbindungscode",
+    "fr": "Code de connexion",
+    "es": "Código de conexión",
+    "ja": "接続コード"
+  },
+  "Yayında": {
+    "en": "Live",
+    "de": "Online",
+    "fr": "En ligne",
+    "es": "En línea",
+    "ja": "公開中"
+  },
+  "Bağlı telefonlar": {
+    "en": "Connected phones",
+    "de": "Verbundene Telefone",
+    "fr": "Téléphones connectés",
+    "es": "Teléfonos conectados",
+    "ja": "接続中のスマホ"
+  },
+  "Henüz telefon bağlanmadı. QR'ı okutman yeterli.": {
+    "en": "No phone connected yet. Just scan the QR code.",
+    "de": "Noch kein Telefon verbunden. QR-Code scannen genügt.",
+    "fr": "Aucun téléphone connecté. Il suffit de scanner le QR code.",
+    "es": "Aún no hay ningún teléfono conectado. Basta con escanear el QR.",
+    "ja": "まだスマホは接続されていません。QR コードを読み取るだけです。"
+  },
+  "Telefona açılan dosyalar": {
+    "en": "Files shared with your phone",
+    "de": "Dateien für dein Telefon",
+    "fr": "Fichiers partagés avec le téléphone",
+    "es": "Archivos compartidos con el teléfono",
+    "ja": "スマホに公開中のファイル"
+  },
+  "Buraya eklediğin dosyalar telefonun 'Al' sekmesinde görünür.": {
+    "en": "Files you add here appear in the phone's Receive tab.",
+    "de": "Dateien, die du hier hinzufügst, erscheinen im Tab „Empfangen“ des Telefons.",
+    "fr": "Les fichiers ajoutés ici apparaissent dans l'onglet Recevoir du téléphone.",
+    "es": "Los archivos que añadas aquí aparecen en la pestaña Recibir del teléfono.",
+    "ja": "ここに追加したファイルはスマホの「受信」タブに表示されます。"
+  },
+  "0 dosya": {
+    "en": "0 files",
+    "de": "0 Dateien",
+    "fr": "0 fichier",
+    "es": "0 archivos",
+    "ja": "0 ファイル"
+  },
+  "Henüz dosya paylaşmadın.": {
+    "en": "You haven't shared any files yet.",
+    "de": "Du hast noch keine Dateien geteilt.",
+    "fr": "Vous n'avez encore partagé aucun fichier.",
+    "es": "Todavía no has compartido ningún archivo.",
+    "ja": "まだファイルを共有していません。"
+  },
+  "Dosya ekle": {
+    "en": "Add file",
+    "de": "Datei hinzufügen",
+    "fr": "Ajouter un fichier",
+    "es": "Añadir archivo",
+    "ja": "ファイルを追加"
+  },
+  "Köprüyü kapat": {
+    "en": "Close bridge",
+    "de": "Brücke schließen",
+    "fr": "Fermer le pont",
+    "es": "Cerrar puente",
+    "ja": "ブリッジを閉じる"
+  },
+  "Adresi kopyala": {
+    "en": "Copy address",
+    "de": "Adresse kopieren",
+    "fr": "Copier l'adresse",
+    "es": "Copiar dirección",
+    "ja": "アドレスをコピー"
+  },
+  "Yeni kod": {
+    "en": "New code",
+    "de": "Neuer Code",
+    "fr": "Nouveau code",
+    "es": "Código nuevo",
+    "ja": "新しいコード"
+  },
+  "IP'yi kopyala": {
+    "en": "Copy IP",
+    "de": "IP kopieren",
+    "fr": "Copier l'IP",
+    "es": "Copiar IP",
+    "ja": "IP をコピー"
+  },
+  "Mobil köprü: kapalı": {
+    "en": "Mobile bridge: off",
+    "de": "Mobil-Brücke: aus",
+    "fr": "Pont mobile : désactivé",
+    "es": "Puente móvil: desactivado",
+    "ja": "スマホブリッジ: オフ"
+  },
+  "Kes": {
+    "en": "End",
+    "de": "Beenden",
+    "fr": "Couper",
+    "es": "Cortar",
+    "ja": "切断"
+  },
+  "KAYITLAR": {
+    "en": "HISTORY",
+    "de": "VERLAUF",
+    "fr": "HISTORIQUE",
+    "es": "HISTORIAL",
+    "ja": "履歴"
+  },
+  "Transfer geçmişi": {
+    "en": "Transfer history",
+    "de": "Übertragungsverlauf",
+    "fr": "Historique des transferts",
+    "es": "Historial de transferencias",
+    "ja": "転送履歴"
+  },
+  "Son 250 aktarım, cihazında saklanır.": {
+    "en": "The last 250 transfers, stored on your device.",
+    "de": "Die letzten 250 Übertragungen, auf deinem Gerät gespeichert.",
+    "fr": "Les 250 derniers transferts, stockés sur votre appareil.",
+    "es": "Las últimas 250 transferencias, guardadas en tu dispositivo.",
+    "ja": "直近 250 件の転送をこのデバイスに保存します。"
+  },
+  "Henüz aktarım yok": {
+    "en": "No transfers yet",
+    "de": "Noch keine Übertragungen",
+    "fr": "Aucun transfert pour l'instant",
+    "es": "Todavía no hay transferencias",
+    "ja": "転送はまだありません"
+  },
+  "İlk dosyanı gönderdiğinde burada görünecek.": {
+    "en": "Your first transfer will show up here.",
+    "de": "Deine erste Übertragung erscheint hier.",
+    "fr": "Votre premier transfert apparaîtra ici.",
+    "es": "Tu primera transferencia aparecerá aquí.",
+    "ja": "最初の転送がここに表示されます。"
+  },
+  "Geçmişi temizle": {
+    "en": "Clear history",
+    "de": "Verlauf löschen",
+    "fr": "Effacer l'historique",
+    "es": "Borrar historial",
+    "ja": "履歴を消去"
+  },
+  "TERCİHLER": {
+    "en": "PREFERENCES",
+    "de": "PRÄFERENZEN",
+    "fr": "PRÉFÉRENCES",
+    "es": "PREFERENCIAS",
+    "ja": "環境設定"
+  },
+  "Görünüm, ağ ve aktarım davranışı.": {
+    "en": "Appearance, network and transfer behaviour.",
+    "de": "Darstellung, Netzwerk und Übertragungsverhalten.",
+    "fr": "Apparence, réseau et comportement des transferts.",
+    "es": "Aspecto, red y comportamiento de las transferencias.",
+    "ja": "外観、ネットワーク、転送の動作を設定します。"
+  },
+  "Tema": {
+    "en": "Theme",
+    "de": "Design",
+    "fr": "Thème",
+    "es": "Tema",
+    "ja": "テーマ"
+  },
+  "Seçim anında uygulanır ve hatırlanır.": {
+    "en": "Applied instantly and remembered.",
+    "de": "Wird sofort angewendet und gespeichert.",
+    "fr": "Appliqué immédiatement et mémorisé.",
+    "es": "Se aplica al instante y se recuerda.",
+    "ja": "選択するとすぐに適用され、記憶されます。"
+  },
+  "Ağ": {
+    "en": "Network",
+    "de": "Netzwerk",
+    "fr": "Réseau",
+    "es": "Red",
+    "ja": "ネットワーク"
+  },
+  "Cihaz adı": {
+    "en": "Device name",
+    "de": "Gerätename",
+    "fr": "Nom de l'appareil",
+    "es": "Nombre del dispositivo",
+    "ja": "デバイス名"
+  },
+  "Aktarım portu": {
+    "en": "Transfer port",
+    "de": "Übertragungsport",
+    "fr": "Port de transfert",
+    "es": "Puerto de transferencia",
+    "ja": "転送ポート"
+  },
+  "Kayıt yeri": {
+    "en": "Save location",
+    "de": "Speicherort",
+    "fr": "Emplacement",
+    "es": "Ubicación de guardado",
+    "ja": "保存先"
+  },
+  "Gözat": {
+    "en": "Browse",
+    "de": "Durchsuchen",
+    "fr": "Parcourir",
+    "es": "Examinar",
+    "ja": "参照"
+  },
+  "Paralel kanal sayısı": {
+    "en": "Parallel channels",
+    "de": "Parallele Kanäle",
+    "fr": "Canaux parallèles",
+    "es": "Canales paralelos",
+    "ja": "並列チャンネル数"
+  },
+  "Dil": {
+    "en": "Language",
+    "de": "Sprache",
+    "fr": "Langue",
+    "es": "Idioma",
+    "ja": "言語"
+  },
+  "Arayüz dili anında değişir.": {
+    "en": "The interface language changes instantly.",
+    "de": "Die Sprache der Oberfläche wechselt sofort.",
+    "fr": "La langue de l'interface change immédiatement.",
+    "es": "El idioma de la interfaz cambia al instante.",
+    "ja": "インターフェースの言語がすぐに切り替わります。"
+  },
+  "Uygulama": {
+    "en": "Application",
+    "de": "Anwendung",
+    "fr": "Application",
+    "es": "Aplicación",
+    "ja": "アプリケーション"
+  },
+  ".NET 8 · WPF · tek dosya": {
+    "en": ".NET 8 · WPF · single file",
+    "de": ".NET 8 · WPF · einzelne Datei",
+    "fr": ".NET 8 · WPF · fichier unique",
+    "es": ".NET 8 · WPF · archivo único",
+    "ja": ".NET 8 · WPF · 単一ファイル"
+  },
+  "Otomatik alma modu — gelen aktarımları sormadan kabul et": {
+    "en": "Auto-receive mode — accept incoming transfers without asking",
+    "de": "Auto-Empfang — eingehende Übertragungen ohne Nachfrage annehmen",
+    "fr": "Réception auto — accepter les transferts entrants sans demander",
+    "es": "Modo de recepción automática: acepta las transferencias sin preguntar",
+    "ja": "自動受信モード — 受信を確認なしで承認"
+  },
+  "Flash modu — dosyayı paralel kanallara böl": {
+    "en": "Flash mode — split the file across parallel channels",
+    "de": "Flash-Modus — Datei auf parallele Kanäle aufteilen",
+    "fr": "Mode flash — répartir le fichier sur des canaux parallèles",
+    "es": "Modo flash: divide el archivo en canales paralelos",
+    "ja": "フラッシュモード — ファイルを並列チャンネルに分割"
+  },
+  "Açılışta güncellemeleri kontrol et": {
+    "en": "Check for updates on launch",
+    "de": "Beim Start nach Updates suchen",
+    "fr": "Rechercher les mises à jour au démarrage",
+    "es": "Buscar actualizaciones al iniciar",
+    "ja": "起動時に更新を確認"
+  },
+  "Yeni sürümü arka planda indir": {
+    "en": "Download new versions in the background",
+    "de": "Neue Versionen im Hintergrund laden",
+    "fr": "Télécharger les nouvelles versions en arrière-plan",
+    "es": "Descargar nuevas versiones en segundo plano",
+    "ja": "新しいバージョンをバックグラウンドでダウンロード"
+  },
+  "Güncellemeleri kontrol et": {
+    "en": "Check for updates",
+    "de": "Nach Updates suchen",
+    "fr": "Rechercher des mises à jour",
+    "es": "Buscar actualizaciones",
+    "ja": "更新を確認"
+  },
+  "Uygulama verilerini sıfırla": {
+    "en": "Reset app data",
+    "de": "App-Daten zurücksetzen",
+    "fr": "Réinitialiser les données",
+    "es": "Restablecer datos de la app",
+    "ja": "アプリデータをリセット"
+  },
+  "Kuyruk": {
+    "en": "Queue",
+    "de": "Warteschlange",
+    "fr": "File d'attente",
+    "es": "Cola",
+    "ja": "キュー"
+  },
+  "Kuyruk boş. Göndermek için dosya ekle.": {
+    "en": "The queue is empty. Add a file to send.",
+    "de": "Die Warteschlange ist leer. Füge eine Datei zum Senden hinzu.",
+    "fr": "La file est vide. Ajoutez un fichier à envoyer.",
+    "es": "La cola está vacía. Añade un archivo para enviar.",
+    "ja": "キューは空です。送信するファイルを追加してください。"
+  },
+  "Etkinlik": {
+    "en": "Activity",
+    "de": "Aktivität",
+    "fr": "Activité",
+    "es": "Actividad",
+    "ja": "アクティビティ"
+  },
+  "Dosya seç": {
+    "en": "Choose file",
+    "de": "Datei wählen",
+    "fr": "Choisir un fichier",
+    "es": "Elegir archivo",
+    "ja": "ファイルを選択"
+  },
+  "Klasör seç": {
+    "en": "Choose folder",
+    "de": "Ordner wählen",
+    "fr": "Choisir un dossier",
+    "es": "Elegir carpeta",
+    "ja": "フォルダーを選択"
+  },
+  "Dosya gönder": {
+    "en": "Send file",
+    "de": "Datei senden",
+    "fr": "Envoyer un fichier",
+    "es": "Enviar archivo",
+    "ja": "ファイルを送信"
+  },
+  "Klasör gönder": {
+    "en": "Send folder",
+    "de": "Ordner senden",
+    "fr": "Envoyer un dossier",
+    "es": "Enviar carpeta",
+    "ja": "フォルダーを送信"
+  },
+  "Almayı durdur": {
+    "en": "Stop receiving",
+    "de": "Empfang stoppen",
+    "fr": "Arrêter la réception",
+    "es": "Detener la recepción",
+    "ja": "受信を停止"
+  },
+  "Küçült": {
+    "en": "Minimize",
+    "de": "Minimieren",
+    "fr": "Réduire",
+    "es": "Minimizar",
+    "ja": "最小化"
+  },
+  "Büyüt": {
+    "en": "Maximize",
+    "de": "Maximieren",
+    "fr": "Agrandir",
+    "es": "Maximizar",
+    "ja": "最大化"
+  },
+  "Kapat": {
+    "en": "Close",
+    "de": "Schließen",
+    "fr": "Fermer",
+    "es": "Cerrar",
+    "ja": "閉じる"
+  },
+  "Önceki sayfaya dön (Esc)": {
+    "en": "Back to the previous page (Esc)",
+    "de": "Zurück zur vorherigen Seite (Esc)",
+    "fr": "Retour à la page précédente (Échap)",
+    "es": "Volver a la página anterior (Esc)",
+    "ja": "前のページに戻る (Esc)"
+  },
+  "Temayı değiştir": {
+    "en": "Change theme",
+    "de": "Design wechseln",
+    "fr": "Changer de thème",
+    "es": "Cambiar tema",
+    "ja": "テーマを変更"
+  },
+  "Dosya konumunu açar (çift tık veya Enter)": {
+    "en": "Opens the file location (double-click or Enter)",
+    "de": "Öffnet den Dateispeicherort (Doppelklick oder Enter)",
+    "fr": "Ouvre l'emplacement du fichier (double-clic ou Entrée)",
+    "es": "Abre la ubicación del archivo (doble clic o Enter)",
+    "ja": "ファイルの場所を開きます (ダブルクリックまたは Enter)"
+  },
+  "Oyun Kütüphanesi": {
+    "en": "Game Library",
+    "de": "Spielebibliothek",
+    "fr": "Bibliothèque de jeux",
+    "es": "Biblioteca de juegos",
+    "ja": "ゲームライブラリ"
+  },
+  "28 oyun · 4 sağlayıcı · 512 GB": {
+    "en": "28 games · 4 providers · 512 GB",
+    "de": "28 Spiele · 4 Anbieter · 512 GB",
+    "fr": "28 jeux · 4 fournisseurs · 512 GB",
+    "es": "28 juegos · 4 proveedores · 512 GB",
+    "ja": "28 本 · 4 プロバイダー · 512 GB"
+  },
+  "Boyutlar hesaplanıyor… 7/28": {
+    "en": "Calculating sizes… 7/28",
+    "de": "Größen werden berechnet… 7/28",
+    "fr": "Calcul des tailles… 7/28",
+    "es": "Calculando tamaños… 7/28",
+    "ja": "サイズを計算中… 7/28"
+  },
+  "Oyunlar taranıyor…": {
+    "en": "Scanning games…",
+    "de": "Spiele werden gescannt…",
+    "fr": "Analyse des jeux…",
+    "es": "Analizando juegos…",
+    "ja": "ゲームをスキャン中…"
+  },
+  "Oyun bulunamadı": {
+    "en": "No games found",
+    "de": "Keine Spiele gefunden",
+    "fr": "Aucun jeu trouvé",
+    "es": "No se encontraron juegos",
+    "ja": "ゲームが見つかりません"
+  },
+  "Steam ve Epic kütüphaneleri otomatik taranır. Diğer sağlayıcılar veya özel konumlar için bir klasör ekleyin.": {
+    "en": "Steam and Epic libraries are scanned automatically. Add a folder for other providers or custom locations.",
+    "de": "Steam- und Epic-Bibliotheken werden automatisch gescannt. Für andere Anbieter oder eigene Orte einen Ordner hinzufügen.",
+    "fr": "Les bibliothèques Steam et Epic sont analysées automatiquement. Ajoutez un dossier pour d'autres fournisseurs ou emplacements.",
+    "es": "Las bibliotecas de Steam y Epic se analizan automáticamente. Añade una carpeta para otros proveedores o ubicaciones.",
+    "ja": "Steam と Epic のライブラリは自動でスキャンされます。その他のプロバイダーや独自の場所にはフォルダーを追加してください。"
+  },
+  "Bu filtreye uyan oyun yok": {
+    "en": "No games match this filter",
+    "de": "Keine Spiele für diesen Filter",
+    "fr": "Aucun jeu ne correspond à ce filtre",
+    "es": "Ningún juego coincide con este filtro",
+    "ja": "このフィルターに一致するゲームはありません"
+  },
+  "• Steam oyunları: ": {
+    "en": "• Steam games: ",
+    "de": "• Steam-Spiele: ",
+    "fr": "• Jeux Steam : ",
+    "es": "• Juegos de Steam: ",
+    "ja": "• Steam のゲーム: "
+  },
+  "Alıcı bilgisayarda steamapps/common içine yerleştirilir ve manifest (appmanifest_<appid>.acf) kayıt altına alınır; Steam yeniden başlatıldığında kütüphanede görünür.": {
+    "en": "Placed into steamapps/common on the receiving PC and registered with a manifest (appmanifest_<appid>.acf); it appears in the library after Steam restarts.",
+    "de": "Wird auf dem Ziel-PC in steamapps/common abgelegt und mit einem Manifest (appmanifest_<appid>.acf) registriert; nach einem Steam-Neustart erscheint es in der Bibliothek.",
+    "fr": "Placé dans steamapps/common sur le PC destinataire et enregistré avec un manifeste (appmanifest_<appid>.acf) ; il apparaît dans la bibliothèque après redémarrage de Steam.",
+    "es": "Se coloca en steamapps/common del PC receptor y se registra con un manifiesto (appmanifest_<appid>.acf); aparece en la biblioteca al reiniciar Steam.",
+    "ja": "受信側 PC の steamapps/common に配置し、マニフェスト (appmanifest_<appid>.acf) を登録します。Steam を再起動するとライブラリに表示されます。"
+  },
+  "• Epic oyunları: ": {
+    "en": "• Epic games: ",
+    "de": "• Epic-Spiele: ",
+    "fr": "• Jeux Epic : ",
+    "es": "• Juegos de Epic: ",
+    "ja": "• Epic のゲーム: "
+  },
+  "Klasör kopyalanır; Epic Launcher'da 'Doğrula' seçeneğiyle kayıt tamamlanabilir.": {
+    "en": "The folder is copied; finish registration with “Verify” in the Epic Launcher.",
+    "de": "Der Ordner wird kopiert; die Registrierung lässt sich im Epic Launcher mit „Überprüfen“ abschließen.",
+    "fr": "Le dossier est copié ; terminez l'enregistrement avec « Vérifier » dans l'Epic Launcher.",
+    "es": "Se copia la carpeta; completa el registro con «Verificar» en Epic Launcher.",
+    "ja": "フォルダーをコピーします。Epic Launcher の「検証」で登録を完了できます。"
+  },
+  "• Diğer sağlayıcılar (GOG, Battle.net, Ubisoft, EA, Riot): ": {
+    "en": "• Other providers (GOG, Battle.net, Ubisoft, EA, Riot): ",
+    "de": "• Andere Anbieter (GOG, Battle.net, Ubisoft, EA, Riot): ",
+    "fr": "• Autres fournisseurs (GOG, Battle.net, Ubisoft, EA, Riot) : ",
+    "es": "• Otros proveedores (GOG, Battle.net, Ubisoft, EA, Riot): ",
+    "ja": "• その他のプロバイダー (GOG、Battle.net、Ubisoft、EA、Riot): "
+  },
+  "Oyun klasörü olduğu gibi kopyalanır; başlatıcıya manuel eklenmesi gerekebilir.": {
+    "en": "The game folder is copied as-is; you may need to add it to the launcher manually.",
+    "de": "Der Spielordner wird unverändert kopiert; eventuell muss er manuell im Launcher hinzugefügt werden.",
+    "fr": "Le dossier du jeu est copié tel quel ; il faudra peut-être l'ajouter manuellement au launcher.",
+    "es": "La carpeta del juego se copia tal cual; puede que tengas que añadirla al launcher manualmente.",
+    "ja": "ゲームフォルダーをそのままコピーします。ランチャーへの手動追加が必要な場合があります。"
+  },
+  "Bir oyun seç": {
+    "en": "Select a game",
+    "de": "Spiel auswählen",
+    "fr": "Sélectionnez un jeu",
+    "es": "Selecciona un juego",
+    "ja": "ゲームを選択"
+  },
+  "Listeden bir oyuna tıklayın. Gönder, başlat veya klasörü aç.": {
+    "en": "Click a game in the list. Send it, launch it, or open its folder.",
+    "de": "Klicke in der Liste auf ein Spiel. Senden, starten oder Ordner öffnen.",
+    "fr": "Cliquez sur un jeu dans la liste. Envoyez-le, lancez-le ou ouvrez son dossier.",
+    "es": "Haz clic en un juego de la lista. Envíalo, inícialo o abre su carpeta.",
+    "ja": "一覧からゲームをクリックします。送信、起動、フォルダーを開くができます。"
+  },
+  "Bir hata oluştu. Detaylar için geçmişe bakın.": {
+    "en": "Something went wrong. Check History for details.",
+    "de": "Etwas ist schiefgelaufen. Details im Verlauf.",
+    "fr": "Une erreur est survenue. Voir l'historique pour les détails.",
+    "es": "Algo ha fallado. Consulta el historial para ver los detalles.",
+    "ja": "エラーが発生しました。詳細は履歴を確認してください。"
+  },
+  "Hepsi": {
+    "en": "All",
+    "de": "Alle",
+    "fr": "Tous",
+    "es": "Todos",
+    "ja": "すべて"
+  },
+  "Klasör": {
+    "en": "Folder",
+    "de": "Ordner",
+    "fr": "Dossier",
+    "es": "Carpeta",
+    "ja": "フォルダー"
+  },
+  "Filtreyi temizle": {
+    "en": "Clear filter",
+    "de": "Filter löschen",
+    "fr": "Effacer le filtre",
+    "es": "Borrar filtro",
+    "ja": "フィルターを解除"
+  },
+  "Başlat": {
+    "en": "Launch",
+    "de": "Starten",
+    "fr": "Lancer",
+    "es": "Iniciar",
+    "ja": "起動"
+  },
+  "Nasıl çalışır?": {
+    "en": "How does it work?",
+    "de": "Wie funktioniert es?",
+    "fr": "Comment ça marche ?",
+    "es": "¿Cómo funciona?",
+    "ja": "使い方"
+  },
+  "Tarama yap": {
+    "en": "Scan now",
+    "de": "Jetzt scannen",
+    "fr": "Analyser",
+    "es": "Analizar ahora",
+    "ja": "スキャン"
+  },
+  "Yeni Sürüm Mevcut!": {
+    "en": "New version available!",
+    "de": "Neue Version verfügbar!",
+    "fr": "Nouvelle version disponible !",
+    "es": "¡Nueva versión disponible!",
+    "ja": "新しいバージョンがあります"
+  },
+  "Değişiklik notları yükleniyor...": {
+    "en": "Loading release notes…",
+    "de": "Versionshinweise werden geladen…",
+    "fr": "Chargement des notes de version…",
+    "es": "Cargando notas de la versión…",
+    "ja": "リリースノートを読み込み中…"
+  },
+  "İndiriliyor...": {
+    "en": "Downloading…",
+    "de": "Wird heruntergeladen…",
+    "fr": "Téléchargement…",
+    "es": "Descargando…",
+    "ja": "ダウンロード中…"
+  },
+  "Sonra Hatırlat": {
+    "en": "Remind me later",
+    "de": "Später erinnern",
+    "fr": "Me rappeler plus tard",
+    "es": "Recordármelo luego",
+    "ja": "後で通知"
+  },
+  "⬇  Güncelle": {
+    "en": "⬇  Update",
+    "de": "⬇  Aktualisieren",
+    "fr": "⬇  Mettre à jour",
+    "es": "⬇  Actualizar",
+    "ja": "⬇  更新"
+  },
+  "Güncelleme Mevcut": {
+    "en": "Update available",
+    "de": "Update verfügbar",
+    "fr": "Mise à jour disponible",
+    "es": "Actualización disponible",
+    "ja": "更新があります"
+  },
+  "Steam": {
+    "en": "Steam",
+    "de": "Steam",
+    "fr": "Steam",
+    "es": "Steam",
+    "ja": "Steam"
+  },
+  "Epic": {
+    "en": "Epic",
+    "de": "Epic",
+    "fr": "Epic",
+    "es": "Epic",
+    "ja": "Epic"
+  },
+  "GOG": {
+    "en": "GOG",
+    "de": "GOG",
+    "fr": "GOG",
+    "es": "GOG",
+    "ja": "GOG"
+  },
+  "Battle.net": {
+    "en": "Battle.net",
+    "de": "Battle.net",
+    "fr": "Battle.net",
+    "es": "Battle.net",
+    "ja": "Battle.net"
+  },
+  "Ubisoft": {
+    "en": "Ubisoft",
+    "de": "Ubisoft",
+    "fr": "Ubisoft",
+    "es": "Ubisoft",
+    "ja": "Ubisoft"
+  },
+  "EA": {
+    "en": "EA",
+    "de": "EA",
+    "fr": "EA",
+    "es": "EA",
+    "ja": "EA"
+  },
+  "Riot": {
+    "en": "Riot",
+    "de": "Riot",
+    "fr": "Riot",
+    "es": "Riot",
+    "ja": "Riot"
+  },
+  "Prism": {
+    "en": "Prism",
+    "de": "Prism",
+    "fr": "Prism",
+    "es": "Prism",
+    "ja": "Prism"
+  },
+  "LAN": {
+    "en": "LAN",
+    "de": "LAN",
+    "fr": "LAN",
+    "es": "LAN",
+    "ja": "LAN"
+  },
+  "PORT": {
+    "en": "PORT",
+    "de": "PORT",
+    "fr": "PORT",
+    "es": "PUERTO",
+    "ja": "ポート"
+  },
+  "MOD": {
+    "en": "MODE",
+    "de": "MODUS",
+    "fr": "MODE",
+    "es": "MODO",
+    "ja": "モード"
+  },
+  "http://—": {
+    "en": "http://—",
+    "de": "http://—",
+    "fr": "http://—",
+    "es": "http://—",
+    "ja": "http://—"
+  },
+  "🔄": {
+    "en": "🔄",
+    "de": "🔄",
+    "fr": "🔄",
+    "es": "🔄",
+    "ja": "🔄"
+  },
+  "?": {
+    "en": "?",
+    "de": "?",
+    "fr": "?",
+    "es": "?",
+    "ja": "?"
+  },
+  "Eşleşme servisi başlatılamadı: ": {
+    "en": "Could not start the pairing service: ",
+    "de": "Kopplungsdienst konnte nicht gestartet werden: ",
+    "fr": "Impossible de démarrer le service d'appairage : ",
+    "es": "No se pudo iniciar el servicio de emparejamiento: ",
+    "ja": "ペアリングサービスを開始できませんでした: "
+  },
+  "[Ağ] ": {
+    "en": "[Net] ",
+    "de": "[Netz] ",
+    "fr": "[Réseau] ",
+    "es": "[Red] ",
+    "ja": "[ネット] "
+  },
+  "[Alım] ": {
+    "en": "[Recv] ",
+    "de": "[Empfang] ",
+    "fr": "[Réception] ",
+    "es": "[Recepción] ",
+    "ja": "[受信] "
+  },
+  "[Keşif] ": {
+    "en": "[Discovery] ",
+    "de": "[Suche] ",
+    "fr": "[Découverte] ",
+    "es": "[Descubrir] ",
+    "ja": "[検出] "
+  },
+  "[Eşleşme] ": {
+    "en": "[Pairing] ",
+    "de": "[Kopplung] ",
+    "fr": "[Appairage] ",
+    "es": "[Emparejamiento] ",
+    "ja": "[ペアリング] "
+  },
+  "Profil adı güncellendi": {
+    "en": "Profile name updated",
+    "de": "Profilname aktualisiert",
+    "fr": "Nom du profil mis à jour",
+    "es": "Nombre del perfil actualizado",
+    "ja": "プロフィール名を更新しました"
+  },
+  "Ağ taraması yenilendi.": {
+    "en": "Network scan refreshed.",
+    "de": "Netzwerkscan aktualisiert.",
+    "fr": "Analyse réseau actualisée.",
+    "es": "Análisis de red actualizado.",
+    "ja": "ネットワークスキャンを更新しました。"
+  },
+  "Cihazlar taranıyor…": {
+    "en": "Scanning for devices…",
+    "de": "Geräte werden gesucht…",
+    "fr": "Recherche d'appareils…",
+    "es": "Buscando dispositivos…",
+    "ja": "デバイスを検索中…"
+  },
+  "Önce mevcut oturumu kapat": {
+    "en": "Close the current session first",
+    "de": "Beende zuerst die aktuelle Sitzung",
+    "fr": "Fermez d'abord la session en cours",
+    "es": "Cierra primero la sesión actual",
+    "ja": "先に現在のセッションを終了してください"
+  },
+  "İstek gönderilemedi — güvenlik duvarı engelliyor olabilir": {
+    "en": "Request failed — the firewall may be blocking it",
+    "de": "Anfrage fehlgeschlagen — möglicherweise blockiert die Firewall",
+    "fr": "Échec de la demande — le pare-feu la bloque peut-être",
+    "es": "No se pudo enviar la solicitud: puede que el firewall la esté bloqueando",
+    "ja": "リクエストを送信できません — ファイアウォールが遮断している可能性があります"
+  },
+  "Eşleşme kabul edildi.": {
+    "en": "Pairing accepted.",
+    "de": "Kopplung angenommen.",
+    "fr": "Appairage accepté.",
+    "es": "Emparejamiento aceptado.",
+    "ja": "ペアリングを承認しました。"
+  },
+  "Eşleşme reddedildi.": {
+    "en": "Pairing declined.",
+    "de": "Kopplung abgelehnt.",
+    "fr": "Appairage refusé.",
+    "es": "Emparejamiento rechazado.",
+    "ja": "ペアリングを拒否しました。"
+  },
+  "Karşı cihaz isteği reddetti": {
+    "en": "The other device declined the request",
+    "de": "Das andere Gerät hat die Anfrage abgelehnt",
+    "fr": "L'autre appareil a refusé la demande",
+    "es": "El otro dispositivo rechazó la solicitud",
+    "ja": "相手のデバイスがリクエストを拒否しました"
+  },
+  "Eşleşme isteği reddedildi.": {
+    "en": "Pairing request declined.",
+    "de": "Kopplungsanfrage abgelehnt.",
+    "fr": "Demande d'appairage refusée.",
+    "es": "Solicitud de emparejamiento rechazada.",
+    "ja": "ペアリング要求を拒否しました。"
+  },
+  "İstek reddedildi": {
+    "en": "Request declined",
+    "de": "Anfrage abgelehnt",
+    "fr": "Demande refusée",
+    "es": "Solicitud rechazada",
+    "ja": "リクエストを拒否しました"
+  },
+  "Eşleşme iptal edildi": {
+    "en": "Pairing cancelled",
+    "de": "Kopplung abgebrochen",
+    "fr": "Appairage annulé",
+    "es": "Emparejamiento cancelado",
+    "ja": "ペアリングを中止しました"
+  },
+  "Eşleşme isteği iptal edildi.": {
+    "en": "Pairing request cancelled.",
+    "de": "Kopplungsanfrage abgebrochen.",
+    "fr": "Demande d'appairage annulée.",
+    "es": "Solicitud de emparejamiento cancelada.",
+    "ja": "ペアリング要求を中止しました。"
+  },
+  "Dosyalar alındı": {
+    "en": "Files received",
+    "de": "Dateien empfangen",
+    "fr": "Fichiers reçus",
+    "es": "Archivos recibidos",
+    "ja": "ファイルを受信しました"
+  },
+  "[Alındı] ": {
+    "en": "[Saved] ",
+    "de": "[Empfangen] ",
+    "fr": "[Reçu] ",
+    "es": "[Recibido] ",
+    "ja": "[受信] "
+  },
+  "Oturum sonlandırıldı": {
+    "en": "Session ended",
+    "de": "Sitzung beendet",
+    "fr": "Session terminée",
+    "es": "Sesión finalizada",
+    "ja": "セッションを終了しました"
+  },
+  "Oturum kapatıldı.": {
+    "en": "Session closed.",
+    "de": "Sitzung geschlossen.",
+    "fr": "Session fermée.",
+    "es": "Sesión cerrada.",
+    "ja": "セッションを閉じました。"
+  },
+  "PIN 6 haneli olmalı": {
+    "en": "The PIN must be 6 digits",
+    "de": "Die PIN muss 6-stellig sein",
+    "fr": "Le PIN doit comporter 6 chiffres",
+    "es": "El PIN debe tener 6 dígitos",
+    "ja": "PIN は 6 桁です"
+  },
+  "PIN, karşı cihazın isteğini onaylamak için kullanılır": {
+    "en": "The PIN confirms the request from the other device",
+    "de": "Die PIN bestätigt die Anfrage des anderen Geräts",
+    "fr": "Le PIN confirme la demande de l'autre appareil",
+    "es": "El PIN confirma la solicitud del otro dispositivo",
+    "ja": "PIN は相手のデバイスからの要求を承認するためのものです"
+  },
+  "PIN doğrulama: karşı cihazdan istek bekleniyor.": {
+    "en": "PIN verification: waiting for the other device.",
+    "de": "PIN-Prüfung: warte auf das andere Gerät.",
+    "fr": "Vérification du PIN : en attente de l'autre appareil.",
+    "es": "Verificación del PIN: esperando al otro dispositivo.",
+    "ja": "PIN 認証: 相手のデバイスからの要求を待っています。"
+  },
+  "Geçersiz IP adresi": {
+    "en": "Invalid IP address",
+    "de": "Ungültige IP-Adresse",
+    "fr": "Adresse IP invalide",
+    "es": "Dirección IP no válida",
+    "ja": "IP アドレスが正しくありません"
+  },
+  "Klasörler tek tek gönderilir; bu bırakmada yalnızca dosyalar alındı.": {
+    "en": "Folders are sent one at a time; this drop only took the files.",
+    "de": "Ordner werden einzeln gesendet; dieser Vorgang hat nur die Dateien übernommen.",
+    "fr": "Les dossiers s'envoient un par un ; ce dépôt n'a pris que les fichiers.",
+    "es": "Las carpetas se envían de una en una; esta vez solo se tomaron los archivos.",
+    "ja": "フォルダーは 1 つずつ送信されます。今回はファイルのみを受け取りました。"
+  },
+  "Hedef seçilmedi — Keşif'te bir cihaza 'Gönder' de": {
+    "en": "No target selected — press “Send” on a device in Discover",
+    "de": "Kein Ziel gewählt — tippe im Tab „Entdecken“ auf „Senden“",
+    "fr": "Aucune cible — appuyez sur « Envoyer » sur un appareil dans Découvrir",
+    "es": "Ningún destino: pulsa «Enviar» en un dispositivo de Descubrir",
+    "ja": "送信先が未選択です — 「検出」でデバイスの「送信」を押してください"
+  },
+  "Ağda cihaz yok. Karşı tarafta Dosyaktar açık ve aynı ağda olmalı.": {
+    "en": "No devices on the network. Dosyaktar must be open on the other device, on the same network.",
+    "de": "Keine Geräte im Netzwerk. Auf dem anderen Gerät muss Dosyaktar im selben Netzwerk laufen.",
+    "fr": "Aucun appareil sur le réseau. Dosyaktar doit être ouvert sur l'autre appareil, sur le même réseau.",
+    "es": "No hay dispositivos en la red. Dosyaktar debe estar abierto en el otro dispositivo y en la misma red.",
+    "ja": "ネットワーク上にデバイスがありません。相手のデバイスで Dosyaktar を同じネットワーク上で開いてください。"
+  },
+  "Önce bir cihazla eşleş": {
+    "en": "Pair with a device first",
+    "de": "Kopple zuerst ein Gerät",
+    "fr": "Appairez d'abord un appareil",
+    "es": "Empareja primero un dispositivo",
+    "ja": "先にデバイスとペアリングしてください"
+  },
+  "Zaten bir aktarım sürüyor.": {
+    "en": "A transfer is already running.",
+    "de": "Es läuft bereits eine Übertragung.",
+    "fr": "Un transfert est déjà en cours.",
+    "es": "Ya hay una transferencia en curso.",
+    "ja": "すでに転送が進行中です。"
+  },
+  "Gönderilecek dosya yok": {
+    "en": "No files to send",
+    "de": "Keine Dateien zum Senden",
+    "fr": "Aucun fichier à envoyer",
+    "es": "No hay archivos para enviar",
+    "ja": "送信するファイルがありません"
+  },
+  "Gönderiliyor…": {
+    "en": "Sending…",
+    "de": "Wird gesendet…",
+    "fr": "Envoi…",
+    "es": "Enviando…",
+    "ja": "送信中…"
+  },
+  "Transfer tamamlandı": {
+    "en": "Transfer complete",
+    "de": "Übertragung abgeschlossen",
+    "fr": "Transfert terminé",
+    "es": "Transferencia completada",
+    "ja": "転送が完了しました"
+  },
+  "Transfer başarısız: ": {
+    "en": "Transfer failed: ",
+    "de": "Übertragung fehlgeschlagen: ",
+    "fr": "Échec du transfert : ",
+    "es": "Error en la transferencia: ",
+    "ja": "転送に失敗しました: "
+  },
+  "Klasör bulunamadı": {
+    "en": "Folder not found",
+    "de": "Ordner nicht gefunden",
+    "fr": "Dossier introuvable",
+    "es": "Carpeta no encontrada",
+    "ja": "フォルダーが見つかりません"
+  },
+  "Klasör göndermek için önce bir cihaza bağlan": {
+    "en": "Connect to a device before sending a folder",
+    "de": "Verbinde dich zuerst mit einem Gerät, um einen Ordner zu senden",
+    "fr": "Connectez-vous à un appareil avant d'envoyer un dossier",
+    "es": "Conéctate a un dispositivo antes de enviar una carpeta",
+    "ja": "フォルダーを送る前にデバイスへ接続してください"
+  },
+  "Klasör taranıyor…": {
+    "en": "Scanning folder…",
+    "de": "Ordner wird gescannt…",
+    "fr": "Analyse du dossier…",
+    "es": "Analizando carpeta…",
+    "ja": "フォルダーをスキャン中…"
+  },
+  "Klasör gönderildi": {
+    "en": "Folder sent",
+    "de": "Ordner gesendet",
+    "fr": "Dossier envoyé",
+    "es": "Carpeta enviada",
+    "ja": "フォルダーを送信しました"
+  },
+  "Klasör gönderimi iptal edildi": {
+    "en": "Folder transfer cancelled",
+    "de": "Ordnerübertragung abgebrochen",
+    "fr": "Envoi du dossier annulé",
+    "es": "Envío de la carpeta cancelado",
+    "ja": "フォルダーの送信を中止しました"
+  },
+  "Klasör gönderilemedi: ": {
+    "en": "Folder could not be sent: ",
+    "de": "Ordner konnte nicht gesendet werden: ",
+    "fr": "Impossible d'envoyer le dossier : ",
+    "es": "No se pudo enviar la carpeta: ",
+    "ja": "フォルダーを送信できませんでした: "
+  },
+  "İptal isteği gönderildi…": {
+    "en": "Cancel requested…",
+    "de": "Abbruch angefordert…",
+    "fr": "Annulation demandée…",
+    "es": "Cancelación solicitada…",
+    "ja": "キャンセルを要求しました…"
+  },
+  "Oyun göndermek için önce bir cihaza bağlan": {
+    "en": "Connect to a device before sending a game",
+    "de": "Verbinde dich zuerst mit einem Gerät, um ein Spiel zu senden",
+    "fr": "Connectez-vous à un appareil avant d'envoyer un jeu",
+    "es": "Conéctate a un dispositivo antes de enviar un juego",
+    "ja": "ゲームを送る前にデバイスへ接続してください"
+  },
+  "Zaten bir aktarım sürüyor — bitmesini bekle": {
+    "en": "A transfer is already running — wait for it to finish",
+    "de": "Es läuft bereits eine Übertragung — warte, bis sie fertig ist",
+    "fr": "Un transfert est déjà en cours — attendez la fin",
+    "es": "Ya hay una transferencia en curso: espera a que termine",
+    "ja": "すでに転送中です — 完了を待ってください"
+  },
+  "Oyun hazırlanıyor…": {
+    "en": "Preparing game…",
+    "de": "Spiel wird vorbereitet…",
+    "fr": "Préparation du jeu…",
+    "es": "Preparando el juego…",
+    "ja": "ゲームを準備中…"
+  },
+  "Oyun gönderildi": {
+    "en": "Game sent",
+    "de": "Spiel gesendet",
+    "fr": "Jeu envoyé",
+    "es": "Juego enviado",
+    "ja": "ゲームを送信しました"
+  },
+  "Oyun gönderimi iptal edildi": {
+    "en": "Game transfer cancelled",
+    "de": "Spielübertragung abgebrochen",
+    "fr": "Envoi du jeu annulé",
+    "es": "Envío del juego cancelado",
+    "ja": "ゲームの送信を中止しました"
+  },
+  "Oyun gönderilemedi: ": {
+    "en": "Game could not be sent: ",
+    "de": "Spiel konnte nicht gesendet werden: ",
+    "fr": "Impossible d'envoyer le jeu : ",
+    "es": "No se pudo enviar el juego: ",
+    "ja": "ゲームを送信できませんでした: "
+  },
+  "Mobil köprü açık": {
+    "en": "Mobile bridge on",
+    "de": "Mobil-Brücke an",
+    "fr": "Pont mobile activé",
+    "es": "Puente móvil activado",
+    "ja": "スマホブリッジ ON"
+  },
+  "Mobil köprü açılamadı": {
+    "en": "Could not start the mobile bridge",
+    "de": "Mobil-Brücke konnte nicht gestartet werden",
+    "fr": "Impossible de démarrer le pont mobile",
+    "es": "No se pudo iniciar el puente móvil",
+    "ja": "スマホブリッジを開始できませんでした"
+  },
+  "Mobil köprü hatası: ": {
+    "en": "Mobile bridge error: ",
+    "de": "Mobil-Brücken-Fehler: ",
+    "fr": "Erreur du pont mobile : ",
+    "es": "Error del puente móvil: ",
+    "ja": "スマホブリッジのエラー: "
+  },
+  "Mobil köprü kapatıldı": {
+    "en": "Mobile bridge closed",
+    "de": "Mobil-Brücke geschlossen",
+    "fr": "Pont mobile fermé",
+    "es": "Puente móvil cerrado",
+    "ja": "スマホブリッジを閉じました"
+  },
+  "Mobil köprü kapatıldı.": {
+    "en": "Mobile bridge closed.",
+    "de": "Mobil-Brücke geschlossen.",
+    "fr": "Pont mobile fermé.",
+    "es": "Puente móvil cerrado.",
+    "ja": "スマホブリッジを閉じました。"
+  },
+  "Yeni bağlantı kodu üretildi": {
+    "en": "New connection code generated",
+    "de": "Neuer Verbindungscode erzeugt",
+    "fr": "Nouveau code de connexion généré",
+    "es": "Nuevo código de conexión generado",
+    "ja": "新しい接続コードを生成しました"
+  },
+  "Köprü kapalı — adres yok": {
+    "en": "Bridge is off — no address",
+    "de": "Brücke ist aus — keine Adresse",
+    "fr": "Pont désactivé — aucune adresse",
+    "es": "Puente desactivado: no hay dirección",
+    "ja": "ブリッジはオフです — アドレスがありません"
+  },
+  "Bu kayıt için dosya konumu yok": {
+    "en": "This entry has no file location",
+    "de": "Für diesen Eintrag gibt es keinen Dateipfad",
+    "fr": "Aucun emplacement de fichier pour cette entrée",
+    "es": "Esta entrada no tiene ubicación de archivo",
+    "ja": "この記録にはファイルの場所がありません"
+  },
+  "Konum açıldı: ": {
+    "en": "Location opened: ",
+    "de": "Speicherort geöffnet: ",
+    "fr": "Emplacement ouvert : ",
+    "es": "Ubicación abierta: ",
+    "ja": "場所を開きました: "
+  },
+  "Klasör açıldı: ": {
+    "en": "Folder opened: ",
+    "de": "Ordner geöffnet: ",
+    "fr": "Dossier ouvert : ",
+    "es": "Carpeta abierta: ",
+    "ja": "フォルダーを開きました: "
+  },
+  "Dosya artık yerinde değil": {
+    "en": "The file is no longer there",
+    "de": "Die Datei ist nicht mehr vorhanden",
+    "fr": "Le fichier n'existe plus",
+    "es": "El archivo ya no está",
+    "ja": "ファイルは見つかりません"
+  },
+  "Konum açılamadı: ": {
+    "en": "Could not open the location: ",
+    "de": "Speicherort konnte nicht geöffnet werden: ",
+    "fr": "Impossible d'ouvrir l'emplacement : ",
+    "es": "No se pudo abrir la ubicación: ",
+    "ja": "場所を開けませんでした: "
+  },
+  "Geçmiş temizlendi": {
+    "en": "History cleared",
+    "de": "Verlauf gelöscht",
+    "fr": "Historique effacé",
+    "es": "Historial borrado",
+    "ja": "履歴を消去しました"
+  },
+  "Klasör açılamadı: ": {
+    "en": "Could not open the folder: ",
+    "de": "Ordner konnte nicht geöffnet werden: ",
+    "fr": "Impossible d'ouvrir le dossier : ",
+    "es": "No se pudo abrir la carpeta: ",
+    "ja": "フォルダーを開けませんでした: "
+  },
+  "[Güncelleme] ": {
+    "en": "[Update] ",
+    "de": "[Update] ",
+    "fr": "[Mise à jour] ",
+    "es": "[Actualización] ",
+    "ja": "[更新] "
+  },
+  "Sürüm güncel": {
+    "en": "You're up to date",
+    "de": "Alles aktuell",
+    "fr": "Vous êtes à jour",
+    "es": "Estás al día",
+    "ja": "最新バージョンです"
+  },
+  "Güncelleme kontrolü başarısız": {
+    "en": "Update check failed",
+    "de": "Update-Prüfung fehlgeschlagen",
+    "fr": "Échec de la recherche de mises à jour",
+    "es": "Error al buscar actualizaciones",
+    "ja": "更新の確認に失敗しました"
+  },
+  "Panoya kopyalanamadı: ": {
+    "en": "Could not copy to the clipboard: ",
+    "de": "Kopieren in die Zwischenablage fehlgeschlagen: ",
+    "fr": "Impossible de copier dans le presse-papiers : ",
+    "es": "No se pudo copiar al portapapeles: ",
+    "ja": "クリップボードにコピーできませんでした: "
+  },
+  "Adres kopyalandı": {
+    "en": "Address copied",
+    "de": "Adresse kopiert",
+    "fr": "Adresse copiée",
+    "es": "Dirección copiada",
+    "ja": "アドレスをコピーしました"
+  },
+  "IP kopyalandı": {
+    "en": "IP copied",
+    "de": "IP kopiert",
+    "fr": "IP copiée",
+    "es": "IP copiada",
+    "ja": "IP をコピーしました"
+  },
+  "gönderim bekleniyor": {
+    "en": "waiting to send",
+    "de": "warte auf Senden",
+    "fr": "en attente d'envoi",
+    "es": "esperando para enviar",
+    "ja": "送信待ち"
+  },
+  "Alma kapalı — 'Almaya başla'ya bas": {
+    "en": "Receiving off — press “Start receiving”",
+    "de": "Empfang aus — „Empfang starten“ drücken",
+    "fr": "Réception désactivée — appuyez sur « Démarrer la réception »",
+    "es": "Recepción desactivada: pulsa «Empezar a recibir»",
+    "ja": "受信オフ — 「受信を開始」を押してください"
+  },
+  "Hazırlanıyor": {
+    "en": "Preparing",
+    "de": "Wird vorbereitet",
+    "fr": "Préparation",
+    "es": "Preparando",
+    "ja": "準備中"
+  },
+  "Ağ yok": {
+    "en": "No network",
+    "de": "Kein Netzwerk",
+    "fr": "Pas de réseau",
+    "es": "Sin red",
+    "ja": "ネットワークなし"
+  },
+  "Bağlantı yok": {
+    "en": "No connection",
+    "de": "Keine Verbindung",
+    "fr": "Pas de connexion",
+    "es": "Sin conexión",
+    "ja": "接続なし"
+  },
+  "Gönderilecek dosyaları seç": {
+    "en": "Choose the files to send",
+    "de": "Dateien zum Senden wählen",
+    "fr": "Choisir les fichiers à envoyer",
+    "es": "Elegir los archivos que enviar",
+    "ja": "送信するファイルを選択"
+  },
+  "Gönderilecek klasörü seç": {
+    "en": "Choose the folder to send",
+    "de": "Ordner zum Senden wählen",
+    "fr": "Choisir le dossier à envoyer",
+    "es": "Elegir la carpeta que enviar",
+    "ja": "送信するフォルダーを選択"
+  },
+  "Telefona açılacak dosyalar": {
+    "en": "Files to share with your phone",
+    "de": "Dateien für dein Telefon",
+    "fr": "Fichiers à partager avec le téléphone",
+    "es": "Archivos para compartir con el teléfono",
+    "ja": "スマホに公開するファイル"
+  },
+  "Kayıt klasörünü seç": {
+    "en": "Choose the save folder",
+    "de": "Speicherordner wählen",
+    "fr": "Choisir le dossier de destination",
+    "es": "Elegir la carpeta de guardado",
+    "ja": "保存先フォルダーを選択"
+  },
+  "Oyun kütüphaneleri taranıyor…": {
+    "en": "Scanning game libraries…",
+    "de": "Spielebibliotheken werden gescannt…",
+    "fr": "Analyse des bibliothèques de jeux…",
+    "es": "Analizando bibliotecas de juegos…",
+    "ja": "ゲームライブラリをスキャン中…"
+  },
+  "Taranıyor…": {
+    "en": "Scanning…",
+    "de": "Wird gescannt…",
+    "fr": "Analyse…",
+    "es": "Analizando…",
+    "ja": "スキャン中…"
+  },
+  "Yükleniyor...": {
+    "en": "Loading...",
+    "de": "Wird geladen...",
+    "fr": "Chargement...",
+    "es": "Cargando...",
+    "ja": "読み込み中..."
+  },
+  "Mobil köprü: açık": {
+    "en": "Mobile bridge: on",
+    "de": "Mobil-Brücke: an",
+    "fr": "Pont mobile : activé",
+    "es": "Puente móvil: activado",
+    "ja": "スマホブリッジ: オン"
+  },
+  "Kapalı": {
+    "en": "Off",
+    "de": "Aus",
+    "fr": "Désactivé",
+    "es": "Desactivado",
+    "ja": "オフ"
+  },
+  "Köprüyü aç": {
+    "en": "Open bridge",
+    "de": "Brücke öffnen",
+    "fr": "Ouvrir le pont",
+    "es": "Abrir puente",
+    "ja": "ブリッジを開く"
+  },
+  "Köprü kapalı — açınca adres oluşur": {
+    "en": "Bridge off — the address appears when you open it",
+    "de": "Brücke aus — die Adresse erscheint beim Öffnen",
+    "fr": "Pont désactivé — l'adresse apparaît à l'ouverture",
+    "es": "Puente desactivado: la dirección aparece al abrirlo",
+    "ja": "ブリッジはオフです — 開くとアドレスが表示されます"
+  },
+  "Oyun ara": {
+    "en": "Search games",
+    "de": "Spiel suchen",
+    "fr": "Rechercher un jeu",
+    "es": "Buscar juego",
+    "ja": "ゲームを検索"
+  },
+  "Almaya başla": {
+    "en": "Start receiving",
+    "de": "Empfang starten",
+    "fr": "Démarrer la réception",
+    "es": "Empezar a recibir",
+    "ja": "受信を開始"
+  },
+  "Oyun alındı": {
+    "en": "Game received",
+    "de": "Spiel empfangen",
+    "fr": "Jeu reçu",
+    "es": "Juego recibido",
+    "ja": "ゲームを受信しました"
+  },
+  "Gelen oyun": {
+    "en": "Incoming game",
+    "de": "Eingehendes Spiel",
+    "fr": "Jeu entrant",
+    "es": "Juego entrante",
+    "ja": "受信中のゲーム"
+  },
+  "Oyun kütüphaneye eklendi": {
+    "en": "Game added to the library",
+    "de": "Spiel zur Bibliothek hinzugefügt",
+    "fr": "Jeu ajouté à la bibliothèque",
+    "es": "Juego añadido a la biblioteca",
+    "ja": "ゲームをライブラリに追加しました"
+  },
+  "Tamamlandı · ": {
+    "en": "Completed · ",
+    "de": "Abgeschlossen · ",
+    "fr": "Terminé · ",
+    "es": "Completado · ",
+    "ja": "完了 · "
+  },
+  "İptal edildi": {
+    "en": "Cancelled",
+    "de": "Abgebrochen",
+    "fr": "Annulé",
+    "es": "Cancelado",
+    "ja": "中止しました"
+  },
+  "Başarısız": {
+    "en": "Failed",
+    "de": "Fehlgeschlagen",
+    "fr": "Échec",
+    "es": "Fallido",
+    "ja": "失敗"
+  },
+  "Bağlantı kurulamadı": {
+    "en": "Could not connect",
+    "de": "Verbindung fehlgeschlagen",
+    "fr": "Connexion impossible",
+    "es": "No se pudo conectar",
+    "ja": "接続できませんでした"
+  },
+  "Gönderilemedi": {
+    "en": "Could not send",
+    "de": "Konnte nicht senden",
+    "fr": "Envoi impossible",
+    "es": "No se pudo enviar",
+    "ja": "送信できませんでした"
+  },
+  "Alınıyor": {
+    "en": "Receiving",
+    "de": "Wird empfangen",
+    "fr": "Réception",
+    "es": "Recibiendo",
+    "ja": "受信中"
+  },
+  "Tamamlandı": {
+    "en": "Completed",
+    "de": "Abgeschlossen",
+    "fr": "Terminé",
+    "es": "Completado",
+    "ja": "完了"
+  },
+  "Bağlantı engellendi": {
+    "en": "Connection blocked",
+    "de": "Verbindung blockiert",
+    "fr": "Connexion bloquée",
+    "es": "Conexión bloqueada",
+    "ja": "接続がブロックされました"
+  },
+  "Transfer geçmişi silinsin mi?": {
+    "en": "Delete the transfer history?",
+    "de": "Übertragungsverlauf löschen?",
+    "fr": "Supprimer l'historique des transferts ?",
+    "es": "¿Borrar el historial de transferencias?",
+    "ja": "転送履歴を削除しますか？"
+  },
+  "Sıfırla": {
+    "en": "Reset",
+    "de": "Zurücksetzen",
+    "fr": "Réinitialiser",
+    "es": "Restablecer",
+    "ja": "リセット"
+  },
+  "Tüm ayarlar, geçmiş ve kayıtlı hedefler silinecek. Uygulama yeniden başlatılacak.\n\nOnaylıyor musunuz?": {
+    "en": "All settings, history and saved targets will be deleted. The app will restart.\n\nContinue?",
+    "de": "Alle Einstellungen, der Verlauf und gespeicherte Ziele werden gelöscht. Die App wird neu gestartet.\n\nFortfahren?",
+    "fr": "Tous les paramètres, l'historique et les cibles enregistrées seront supprimés. L'application redémarrera.\n\nContinuer ?",
+    "es": "Se borrarán todos los ajustes, el historial y los destinos guardados. La app se reiniciará.\n\n¿Continuar?",
+    "ja": "設定、履歴、保存された送信先がすべて削除されます。アプリは再起動します。\n\n続行しますか？"
+  },
+  "Güncelleme Hatası": {
+    "en": "Update error",
+    "de": "Update-Fehler",
+    "fr": "Erreur de mise à jour",
+    "es": "Error de actualización",
+    "ja": "更新エラー"
+  },
+  "Güncelle": {
+    "en": "Update",
+    "de": "Aktualisieren",
+    "fr": "Mettre à jour",
+    "es": "Actualizar",
+    "ja": "更新"
+  },
+  "İptal edildi.": {
+    "en": "Cancelled.",
+    "de": "Abgebrochen.",
+    "fr": "Annulé.",
+    "es": "Cancelado.",
+    "ja": "中止しました。"
+  },
+  "Bu sürümde çeşitli iyileştirmeler ve hata düzeltmeleri yapıldı.": {
+    "en": "This release brings various improvements and bug fixes.",
+    "de": "Dieses Release enthält diverse Verbesserungen und Fehlerbehebungen.",
+    "fr": "Cette version apporte diverses améliorations et corrections de bugs.",
+    "es": "Esta versión incluye varias mejoras y correcciones de errores.",
+    "ja": "このバージョンには各種の改善と不具合修正が含まれます。"
+  },
+  "{0} oyun · {1} sağlayıcı · {2}": {
+    "en": "{0} games · {1} providers · {2}",
+    "de": "{0} Spiele · {1} Anbieter · {2}",
+    "fr": "{0} jeux · {1} fournisseurs · {2}",
+    "es": "{0} juegos · {1} proveedores · {2}",
+    "ja": "{0} 本 · {1} プロバイダー · {2}"
+  },
+  "{0} oyun · {1} sağlayıcı": {
+    "en": "{0} games · {1} providers",
+    "de": "{0} Spiele · {1} Anbieter",
+    "fr": "{0} jeux · {1} fournisseurs",
+    "es": "{0} juegos · {1} proveedores",
+    "ja": "{0} 本 · {1} プロバイダー"
+  },
+  "Boyutlar hesaplanıyor… {0}/{1}": {
+    "en": "Calculating sizes… {0}/{1}",
+    "de": "Größen werden berechnet… {0}/{1}",
+    "fr": "Calcul des tailles… {0}/{1}",
+    "es": "Calculando tamaños… {0}/{1}",
+    "ja": "サイズを計算中… {0}/{1}"
+  },
+  "Tarama tamamlanamadı: ": {
+    "en": "Scan could not finish: ",
+    "de": "Scan konnte nicht abgeschlossen werden: ",
+    "fr": "L'analyse n'a pas pu aboutir : ",
+    "es": "El análisis no pudo completarse: ",
+    "ja": "スキャンを完了できませんでした: "
+  },
+  "Klasör eklenemedi: ": {
+    "en": "Could not add the folder: ",
+    "de": "Ordner konnte nicht hinzugefügt werden: ",
+    "fr": "Impossible d'ajouter le dossier : ",
+    "es": "No se pudo añadir la carpeta: ",
+    "ja": "フォルダーを追加できませんでした: "
+  },
+  "Göndermek için önce bir cihaza bağlan.": {
+    "en": "Connect to a device before sending.",
+    "de": "Verbinde dich zuerst mit einem Gerät.",
+    "fr": "Connectez-vous à un appareil avant d'envoyer.",
+    "es": "Conéctate a un dispositivo antes de enviar.",
+    "ja": "送信する前にデバイスへ接続してください。"
+  },
+  "Oyun başlatılamadı.": {
+    "en": "Could not launch the game.",
+    "de": "Spiel konnte nicht gestartet werden.",
+    "fr": "Impossible de lancer le jeu.",
+    "es": "No se pudo iniciar el juego.",
+    "ja": "ゲームを起動できませんでした。"
+  },
+  "Parlak cam": {
+    "en": "Bright glass",
+    "de": "Helles Glas",
+    "fr": "Verre clair",
+    "es": "Cristal claro",
+    "ja": "明るいガラス"
+  },
+  "Derin mavi": {
+    "en": "Deep blue",
+    "de": "Tiefes Blau",
+    "fr": "Bleu profond",
+    "es": "Azul profundo",
+    "ja": "深い青"
+  },
+  "Buz mavisi": {
+    "en": "Ice blue",
+    "de": "Eisblau",
+    "fr": "Bleu glacier",
+    "es": "Azul hielo",
+    "ja": "アイスブルー"
+  },
+  "Kutup yeşili": {
+    "en": "Polar green",
+    "de": "Polargrün",
+    "fr": "Vert polaire",
+    "es": "Verde polar",
+    "ja": "ポーラーグリーン"
+  },
+  "Sıcak kum": {
+    "en": "Warm sand",
+    "de": "Warmer Sand",
+    "fr": "Sable chaud",
+    "es": "Arena cálida",
+    "ja": "ウォームサンド"
+  },
+  "Neon gece": {
+    "en": "Neon night",
+    "de": "Neon-Nacht",
+    "fr": "Nuit néon",
+    "es": "Noche neón",
+    "ja": "ネオンの夜"
+  },
+  "Orman": {
+    "en": "Forest",
+    "de": "Wald",
+    "fr": "Forêt",
+    "es": "Bosque",
+    "ja": "森"
+  },
+  "Saf gri": {
+    "en": "Pure grey",
+    "de": "Reines Grau",
+    "fr": "Gris pur",
+    "es": "Gris puro",
+    "ja": "ピュアグレー"
+  },
+  "Tilki": {
+    "en": "Fox",
+    "de": "Fuchs",
+    "fr": "Renard",
+    "es": "Zorro",
+    "ja": "キツネ"
+  },
+  "Baykuş": {
+    "en": "Owl",
+    "de": "Eule",
+    "fr": "Chouette",
+    "es": "Búho",
+    "ja": "フクロウ"
+  },
+  "Panda": {
+    "en": "Panda",
+    "de": "Panda",
+    "fr": "Panda",
+    "es": "Panda",
+    "ja": "パンダ"
+  },
+  "Ayı": {
+    "en": "Bear",
+    "de": "Bär",
+    "fr": "Ours",
+    "es": "Oso",
+    "ja": "クマ"
+  },
+  "Tavşan": {
+    "en": "Rabbit",
+    "de": "Hase",
+    "fr": "Lapin",
+    "es": "Conejo",
+    "ja": "ウサギ"
+  },
+  "Kurbağa": {
+    "en": "Frog",
+    "de": "Frosch",
+    "fr": "Grenouille",
+    "es": "Rana",
+    "ja": "カエル"
+  },
+  "Penguen": {
+    "en": "Penguin",
+    "de": "Pinguin",
+    "fr": "Pingouin",
+    "es": "Pingüino",
+    "ja": "ペンギン"
+  },
+  "Koala": {
+    "en": "Koala",
+    "de": "Koala",
+    "fr": "Koala",
+    "es": "Koala",
+    "ja": "コアラ"
+  },
+  "Aslan": {
+    "en": "Lion",
+    "de": "Löwe",
+    "fr": "Lion",
+    "es": "León",
+    "ja": "ライオン"
+  },
+  "Kaplan": {
+    "en": "Tiger",
+    "de": "Tiger",
+    "fr": "Tigre",
+    "es": "Tigre",
+    "ja": "トラ"
+  },
+  "Ahtapot": {
+    "en": "Octopus",
+    "de": "Krake",
+    "fr": "Pieuvre",
+    "es": "Pulpo",
+    "ja": "タコ"
+  },
+  "Astronot": {
+    "en": "Astronaut",
+    "de": "Astronaut",
+    "fr": "Astronaute",
+    "es": "Astronauta",
+    "ja": "宇宙飛行士"
+  },
+  "Robot": {
+    "en": "Robot",
+    "de": "Roboter",
+    "fr": "Robot",
+    "es": "Robot",
+    "ja": "ロボット"
+  },
+  "Uzaylı": {
+    "en": "Alien",
+    "de": "Alien",
+    "fr": "Alien",
+    "es": "Extraterrestre",
+    "ja": "宇宙人"
+  },
+  "Gezegen": {
+    "en": "Planet",
+    "de": "Planet",
+    "fr": "Planète",
+    "es": "Planeta",
+    "ja": "惑星"
+  },
+  "Ay": {
+    "en": "Moon",
+    "de": "Mond",
+    "fr": "Lune",
+    "es": "Luna",
+    "ja": "月"
+  },
+  "Yıldız": {
+    "en": "Star",
+    "de": "Stern",
+    "fr": "Étoile",
+    "es": "Estrella",
+    "ja": "星"
+  },
+  "Kuyruklu": {
+    "en": "Comet",
+    "de": "Komet",
+    "fr": "Comète",
+    "es": "Cometa",
+    "ja": "彗星"
+  },
+  "UFO": {
+    "en": "UFO",
+    "de": "UFO",
+    "fr": "OVNI",
+    "es": "OVNI",
+    "ja": "UFO"
+  },
+  "Güneş": {
+    "en": "Sun",
+    "de": "Sonne",
+    "fr": "Soleil",
+    "es": "Sol",
+    "ja": "太陽"
+  },
+  "Bulut": {
+    "en": "Cloud",
+    "de": "Wolke",
+    "fr": "Nuage",
+    "es": "Nube",
+    "ja": "雲"
+  },
+  "Yaprak": {
+    "en": "Leaf",
+    "de": "Blatt",
+    "fr": "Feuille",
+    "es": "Hoja",
+    "ja": "葉"
+  },
+  "Kaktüs": {
+    "en": "Cactus",
+    "de": "Kaktus",
+    "fr": "Cactus",
+    "es": "Cactus",
+    "ja": "サボテン"
+  },
+  "Mantar": {
+    "en": "Mushroom",
+    "de": "Pilz",
+    "fr": "Champignon",
+    "es": "Seta",
+    "ja": "キノコ"
+  },
+  "Alev": {
+    "en": "Flame",
+    "de": "Flamme",
+    "fr": "Flamme",
+    "es": "Llama",
+    "ja": "炎"
+  },
+  "Dalga": {
+    "en": "Wave",
+    "de": "Welle",
+    "fr": "Vague",
+    "es": "Ola",
+    "ja": "波"
+  },
+  "Kristal": {
+    "en": "Crystal",
+    "de": "Kristall",
+    "fr": "Cristal",
+    "es": "Cristal",
+    "ja": "クリスタル"
+  },
+  "Hayalet": {
+    "en": "Ghost",
+    "de": "Geist",
+    "fr": "Fantôme",
+    "es": "Fantasma",
+    "ja": "ゴースト"
+  },
+  "Ninja": {
+    "en": "Ninja",
+    "de": "Ninja",
+    "fr": "Ninja",
+    "es": "Ninja",
+    "ja": "忍者"
+  },
+  "Büyücü": {
+    "en": "Wizard",
+    "de": "Zauberer",
+    "fr": "Sorcier",
+    "es": "Mago",
+    "ja": "魔法使い"
+  },
+  "Şövalye": {
+    "en": "Knight",
+    "de": "Ritter",
+    "fr": "Chevalier",
+    "es": "Caballero",
+    "ja": "騎士"
+  },
+  "AKTARIM": {
+    "en": "TRANSFER",
+    "de": "ÜBERTRAGUNG",
+    "fr": "TRANSFERT",
+    "es": "TRANSFERENCIA",
+    "ja": "転送"
+  },
+  "Güvenlik duvarı izni hazır": {
+    "en": "Firewall permission ready",
+    "de": "Firewall-Freigabe bereit",
+    "fr": "Autorisation du pare-feu prête",
+    "es": "Permiso del firewall listo",
+    "ja": "ファイアウォールの許可が完了"
+  },
+  "Uygulama yolu okunamadı; güvenlik duvarı izni atlandı": {
+    "en": "Could not read the app path; firewall permission skipped",
+    "de": "App-Pfad nicht lesbar; Firewall-Freigabe übersprungen",
+    "fr": "Chemin de l'application illisible ; autorisation du pare-feu ignorée",
+    "es": "No se pudo leer la ruta de la app; permiso del firewall omitido",
+    "ja": "アプリのパスを取得できず、ファイアウォールの許可を省略しました"
+  },
+  "Güvenlik duvarına gelen bağlantı izni eklendi": {
+    "en": "Inbound firewall rule added",
+    "de": "Eingehende Firewall-Regel hinzugefügt",
+    "fr": "Règle de pare-feu entrante ajoutée",
+    "es": "Regla de firewall de entrada añadida",
+    "ja": "受信ファイアウォール規則を追加しました"
+  },
+  "Güvenlik duvarı izni eklenemedi: ": {
+    "en": "Could not add the firewall rule: ",
+    "de": "Firewall-Regel konnte nicht hinzugefügt werden: ",
+    "fr": "Impossible d'ajouter la règle de pare-feu : ",
+    "es": "No se pudo añadir la regla de firewall: ",
+    "ja": "ファイアウォール規則を追加できませんでした: "
+  },
+  "Eşleştirme servisi dinliyor...": {
+    "en": "Pairing service listening...",
+    "de": "Kopplungsdienst hört zu...",
+    "fr": "Service d'appairage à l'écoute...",
+    "es": "Servicio de emparejamiento escuchando...",
+    "ja": "ペアリングサービス待機中..."
+  },
+  "Cihaz keşfi başlatıldı.": {
+    "en": "Device discovery started.",
+    "de": "Gerätesuche gestartet.",
+    "fr": "Découverte des appareils démarrée.",
+    "es": "Descubrimiento de dispositivos iniciado.",
+    "ja": "デバイス検出を開始しました。"
+  },
+  "Keşif başladı · port {0}": {
+    "en": "Discovery started · port {0}",
+    "de": "Suche gestartet · Port {0}",
+    "fr": "Découverte démarrée · port {0}",
+    "es": "Descubrimiento iniciado · puerto {0}",
+    "ja": "検出を開始 · ポート {0}"
+  },
+  "GitHub'da güncel sürüm aranıyor...": {
+    "en": "Checking GitHub for the latest version...",
+    "de": "Neueste Version wird auf GitHub gesucht...",
+    "fr": "Recherche de la dernière version sur GitHub...",
+    "es": "Buscando la última versión en GitHub...",
+    "ja": "GitHub で最新バージョンを確認中..."
+  },
+  "Güncelleme kontrolü şu an yapılamıyor — daha sonra tekrar deneyin.": {
+    "en": "Update check unavailable right now — try again later.",
+    "de": "Update-Prüfung derzeit nicht möglich — später erneut versuchen.",
+    "fr": "Vérification des mises à jour impossible pour le moment — réessayez plus tard.",
+    "es": "No se puede comprobar la actualización ahora — inténtalo más tarde.",
+    "ja": "現在アップデートを確認できません — 後でもう一度お試しください。"
+  },
+  "Güncelleme sunucusuna ulaşılamadı — daha sonra tekrar deneyin.": {
+    "en": "Update server unreachable — try again later.",
+    "de": "Update-Server nicht erreichbar — später erneut versuchen.",
+    "fr": "Serveur de mise à jour injoignable — réessayez plus tard.",
+    "es": "Servidor de actualizaciones inaccesible — inténtalo más tarde.",
+    "ja": "アップデートサーバーに接続できません — 後でもう一度お試しください。"
+  },
+  "⚠ Geçersiz sürüm etiketi: {0}": {
+    "en": "⚠ Invalid version tag: {0}",
+    "de": "⚠ Ungültiges Versions-Tag: {0}",
+    "fr": "⚠ Étiquette de version invalide : {0}",
+    "es": "⚠ Etiqueta de versión no válida: {0}",
+    "ja": "⚠ 無効なバージョンタグ: {0}"
+  },
+  "✓ Güncelsiniz (v{0})": {
+    "en": "✓ You're up to date (v{0})",
+    "de": "✓ Aktuell (v{0})",
+    "fr": "✓ À jour (v{0})",
+    "es": "✓ Actualizado (v{0})",
+    "ja": "✓ 最新です (v{0})"
+  },
+  "⚠ Release'de '{0}' bulunamadı — release'e Dosyaktar.exe ekleyin.": {
+    "en": "⚠ '{0}' not found in the release — add Dosyaktar.exe to it.",
+    "de": "⚠ '{0}' im Release nicht gefunden — Dosyaktar.exe hinzufügen.",
+    "fr": "⚠ '{0}' introuvable dans la release — ajoutez Dosyaktar.exe.",
+    "es": "⚠ No se encontró '{0}' en la release — añade Dosyaktar.exe.",
+    "ja": "⚠ リリースに '{0}' がありません — Dosyaktar.exe を追加してください。"
+  },
+  "🎉 Yeni sürüm bulundu: {0} (şu an: v{1})": {
+    "en": "🎉 New version found: {0} (currently: v{1})",
+    "de": "🎉 Neue Version gefunden: {0} (aktuell: v{1})",
+    "fr": "🎉 Nouvelle version trouvée : {0} (actuelle : v{1})",
+    "es": "🎉 Nueva versión encontrada: {0} (actual: v{1})",
+    "ja": "🎉 新しいバージョンがあります: {0} (現在: v{1})"
+  },
+  "⚠ İnternet bağlantısı yok — güncelleme kontrol edilemedi.": {
+    "en": "⚠ No internet connection — update check failed.",
+    "de": "⚠ Keine Internetverbindung — Update-Prüfung fehlgeschlagen.",
+    "fr": "⚠ Pas de connexion Internet — vérification impossible.",
+    "es": "⚠ Sin conexión a Internet — no se pudo comprobar.",
+    "ja": "⚠ インターネット接続がありません — 確認できませんでした。"
+  },
+  "⚠ Güncelleme hatası: {0}": {
+    "en": "⚠ Update error: {0}",
+    "de": "⚠ Update-Fehler: {0}",
+    "fr": "⚠ Erreur de mise à jour : {0}",
+    "es": "⚠ Error de actualización: {0}",
+    "ja": "⚠ アップデートエラー: {0}"
+  },
+  "Güncelleme indiriliyor...": {
+    "en": "Downloading update...",
+    "de": "Update wird heruntergeladen...",
+    "fr": "Téléchargement de la mise à jour...",
+    "es": "Descargando actualización...",
+    "ja": "アップデートをダウンロード中..."
+  },
+  "İndirme tamamlandı. ({0})": {
+    "en": "Download complete. ({0})",
+    "de": "Download abgeschlossen. ({0})",
+    "fr": "Téléchargement terminé. ({0})",
+    "es": "Descarga completada. ({0})",
+    "ja": "ダウンロード完了 ({0})"
+  },
+  "Yeni sürüm bulundu: {0} — arka planda indiriliyor...": {
+    "en": "New version found: {0} — downloading in the background...",
+    "de": "Neue Version gefunden: {0} — Download im Hintergrund...",
+    "fr": "Nouvelle version trouvée : {0} — téléchargement en arrière-plan...",
+    "es": "Nueva versión encontrada: {0} — descargando en segundo plano...",
+    "ja": "新しいバージョン: {0} — バックグラウンドでダウンロード中..."
+  },
+  "Güncelleme hazır, uygulama yeniden başlatılıyor...": {
+    "en": "Update ready, restarting the app...",
+    "de": "Update bereit, App wird neu gestartet...",
+    "fr": "Mise à jour prête, redémarrage de l'application...",
+    "es": "Actualización lista, reiniciando la app...",
+    "ja": "アップデートの準備完了、アプリを再起動します..."
+  },
+  "Otomatik güncelleme başarısız: {0}": {
+    "en": "Automatic update failed: {0}",
+    "de": "Automatisches Update fehlgeschlagen: {0}",
+    "fr": "Échec de la mise à jour automatique : {0}",
+    "es": "Error en la actualización automática: {0}",
+    "ja": "自動アップデートに失敗: {0}"
+  }
+}

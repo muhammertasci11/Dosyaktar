@@ -3,12 +3,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
+using Dosyaktar.Localization;
 using Dosyaktar.Services;
 
 namespace Dosyaktar
 {
     public partial class App : Application
     {
+        /// <summary>True for CLI-driven runs (screenshots): nothing is written to settings.</summary>
+        public static bool Ephemeral { get; private set; }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -21,34 +25,40 @@ namespace Dosyaktar
             // Theme first — every window resolves DynamicResource against it.
             ThemeManager.Apply(string.IsNullOrWhiteSpace(settings.Theme) ? "prism" : settings.Theme);
 
-            LoadLanguage(settings.Language);
+            // --lang=xx overrides the saved language for this session (used by the
+            // screenshot pipeline and by people who keep several shortcuts).
+            string? langArg = null;
+            string? pageArg = null;
+            bool offscreen = false;
+            foreach (var arg in e.Args)
+            {
+                if (arg.StartsWith("--lang=", StringComparison.OrdinalIgnoreCase))
+                    langArg = arg.Substring("--lang=".Length);
+                else if (arg.StartsWith("--page=", StringComparison.OrdinalIgnoreCase))
+                    pageArg = arg.Substring("--page=".Length);
+                else if (arg.Equals("--offscreen", StringComparison.OrdinalIgnoreCase))
+                    offscreen = true;
+            }
+
+            if (!string.IsNullOrWhiteSpace(pageArg)) settings.LastPage = pageArg;
+
+            // Screenshot runs (--lang / --page / --offscreen) must not overwrite the
+            // user's saved session state.
+            Ephemeral = offscreen || langArg != null || pageArg != null;
+
+            Loc.SetLanguage(langArg ?? settings.Language);
 
             var window = new MainWindow(settings);
+
+            if (offscreen)
+            {
+                window.WindowStartupLocation = WindowStartupLocation.Manual;
+                window.Left = -32000;
+                window.Top = -32000;
+            }
+
             MainWindow = window;
             window.Show();
-        }
-
-        // ─── language ────────────────────────────────────────────────────────
-        private static void LoadLanguage(string? lang)
-        {
-            string code = string.IsNullOrWhiteSpace(lang) ? "tr" : lang.Trim();
-            if (code == "tr") return;
-
-            try
-            {
-                var dict = new ResourceDictionary
-                {
-                    Source = new Uri($"pack://application:,,,/Resources/Strings.{code}.xaml", UriKind.Absolute)
-                };
-
-                var merged = Current.Resources.MergedDictionaries;
-                if (merged.Count > 1) merged[1] = dict;
-                else merged.Add(dict);
-            }
-            catch
-            {
-                // Unknown language pack — stay on Turkish.
-            }
         }
 
         // ─── crash reporting ─────────────────────────────────────────────────

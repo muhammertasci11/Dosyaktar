@@ -1,3 +1,4 @@
+using Dosyaktar.Localization;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -88,7 +89,7 @@ namespace Dosyaktar.Services
                 string url = $"https://api.github.com/repos/{UpdateConfig.GitHubOwner}" +
                              $"/{UpdateConfig.GitHubRepo}/releases/latest";
 
-                OnStatus("GitHub'da güncel sürüm aranıyor...");
+                OnStatus(Loc.S("GitHub'da güncel sürüm aranıyor..."));
 
                 using var resp = await _http.GetAsync(url, ct);
 
@@ -100,8 +101,8 @@ namespace Dosyaktar.Services
                 if (!resp.IsSuccessStatusCode)
                 {
                     OnStatus(resp.StatusCode == System.Net.HttpStatusCode.Forbidden
-                        ? "Güncelleme kontrolü şu an yapılamıyor — daha sonra tekrar deneyin."
-                        : "Güncelleme sunucusuna ulaşılamadı — daha sonra tekrar deneyin.");
+                        ? Loc.S("Güncelleme kontrolü şu an yapılamıyor — daha sonra tekrar deneyin.")
+                        : Loc.S("Güncelleme sunucusuna ulaşılamadı — daha sonra tekrar deneyin."));
                     return null;
                 }
 
@@ -112,36 +113,36 @@ namespace Dosyaktar.Services
                 string tag = root.GetProperty("tag_name").GetString() ?? "";
                 if (!TryParseVersion(tag, out var latest))
                 {
-                    OnStatus($"⚠ Geçersiz sürüm etiketi: {tag}");
+                    OnStatus(Loc.F("⚠ Geçersiz sürüm etiketi: {0}", tag));
                     return null;
                 }
 
                 var current = GetCurrentVersion();
                 if (latest <= current)
                 {
-                    OnStatus($"✓ Güncelsiniz (v{current})");
+                    OnStatus(Loc.F("✓ Güncelsiniz (v{0})", current));
                     return null;
                 }
 
                 string? downloadUrl = FindAssetUrl(root);
                 if (downloadUrl == null)
                 {
-                    OnStatus($"⚠ Release'de '{UpdateConfig.AssetName}' bulunamadı — release'e Dosyaktar.exe ekleyin.");
+                    OnStatus(Loc.F("⚠ Release'de '{0}' bulunamadı — release'e Dosyaktar.exe ekleyin.", UpdateConfig.AssetName));
                     return null;
                 }
 
                 string notes = root.TryGetProperty("body", out var body) ? (body.GetString() ?? "") : "";
-                OnStatus($"🎉 Yeni sürüm bulundu: {tag} (şu an: v{current})");
+                OnStatus(Loc.F("🎉 Yeni sürüm bulundu: {0} (şu an: v{1})", tag, current));
                 return new UpdateInfo(latest, downloadUrl, notes, tag);
             }
             catch (HttpRequestException)
             {
-                OnStatus("⚠ İnternet bağlantısı yok — güncelleme kontrol edilemedi.");
+                OnStatus(Loc.S("⚠ İnternet bağlantısı yok — güncelleme kontrol edilemedi."));
                 return null;
             }
             catch (Exception ex)
             {
-                OnStatus($"⚠ Güncelleme hatası: {ex.Message}");
+                OnStatus(Loc.F("⚠ Güncelleme hatası: {0}", ex.Message));
                 return null;
             }
         }
@@ -167,7 +168,7 @@ namespace Dosyaktar.Services
             IProgress<int>? progress = null,
             CancellationToken ct = default)
         {
-            OnStatus("Güncelleme indiriliyor...");
+            OnStatus(Loc.S("Güncelleme indiriliyor..."));
             string dest = Path.Combine(Path.GetTempPath(), "Dosyaktar_update.exe");
 
             using var resp = await _http.GetAsync(
@@ -199,7 +200,7 @@ namespace Dosyaktar.Services
 
             progress?.Report(100);
             OnProgress(100);
-            OnStatus($"İndirme tamamlandı. ({FormatBytes(downloaded)})");
+            OnStatus(Loc.F("İndirme tamamlandı. ({0})", FormatBytes(downloaded)));
             return dest;
         }
 
@@ -285,16 +286,16 @@ del "%~f0" 2>nul
             // Sessiz mod: indir ve uygula
             try
             {
-                OnStatus($"Yeni sürüm bulundu: {info.TagName} — arka planda indiriliyor...");
+                OnStatus(Loc.F("Yeni sürüm bulundu: {0} — arka planda indiriliyor...", info.TagName));
                 string exe = await DownloadUpdateAsync(info, ct: ct);
-                OnStatus("Güncelleme hazır, uygulama yeniden başlatılıyor...");
+                OnStatus(Loc.S("Güncelleme hazır, uygulama yeniden başlatılıyor..."));
                 await Task.Delay(500, ct);
                 ApplyUpdate(exe);
             }
             catch (OperationCanceledException) { }
             catch (Exception ex)
             {
-                OnStatus($"Otomatik güncelleme başarısız: {ex.Message}");
+                OnStatus(Loc.F("Otomatik güncelleme başarısız: {0}", ex.Message));
                 return info; // başarısızsa UI penceresi açılsın
             }
             return null;

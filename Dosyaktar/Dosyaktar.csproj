@@ -11,28 +11,29 @@
     <RootNamespace>Dosyaktar</RootNamespace>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
 
-    <!-- Sürüm — her release'de artırın: 1.0.0 → 1.1.0 → 1.2.0 -->
-    <Version>2.2.1</Version>
-    <AssemblyVersion>2.2.1.0</AssemblyVersion>
-    <FileVersion>2.2.1.0</FileVersion>
+    <!-- Surum: her release'de artirin (2.3.0 -> 2.4.0) -->
+    <Version>2.3.0</Version>
+    <AssemblyVersion>2.3.0.0</AssemblyVersion>
+    <FileVersion>2.3.0.0</FileVersion>
     <Product>Dosyaktar</Product>
     <Company>muhammertasci11</Company>
 
-    <!-- Tek EXE — paylaşılabilir, kurulum gerektirmez -->
+    <!-- Tek EXE: paylasilabilir, kurulum gerektirmez -->
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <PublishReadyToRun>true</PublishReadyToRun>
-    <!-- Hata ayıklama sembollerini EXE'ye gömme -->
+    <!-- Hata ayiklama sembollerini EXE'ye gomme -->
     <DebugType>embedded</DebugType>
-    <!-- PDB / XML / gereksiz dosyaları üretme -->
+    <!-- PDB / XML / gereksiz dosyalari uretme -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <AllowedReferenceRelatedFileExtensions>.pdb</AllowedReferenceRelatedFileExtensions>
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="Assets\**\*" />
+    <EmbeddedResource Include="Resources\strings.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="QRCoder" Version="1.4.3" />

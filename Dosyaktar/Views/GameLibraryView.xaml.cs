@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Dosyaktar.Helpers;
+using Dosyaktar.Localization;
 using Dosyaktar.Services;
 
 namespace Dosyaktar.Views
@@ -35,6 +36,12 @@ namespace Dosyaktar.Views
             InitializeComponent();
 
             _library.Status += OnLibraryStatus;
+
+            Loc.LanguageChanged += (_, _) => Dispatcher.InvokeAsync(() =>
+            {
+                UpdateSummary();
+                if (!_sending) BtnSendGame.Content = Loc.S("Gönder");
+            });
 
             TxtSummary.Text = "—";
             TxtWarn.Visibility = Visibility.Collapsed;
@@ -102,8 +109,8 @@ namespace Dosyaktar.Views
 
             TxtWarn.Visibility = Visibility.Collapsed;
             BtnRefresh.IsEnabled = false;
-            TxtScanStatus.Text = "Oyun kütüphaneleri taranıyor…";
-            TxtSummary.Text = "Taranıyor…";
+            TxtScanStatus.Text = Loc.S("Oyun kütüphaneleri taranıyor…");
+            TxtSummary.Text = Loc.S("Taranıyor…");
             UpdateViewState();
 
             try
@@ -134,7 +141,7 @@ namespace Dosyaktar.Views
             }
             catch (Exception ex)
             {
-                ShowWarn($"Tarama tamamlanamadı: {ex.Message}");
+                ShowWarn(Loc.S("Tarama tamamlanamadı: ") + ex.Message);
             }
             finally
             {
@@ -235,7 +242,7 @@ namespace Dosyaktar.Views
             {
                 done++;
                 SizeProgress.Value = Math.Min(done, missing);
-                TxtSizeProgress.Text = $"Boyutlar hesaplanıyor… {done}/{missing}";
+                TxtSizeProgress.Text = Loc.F("Boyutlar hesaplanıyor… {0}/{1}", done, missing);
                 UpdateSummary();
             });
 
@@ -338,8 +345,8 @@ namespace Dosyaktar.Views
             long total = _all.Sum(g => g.SizeBytes);
 
             TxtSummary.Text = total > 0
-                ? $"{_all.Count} oyun · {providers} sağlayıcı · {FileTransferService.FormatSize(total)}"
-                : $"{_all.Count} oyun · {providers} sağlayıcı";
+                ? Loc.F("{0} oyun · {1} sağlayıcı · {2}", _all.Count, providers, FileTransferService.FormatSize(total))
+                : Loc.F("{0} oyun · {1} sağlayıcı", _all.Count, providers);
         }
 
         private string SelectedProviderKey()
@@ -409,7 +416,7 @@ namespace Dosyaktar.Views
         private void UpdateSendEnabled()
         {
             BtnSendGame.IsEnabled = _ready && _canSend && !_sending && GameList.SelectedItem is GameEntry;
-            BtnSendGame.Content = _sending ? "Gönderiliyor…" : "Gönder";
+            BtnSendGame.Content = Loc.S(_sending ? "Gönderiliyor…" : "Gönder");
         }
 
         private void ShowWarn(string message)
@@ -448,7 +455,7 @@ namespace Dosyaktar.Views
             }
             catch (Exception ex)
             {
-                ShowWarn($"Klasör eklenemedi: {ex.Message}");
+                ShowWarn(Loc.S("Klasör eklenemedi: ") + ex.Message);
             }
         }
 
@@ -492,7 +499,7 @@ namespace Dosyaktar.Views
 
             if (!_canSend)
             {
-                ShowWarn("Göndermek için önce bir cihaza bağlan.");
+                ShowWarn(Loc.S("Göndermek için önce bir cihaza bağlan."));
                 return;
             }
 
@@ -505,7 +512,7 @@ namespace Dosyaktar.Views
             if (GameList.SelectedItem is not GameEntry game) return;
 
             if (!GameLauncher.Launch(game, out string? error))
-                ShowWarn(error ?? "Oyun başlatılamadı.");
+                ShowWarn(error ?? Loc.S("Oyun başlatılamadı."));
         }
 
         private void BtnOpenGameFolder_Click(object sender, RoutedEventArgs e)

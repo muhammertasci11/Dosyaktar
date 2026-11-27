@@ -60,6 +60,9 @@ namespace Dosyaktar.Services
 
         public static void Save(AppSettings s)
         {
+            // CLI screenshot runs must leave the user's settings untouched.
+            if (App.Ephemeral) return;
+
             try
             {
                 Directory.CreateDirectory(_dir);

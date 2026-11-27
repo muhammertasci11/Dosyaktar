@@ -1,3 +1,4 @@
+using Dosyaktar.Localization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -46,7 +47,7 @@ namespace Dosyaktar.Services
 
             if (string.IsNullOrEmpty(exePath))
             {
-                message = "Uygulama yolu okunamadı; güvenlik duvarı izni atlandı";
+                message = Loc.S("Uygulama yolu okunamadı; güvenlik duvarı izni atlandı");
                 return false;
             }
 
@@ -55,7 +56,7 @@ namespace Dosyaktar.Services
             var (showCode, showOut) = RunNetsh($"advfirewall firewall show rule name=\"{ruleName}\" verbose");
             if (showCode == 0 && showOut.Contains(exePath, StringComparison.OrdinalIgnoreCase))
             {
-                message = "Güvenlik duvarı izni hazır";
+                message = Loc.S("Güvenlik duvarı izni hazır");
                 return true;
             }
 
@@ -68,8 +69,8 @@ namespace Dosyaktar.Services
 
             bool ok = addCode == 0;
             message = ok
-                ? "Güvenlik duvarına gelen bağlantı izni eklendi"
-                : "Güvenlik duvarı izni eklenemedi: " + FirstLine(addOut);
+                ? Loc.S("Güvenlik duvarına gelen bağlantı izni eklendi")
+                : Loc.S("Güvenlik duvarı izni eklenemedi: ") + FirstLine(addOut);
             return ok;
         }
 

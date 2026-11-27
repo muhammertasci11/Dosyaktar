@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Dosyaktar.Localization;
 using Dosyaktar.Services;
 
 namespace Dosyaktar
@@ -35,7 +36,7 @@ namespace Dosyaktar
 
             BtnUpdate.IsEnabled      = false;
             BtnSkip.IsEnabled        = false;
-            BtnUpdate.Content        = "İndiriliyor...";
+            BtnUpdate.Content        = Loc.S("İndiriliyor...");
             ProgressPanel.Visibility = Visibility.Visible;
 
             _cts = new CancellationTokenSource();
@@ -48,7 +49,7 @@ namespace Dosyaktar
             try
             {
                 string newExe = await _svc.DownloadUpdateAsync(_info, progress, _cts.Token);
-                BtnUpdate.Content = "Yükleniyor...";
+                BtnUpdate.Content = Loc.S("Yükleniyor...");
                 await Task.Delay(500);
                 UpdateService.ApplyUpdate(newExe);
             }

@@ -1,3 +1,4 @@
+using Dosyaktar.Localization;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -86,7 +87,7 @@ namespace Dosyaktar.Services
             Task.Run(() => ListenLoopAsync(_cts.Token));
             Task.Run(() => CleanupLoopAsync(_cts.Token));
 
-            Log("Cihaz keşfi başlatıldı.");
+            Log(Loc.S("Cihaz keşfi başlatıldı."));
         }
 
         public void Stop()

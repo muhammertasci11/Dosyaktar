@@ -1,3 +1,4 @@
+using Dosyaktar.Localization;
 using System;
 using System.IO;
 using System.Net;
@@ -30,7 +31,7 @@ namespace Dosyaktar.Services
                 _listener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 _listener.Start();
                 Task.Run(() => ListenLoopAsync(_cts.Token));
-                Log("Eşleştirme servisi dinliyor...");
+                Log(Loc.S("Eşleştirme servisi dinliyor..."));
             }
             catch (Exception ex)
             {
