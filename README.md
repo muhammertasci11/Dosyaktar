@@ -5,29 +5,29 @@
   <br/>
 
   <p>
+    <a href="https://github.com/muhammertasci11/Dosyaktar/releases/latest">
+      <img src="https://img.shields.io/github/v/release/muhammertasci11/Dosyaktar?include_prereleases&style=for-the-badge&logo=github" alt="Latest Release"/>
+    </a>
+    <a href="https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.2.1/Dosyaktar.exe">
+      <img src="https://img.shields.io/badge/Download-Dosyaktar.exe-blue?style=for-the-badge&logo=windows" alt="Download v2.2.1"/>
+    </a>
     <img src="https://img.shields.io/badge/.NET-8.0-5C2D91?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET 8.0">
     <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white" alt="C#">
     <img src="https://img.shields.io/badge/WPF-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="WPF">
-    <img src="https://img.shields.io/badge/version-2.2.1-6C3BFF?style=for-the-badge" alt="v2.2.1">
     <img src="https://img.shields.io/badge/Windows-10%2F11-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows">
   </p>
-
-  <br/>
-  <a href="https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.2.1/Dosyaktar.exe">
-    <img src="https://img.shields.io/badge/Download-Dosyaktar.exe-blue?style=for-the-badge&logo=windows" alt="Download v2.2.1"/>
-  </a>
 </div>
 
 <br/>
 
 <div align="center">
-  <img src="https://github.com/muhammertasci11/Dosyaktar/raw/main/landing-full-desktop.png" width="700" alt="Dosyaktar masaüstü arayüzü"/>
+  <img src="landing-full-desktop.png" width="720" alt="Dosyaktar masaüstü arayüzü"/>
   <p><i>Dosyaktar ana penceresinde oyun kütüphanesi ve mobil akış</i></p>
 </div>
 
 <br/>
 
-<details>
+<details open>
   <summary><b>📸 Ekran görüntüleri</b></summary>
   <br/>
   <div align="center">
@@ -38,18 +38,18 @@
       </tr>
       <tr>
         <td>
-          <img src="https://github.com/muhammertasci11/Dosyaktar/raw/main/landing-anchor-desktop.png" width="320" alt="Ana ekran"/>
+          <img src="landing-anchor-desktop.png" width="340" alt="Ana ekran"/>
         </td>
         <td>
-          <img src="https://github.com/muhammertasci11/Dosyaktar/raw/main/landing-oyunlar-desktop.png" width="320" alt="Oyun kitaplığı"/>
+          <img src="landing-oyunlar-desktop.png" width="340" alt="Oyun kitaplığı"/>
         </td>
       </tr>
       <tr>
         <td>
-          <img src="https://github.com/muhammertasci11/Dosyaktar/raw/main/landing-full-desktop.png" width="320" alt="Tam ekran"/>
+          <img src="landing-oyunlar-mobile.png" width="220" alt="Mobil oyun kitaplığı"/>
         </td>
         <td>
-          <img src="https://github.com/muhammertasci11/Dosyaktar/raw/main/landing-full-mobile.png" width="200" alt="Mobil arayüz"/>
+          <img src="landing-anchor-mobile.png" width="220" alt="Mobil ana ekran"/>
         </td>
       </tr>
     </table>
@@ -79,7 +79,7 @@ Sürükle-bırak kadar basit bir akış: cihazı seç, PIN'i onayla, dosyaları 
 
 ## 📦 Kurulum
 
-### İndir
+### İndirin
 
 [**Dosyaktar.exe v2.2.1 indir**](https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.2.1/Dosyaktar.exe) (77,25 MB)
 

@@ -15,6 +15,7 @@ publish[0-9]*/
 # QA artifacts
 .playwright-mcp/
 pwa*.png
-landing-*.png
+# Screenshots for product page — keep tracked
+!landing-*.png
 *.orig
 *.tmp
