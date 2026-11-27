@@ -17,4 +17,3 @@ publish[0-9]*/
 pwa*.png
 *.orig
 *.tmp
-.vercel/
