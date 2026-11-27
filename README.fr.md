@@ -30,8 +30,8 @@ Les fichiers sont découpés en blocs de 8 Mo et transportés sur **32 canaux TC
 
 - **Fichier** — `Dosyaktar.exe`
 - **Version** — 2.3.0
-- **Taille** — 77.3 MB (77,279,571 bytes)
-- **SHA-256** — `79D9FA2BEE994B7A562CE7FB986AB40DEF7A5BF9F8A1582B1F0707980272E1A9`
+- **Taille** — 77.3 MB (77,279,587 bytes)
+- **SHA-256** — `30C315EF71A36E540BFF7CA3EA4AC49D77BAD648B6B82613CEA172C3DD211361`
 - **Système** — Windows 10 / 11 (x64)
 
 **[Télécharger Dosyaktar v2.3.0](https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.3.0/Dosyaktar.exe)**

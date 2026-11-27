@@ -30,8 +30,8 @@ Dateien werden in 8-MB-Blöcke geteilt und über **32 parallele TCP-Kanäle** ü
 
 - **Datei** — `Dosyaktar.exe`
 - **Version** — 2.3.0
-- **Größe** — 77.3 MB (77,279,571 bytes)
-- **SHA-256** — `79D9FA2BEE994B7A562CE7FB986AB40DEF7A5BF9F8A1582B1F0707980272E1A9`
+- **Größe** — 77.3 MB (77,279,587 bytes)
+- **SHA-256** — `30C315EF71A36E540BFF7CA3EA4AC49D77BAD648B6B82613CEA172C3DD211361`
 - **System** — Windows 10 / 11 (x64)
 
 **[Dosyaktar v2.3.0 herunterladen](https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.3.0/Dosyaktar.exe)**

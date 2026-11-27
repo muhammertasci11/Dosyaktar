@@ -30,8 +30,8 @@ Dosyalar 8 MB'lik parçalara bölünür ve **32 paralel TCP kanalı** üzerinden
 
 - **Dosya** — `Dosyaktar.exe`
 - **Sürüm** — 2.3.0
-- **Boyut** — 77.3 MB (77,279,571 bytes)
-- **SHA-256** — `79D9FA2BEE994B7A562CE7FB986AB40DEF7A5BF9F8A1582B1F0707980272E1A9`
+- **Boyut** — 77.3 MB (77,279,587 bytes)
+- **SHA-256** — `30C315EF71A36E540BFF7CA3EA4AC49D77BAD648B6B82613CEA172C3DD211361`
 - **Sistem** — Windows 10 / 11 (x64)
 
 **[Dosyaktar v2.3.0 indir](https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.3.0/Dosyaktar.exe)**
