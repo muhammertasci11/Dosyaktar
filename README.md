@@ -50,7 +50,7 @@ Files are split into 8 MB chunks and carried over **32 parallel TCP channels**, 
 
 | Game library | Transfer | Settings |
 |:--:|:--:|:--:|
-| ![](docs/shots/en-games.jpg) | ![](docs/shots/en-send.jpg) | ![](docs/shots/en-settings.jpg) |
+| ![Game library](docs/shots/en-games.jpg) | ![Transfer](docs/shots/en-send.jpg) | ![Settings](docs/shots/en-settings.jpg) |
 
 ## Features
 

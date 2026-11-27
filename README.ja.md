@@ -50,7 +50,7 @@ Dosyaktar は、同じ Wi-Fi または Ethernet 上の Windows PC 間でファ�
 
 | ゲームライブラリ | 転送 | 設定 |
 |:--:|:--:|:--:|
-| ![](docs/shots/ja-games.jpg) | ![](docs/shots/ja-send.jpg) | ![](docs/shots/ja-settings.jpg) |
+| ![ゲームライブラリ](docs/shots/ja-games.jpg) | ![転送](docs/shots/ja-send.jpg) | ![設定](docs/shots/ja-settings.jpg) |
 
 ## 機能
 

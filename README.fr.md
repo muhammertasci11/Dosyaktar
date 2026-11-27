@@ -50,7 +50,7 @@ Les fichiers sont découpés en blocs de 8 Mo et transportés sur **32 canaux TC
 
 | Bibliothèque de jeux | Transfert | Réglages |
 |:--:|:--:|:--:|
-| ![](docs/shots/fr-games.jpg) | ![](docs/shots/fr-send.jpg) | ![](docs/shots/fr-settings.jpg) |
+| ![Bibliothèque de jeux](docs/shots/fr-games.jpg) | ![Transfert](docs/shots/fr-send.jpg) | ![Réglages](docs/shots/fr-settings.jpg) |
 
 ## Fonctions
 

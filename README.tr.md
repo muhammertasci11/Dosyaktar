@@ -50,7 +50,7 @@ Dosyalar 8 MB'lik parçalara bölünür ve **32 paralel TCP kanalı** üzerinden
 
 | Oyun kitaplığı | Aktarım | Ayarlar |
 |:--:|:--:|:--:|
-| ![](docs/shots/tr-games.jpg) | ![](docs/shots/tr-send.jpg) | ![](docs/shots/tr-settings.jpg) |
+| ![Oyun kitaplığı](docs/shots/tr-games.jpg) | ![Aktarım](docs/shots/tr-send.jpg) | ![Ayarlar](docs/shots/tr-settings.jpg) |
 
 ## Özellikler
 

@@ -50,7 +50,7 @@ Dateien werden in 8-MB-Blöcke geteilt und über **32 parallele TCP-Kanäle** ü
 
 | Spielebibliothek | Übertragung | Optionen |
 |:--:|:--:|:--:|
-| ![](docs/shots/de-games.jpg) | ![](docs/shots/de-send.jpg) | ![](docs/shots/de-settings.jpg) |
+| ![Spielebibliothek](docs/shots/de-games.jpg) | ![Übertragung](docs/shots/de-send.jpg) | ![Optionen](docs/shots/de-settings.jpg) |
 
 ## Funktionen
 

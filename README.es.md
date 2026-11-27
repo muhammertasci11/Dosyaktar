@@ -50,7 +50,7 @@ Los archivos se dividen en bloques de 8 MB y viajan por **32 canales TCP en para
 
 | Biblioteca de juegos | Transferencia | Ajustes |
 |:--:|:--:|:--:|
-| ![](docs/shots/es-games.jpg) | ![](docs/shots/es-send.jpg) | ![](docs/shots/es-settings.jpg) |
+| ![Biblioteca de juegos](docs/shots/es-games.jpg) | ![Transferencia](docs/shots/es-send.jpg) | ![Ajustes](docs/shots/es-settings.jpg) |
 
 ## Funciones
 
