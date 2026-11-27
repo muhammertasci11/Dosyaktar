@@ -1,120 +1,173 @@
 <div align="center">
-  <img src="Dosyaktar/Assets/icon.png" width="128" height="128" alt="Dosyaktar Icon"/>
+  <img src="Dosyaktar/Assets/icon.png" width="96" height="96" alt="Dosyaktar Icon"/>
   <h1>Dosyaktar</h1>
   <p><strong>Aynı ağda ışık hızında dosya, klasör ve oyun transferi</strong></p>
+  <br/>
 
   <p>
-    <img src="https://img.shields.io/badge/.NET-8.0-5C2D91?style=for-the-badge&logo=.net&logoColor=white" alt=".NET 8.0">
+    <img src="https://img.shields.io/badge/.NET-8.0-5C2D91?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET 8.0">
     <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white" alt="C#">
     <img src="https://img.shields.io/badge/WPF-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="WPF">
-    <img src="https://img.shields.io/badge/version-2.1.0-6C3BFF?style=for-the-badge" alt="v2.1.0">
+    <img src="https://img.shields.io/badge/version-2.2.1-6C3BFF?style=for-the-badge" alt="v2.2.1">
+    <img src="https://img.shields.io/badge/Windows-10%2F11-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows">
   </p>
+
+  <br/>
+  <a href="https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.2.1/Dosyaktar.exe">
+    <img src="https://img.shields.io/badge/Download-Dosyaktar.exe-blue?style=for-the-badge&logo=windows" alt="Download v2.2.1"/>
+  </a>
 </div>
 
----
+<br/>
 
-## Hakkında
+<div align="center">
+  <img src="https://github.com/muhammertasci11/Dosyaktar/raw/main/landing-full-desktop.png" width="700" alt="Dosyaktar masaüstü arayüzü"/>
+  <p><i>Dosyaktar ana penceresinde oyun kütüphanesi ve mobil akış</i></p>
+</div>
 
-**Dosyaktar**, aynı yerel ağdaki (Wi-Fi veya Ethernet) Windows bilgisayarlar arasında dosya, klasör ve **kurulu oyunları** internet kotası harcamadan taşıyan bir masaüstü uygulamasıdır. Bulut yok, hesap yok, reklam yok.
+<br/>
+
+<details>
+  <summary><b>📸 Ekran görüntüleri</b></summary>
+  <br/>
+  <div align="center">
+    <table>
+      <tr>
+        <td><b>Ana ekran</b></td>
+        <td><b>Oyun kitaplığı</b></td>
+      </tr>
+      <tr>
+        <td>
+          <img src="https://github.com/muhammertasci11/Dosyaktar/raw/main/landing-anchor-desktop.png" width="320" alt="Ana ekran"/>
+        </td>
+        <td>
+          <img src="https://github.com/muhammertasci11/Dosyaktar/raw/main/landing-oyunlar-desktop.png" width="320" alt="Oyun kitaplığı"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <img src="https://github.com/muhammertasci11/Dosyaktar/raw/main/landing-full-desktop.png" width="320" alt="Tam ekran"/>
+        </td>
+        <td>
+          <img src="https://github.com/muhammertasci11/Dosyaktar/raw/main/landing-full-mobile.png" width="200" alt="Mobil arayüz"/>
+        </td>
+      </tr>
+    </table>
+  </div>
+</details>
+
+<br/>
+
+## 🚀 Hakkında
+
+**Dosyaktar**, aynı yerel ağdaki (Wi-Fi veya Ethernet) Windows bilgisayarlar arasında dosya, klasör ve **kurulu oyunları** internet kotası harcamadan taşıyan, kurulum gerektirmeyen masaüstü uygulamasıdır. Bulut yok, hesap yok, reklam yok.
 
 Sürükle-bırak kadar basit bir akış: cihazı seç, PIN'i onayla, dosyaları bırak. Arka planda 8 MB'lik parçalar hâlinde, **32 paralel TCP kanalıyla** aktarım yapılır.
 
-## Öne çıkanlar
+### Neden Dosyaktar?
 
-### Hızlı transfer
-- **Flash Mode:** Dosyalar 8 MB'lik parçalara bölünür, 32 paralel TCP kanalı üzerinden eşzamanlı taşınır.
-- **Kilitlenmesiz yazma:** Alıcı taraf `RandomAccess` ile doğrudan diske yazar; büyük dosyalarda G/Ç darboğazı oluşmaz.
-- **Sıfır kurulum:** Tek dosya çalıştırılabilir (`win-x64`, self-contained).
+| Özellik | Avantaj |
+|---------|---------|
+| **İnternet gerektirmeyen** | Yerel ağda doğrudan cihazdan cihaza aktarım |
+| **Oyun desteği** | Steam, Epic, GOG, Battle.net, Ubisoft, EA, Riot kitaplıklarını tarar ve aktarır |
+| **Tek dosya** | `win-x64` self-contained tek `.exe` — kurulum yok |
+| **Mobil köprü** | Telefon tarayıcısı üzerinden dosya gönderme/alma (kurulum gerektmez) |
+| **Flash Mode** | 8 MB parçalar, 32 paralel kanal |
+| **8 tema** | WCAG AA kontrastlı tema paleti |
 
-### Oyun kitaplığı ve oyun transferi — *yeni*
-- **7 sağlayıcı:** Steam, Epic Games, GOG, Battle.net, Ubisoft Connect, EA App, Riot Client.
-- **Gerçek kitaplık taraması:** Kayıt defteri anahtarları ve sağlayıcı manifest dosyalarından kurulu oyunlar bulunur; elle klasör seçmek gerekmez.
-- **Oyunu taşı, oynanabilir kalsın:** Steam `.acf` ve Epic manifest dosyaları hedef makinede yeniden yazılır; oyun hedefte kitaplıkta görünür ve açılır.
-- **Tek tıkla aktarım:** Oyun, mevcut transfer hattı üzerinden taşınır — ayrı bir araç yok.
+<br/>
 
-### Telefon köprüsü — *kurulum gerekmez*
-- Masaüstü uygulama yerel ağda bir köprü açar; karşı ekranda **QR kod** ve adres görünür.
-- Telefon tarayıcısından adres açılır, **6 haneli PIN** girilir. Uygulama kurmak gerekmez.
-- **Gönder:** telefondan bilgisayara dosya/fotoğraf yükle. **Al:** bilgisayarın paylaştığı dosyaları indir. **Durum:** canlı aktarım bilgisi.
-- PIN **tek kullanımlıktır** ve her başarılı girişten sonra yenilenir.
-- Telefon arayüzü ayrı bir uygulama kurmadan çalışır; tarayıcı menüsünden **ana ekrana kısayol** olarak eklenebilir.
-- Hiçbir dosya buluta gitmez; trafik doğrudan bilgisayara akar.
+## 📦 Kurulum
 
-### 8 tema
-Prism (parlak cam), Midnight (derin mavi), Nordic (buz mavisi), Aurora (kutup yeşili), Sunset (sıcak kum), Cyber (neon gece), Forest (orman), Graphite (saf gri).
+### İndir
 
-Tüm temalar WCAG AA metin kontrastı hedefiyle üretilir; metin ve ikon renkleri `*InkBrush` / `*FillBrush` rolleri üzerinden gelir.
+[**Dosyaktar.exe v2.2.1 indir**](https://github.com/muhammertasci11/Dosyaktar/releases/download/v2.2.1/Dosyaktar.exe) (77,25 MB)
 
----
+### Nasıl kullanılır
 
-## Mimari
+1. **Başlat:** Dosyaktar'ı aynı ağdaki iki bilgisayarda da açın.
+2. **Keşfet:** Karşı cihaz otomatik olarak belirir.
+3. **Eşleştir:** Hedef cihaza tıklayın ve 6 haneli PIN'i onaylayın.
+4. **Aktar:** Dosya/klasör bırakın ya da Oyunlar sayfasından bir oyun seçip taşıyın.
+5. **Telefon bağlan:** Mobil sayfasındaki QR kodu okutun veya adresi açın, PIN'i girin.
+
+> **Not:** Her iki bilgisayarda da aynı sürümün çalışması gerekir. İlk çalıştırmada Windows Firewall kuralı otomatik olarak eklenir.
+
+<br/>
+
+## ✨ Özellikler
+
+### Hızlı transfer (Flash Mode)
+Dosyalar 8 MB'lik parçalara bölünür ve 32 paralel TCP kanalı üzerinden eşzamanlı taşınır. Büyük dosyalarda G/Ç darboğazı oluşmaz.
+
+### Oyun transferi
+7 sağlayıcıyı destekler: **Steam, Epic Games, GOG, Battle.net, Ubisoft Connect, EA App, Riot Client.** Kayıt defteri ve manifest dosyaları üzerinden kurulu oyunlar bulunur; hedef makinede oyun kitaplığınıza eklenir.
+
+### Mobil köprü
+Masaüstü uygulama yerel ağda bir HTTP köprü açar. Telefon tarayıcınızdan adresi açın, 6 haneli PIN'i girin ve dosya gönderin/ alın. Hiçbir mobil uygulama kurulumu gerektirmez.
+
+### Temalar ve görünüm
+8 WCAG AA kontrastlı tema: Prism, Midnight, Nordic, Aurora, Sunset, Cyber, Forest, Graphite.
+
+<br/>
+
+## 🏗️ Mimari
 
 | Katman | Sorumluluk |
-|---|---|
-| `Services/NetworkDiscovery.cs` | UDP 5002 üzerinden 2 saniyede bir yayın; aynı ağdaki cihazları bulur. |
-| `Services/PairingService.cs` | TCP 5003 el sıkışması ve 6 haneli PIN doğrulaması. |
-| `Services/FileTransferService.cs` | TCP 5001 veri hattı; Flash Mode'da 32 işçi kanalı yönetir. |
-| `Services/GameLibraryService.cs` | Sağlayıcı bazlı kitaplık taraması (Steam, Epic, GOG, Battle.net, Ubisoft, EA, Riot). |
-| `Services/GameTransferService.cs` | Oyun aktarımı ve hedefte sağlayıcı metadata'sının yeniden yazılması. |
-| `Services/MobileServer.cs` | Gömülü HTTP sunucusu (varsayılan 5050) + `Assets/mobile/` telefon arayüzü. |
-| `Services/HistoryService.cs` | Transfer geçmişi ve kalıcılığı. |
-| `Services/UpdateService.cs` | GitHub Releases üzerinden güncelleme kontrolü. |
-| `ThemeManager.cs` | 8 palet üretir, `MergedDictionaries[0]` üzerinden uygular. |
+|--------|------------|
+| `Services/NetworkDiscovery.cs` | UDP 5002 — aynı ağdaki cihazları keşfet |
+| `Services/PairingService.cs` | TCP 5003 — PIN eşleştirme |
+| `Services/FileTransferService.cs` | TCP 5001 — 32 kanal transfer hattı |
+| `Services/GameLibraryService.cs` | Sağlayıcı bazlı oyun taraması |
+| `Services/GameTransferService.cs` | Oyun aktarımı ve metadata yeniden yazma |
+| `Services/MobileServer.cs` | Gömülü HTTP sunucusu (5050) + mobil arayüz |
+| `Services/HistoryService.cs` | Transfer geçmişi |
+| `Services/UpdateService.cs` | GitHub Releases güncelleme kontrolü |
+| `ThemeManager.cs` | 8 tema paleti |
 
-Arayüz tek yüzeydir: `MainWindow.xaml` içindeki Keşif, Oturum, Oyunlar, Mobil, Geçmiş ve Ayarlar sayfaları.
+Arayüz tek yüzey: `MainWindow.xaml` — Keşif, Oturum, Oyunlar, Mobil, Geçmiş, Ayarlar.
 
----
+<br/>
 
-## Kullanım
-
-1. **Başlat:** Dosyaktar'ı aynı ağdaki iki bilgisayarda da aç.
-2. **Keşfet:** Karşı cihaz kartı otomatik olarak belirir.
-3. **Eşleştir:** Hedef cihaza tıkla, 6 haneli PIN'i karşı tarafta onayla.
-4. **Aktar:** Oturum sayfasına dosya/klasör bırak ya da **Oyunlar** sayfasından bir oyun seçip taşı.
-5. **Telefondan bağlan:** **Mobil** sayfasındaki QR kodu okut veya adresi aç, PIN'i gir.
-
----
-
-## Teknoloji ve gereksinimler
+## 🛠️ Teknoloji
 
 - **Framework:** .NET 8.0
-- **Arayüz:** WPF (özel çerçevesiz pencere, veri odaklı temalar)
+- **Arayüz:** WPF (özel çerçevesiz pencere)
 - **Ağ:** Async TCP/UDP soketleri, 32 paralel kanal
-- **Mobil:** Gömülü HTTP sunucusu + telefon tarayıcısında çalışan tek sayfalık arayüz (kurulum gerekmez)
+- **Mobil:** Gömülü HTTP sunucusu + tek-sayfa mobil arayüz
 - **İşletim sistemi:** Windows 10 / 11 (x64)
 - **Dağıtım:** Self-contained tek dosya
 
-### Derleme
+<br/>
 
-```powershell
-cd Dosyaktar
-dotnet build -c Debug --nologo
+## 📂 Dosya yapısı
+
+```
+Dosyaktar/
+├── Dosyaktar/                 # WPF proje kaynağı
+│   ├── Views/                 # XAML arayüzleri
+│   ├── Services/              # Ağ, oyun, tema, geçiş servisleri
+│   ├── Controls/              # Özel kontroller
+│   ├── Themes/                # Tema paletleri
+│   └── Assets/                # İkonlar ve varlıklar
+├── Assets/mobile/             # Mobil web arayüzü
+├── docs/                      # GitHub Pages dokümanları
+└── README.md
 ```
 
-Çıktı: `Dosyaktar/bin/Debug/net8.0-windows/win-x64/Dosyaktar.exe`
+<br/>
 
-### Yayınlama
-
-```powershell
-cd Dosyaktar
-dotnet publish -c Release --nologo
-```
-
----
-
-## Ayarlar ve veriler
-
-- Ayarlar: `%APPDATA%\Dosyaktar\settings.json`
-- Geçmiş: aynı klasörde, uygulama içindeki **Geçmiş** sayfasından yönetilir.
-- Mobil köprü varsayılan olarak **5050** portunu kullanır.
-
----
-
-## Lisans ve geliştirici
+## 📄 Lisans ve geliştirici
 
 Geliştirici: **[Muhammer Taşçı](https://github.com/muhammertasci11)**  
 *Mekatronik Mühendisliği Öğrencisi | Yazılım ve Otomasyon Geliştirici*
 
+> "Yerel ağ transferini zarafet ve hızla yeniden tanımlıyor."
+
+<br/>
+
 <div align="center">
-  <i>"Yerel ağ transferini zarafet ve hızla yeniden tanımlıyor."</i>
+  <a href="https://github.com/muhammertasci11/Dosyaktar/releases/tag/v2.2.1">
+    <img src="https://img.shields.io/badge/Changelog-v2.2.1-success?style=for-the-badge&logo=github" alt="Changelog"/>
+  </a>
 </div>
